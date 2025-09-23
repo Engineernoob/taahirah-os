@@ -6,7 +6,7 @@ Thumbs.db
 ehthumbs.db
 desktop.ini
 
-# Node / Package Managers (if you ever add npm/yarn for tooling)
+# Node / Package Managers
 node_modules/
 npm-debug.log*
 yarn-debug.log*
@@ -25,7 +25,7 @@ build/
 *.swp
 *.swo
 
-# Environment Files (if you add API keys later)
+# Environment Files
 .env
 .env.local
 .env.*.local
@@ -43,24 +43,18 @@ build/
 # Project-Specific
 # ------------------------
 
-# Ignore compiled fonts if generated
-fonts/*.woff
-fonts/*.woff2
-
-# Keep raw fonts, ignore font cache
+# Ignore compiled fonts (except ones in /fonts/)
+*.woff
+*.woff2
 *.ttf
 *.otf
 
-# Ignore large binary assets that shouldn’t be tracked
+# Ignore audio (except ones in /sounds/)
 *.mp3
 *.ogg
 *.wav
-*.zip
-*.rar
-*.7z
 
-# Ignore generated screenshots or exports
-screenshots/
+# Ignore images (except ones in /icons/)
 *.png
 *.jpg
 *.jpeg
@@ -68,8 +62,7 @@ screenshots/
 # ------------------------
 # Exceptions (force keep)
 # ------------------------
+!icons/**
+!sounds/**
+!fonts/**
 
-# Keep icons and sounds that are actually part of the game
-!icons/
-!sounds/
-!fonts/
