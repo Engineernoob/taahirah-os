@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Projects</title>
+    <link rel="stylesheet" href="https://unpkg.com/98.css" />
+    <style>
+      body {
+        margin: 0;
+        padding: 12px;
+        font-family: "W95", "MS Sans Serif", sans-serif;
+        background: transparent; /* let parent window color show */
+      }
+      a {
+        color: black;
+        text-decoration: none;
+      }
+      a:hover {
+        text-decoration: underline;
+      }
+      ul {
+        margin: 0;
+        padding-left: 18px;
+      }
+    </style>
+  </head>
+  <body>
+    <h4>My Projects</h4>
+    <ul>
+      <li>
+        <a href="https://github.com/Engineernoob/cue" target="_blank">
+          Cue – AI-powered Interview Assistant
+        </a>
+      </li>
+      <li>
+        <a
+          href="https://github.com/Engineernoob/Quantum-Lottery-Predictor"
+          target="_blank"
+        >
+          Quantum Lottery Predictor – Quantum-inspired randomness experiments
+        </a>
+      </li>
+    </ul>
+
+    <div style="margin-top: 16px; text-align: center">
+      <button
+        class="default"
+        onclick="window.parent.postMessage('closeWindow','*')"
+      >
+        OK
+      </button>
+    </div>
+  </body>
+</html>

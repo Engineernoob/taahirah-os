@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>3D Pinball: Space Cadet</title>
+    <meta
+      name="description"
+      content="Classic 3D Pinball Space Cadet game built with HTML, CSS, and JavaScript"
+    />
+    <!-- 98.css for native Win98 look -->
+    <link rel="stylesheet" href="https://unpkg.com/98.css" />
+    <!-- Game-specific styles -->
+    <link rel="stylesheet" href="pinball.css" />
+    <!-- Fonts -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../fonts/w95font.css" />
+  </head>
+  <body>
+    <div class="window" style="width: 920px; margin: 20px auto">
+      <!-- Title Bar -->
+      <div class="title-bar">
+        <div class="title-bar-text">3D Pinball: Space Cadet</div>
+        <div class="title-bar-controls">
+          <button aria-label="Minimize"></button>
+          <button aria-label="Maximize"></button>
+          <button aria-label="Close" onclick="window.close()"></button>
+        </div>
+      </div>
+
+      <!-- Window Body -->
+      <div class="window-body" style="padding: 0; height: 680px">
+        <div id="game-container" style="display: flex; height: 100%">
+          <!-- Main Game Area -->
+          <div id="game-area" style="flex-grow: 1; background: black">
+            <canvas id="game-canvas" width="600" height="680"></canvas>
+            <div id="game-ui">
+              <!-- Controls -->
+              <div
+                id="ball-launcher"
+                style="position: absolute; bottom: 20px; right: 40px"
+              >
+                <button id="launch-button" class="default">LAUNCH</button>
+              </div>
+              <!-- Messages -->
+              <div id="game-messages">
+                <div id="message-display"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Side Panel -->
+          <div
+            id="right-panel"
+            style="
+              width: 300px;
+              background: #c0c0c0;
+              border-left: 2px inset #808080;
+              padding: 8px;
+            "
+          >
+            <div id="score-display" style="margin-bottom: 12px">
+              <div class="score-item">
+                <span class="score-label">SCORE</span>
+                <span id="current-score" class="score-value">0</span>
+              </div>
+              <div class="score-item">
+                <span class="score-label">BALL</span>
+                <span id="ball-count" class="score-value">1</span>
+              </div>
+              <div class="score-item">
+                <span class="score-label">HIGH SCORE</span>
+                <span id="high-score" class="score-value">0</span>
+              </div>
+            </div>
+
+            <fieldset>
+              <legend>MISSIONS</legend>
+              <div class="mission-text" id="mission-text">
+                Hit Mission<br />
+                Targets To<br />
+                Select Mission
+              </div>
+            </fieldset>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Optional loading overlay -->
+    <div
+      id="loading-screen"
+      class="window"
+      style="width: 400px; margin: 100px auto; display: none"
+    >
+      <div class="title-bar">
+        <div class="title-bar-text">Loading</div>
+      </div>
+      <div class="window-body">
+        <h4>Loading Space Cadet...</h4>
+        <div class="progressbar">
+          <div id="loading-progress" style="width: 0%"></div>
+        </div>
+      </div>
+    </div>
+
+    <script src="pinball.js"></script>
+  </body>
+</html>

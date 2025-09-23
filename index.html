@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Portfolio</title>
+
+    <!-- 98.css (UI look) -->
+    <link rel="stylesheet" href="https://unpkg.com/98.css" />
+
+    <!-- os-gui (Windows 98 window system) -->
+    <link rel="stylesheet" href="node_modules/os-gui/layout.css" />
+    <link rel="stylesheet" href="node_modules/os-gui/windows-98.css" />
+    <link rel="stylesheet" href="node_modules/os-gui/windows-default.css" />
+
+    <!-- Custom styles -->
+    <link rel="stylesheet" href="style.css" />
+
+    <!-- Google Fonts for Pinball Game -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!-- Desktop -->
+    <div id="desktop">
+      <div class="desktop-icon" onclick="openWindow('about')">
+        <img src="icons/about-me.png" alt="About" />
+        <span>About Me</span>
+      </div>
+      <div class="desktop-icon" onclick="openWindow('projects')">
+        <img src="icons/projects.png" alt="Projects" />
+        <span>Projects</span>
+      </div>
+      <div class="desktop-icon" onclick="openWindow('contact')">
+        <img src="icons/contact.png" alt="Contact" />
+        <span>Contact</span>
+      </div>
+      <div
+        class="desktop-icon pinball-icon"
+        onclick="openWindow('pinball')"
+        id="pinball-desktop-icon"
+      >
+        <img src="icons/computer-icon.png" alt="Pinball" />
+        <span>Pinball Game</span>
+      </div>
+    </div>
+
+    <!-- Taskbar -->
+    <div id="taskbar">
+      <div class="start-btn" onclick="toggleStartMenu()">
+        <img src="icons/start-button.png" alt="Start" />
+      </div>
+      <div id="taskbar-buttons"></div>
+      <div class="taskbar-space"></div>
+      <div class="taskbar-clock" id="clock"></div>
+    </div>
+
+    <!-- Start Menu -->
+    <div
+      id="start-menu"
+      class="window"
+      style="
+        display: none;
+        position: fixed;
+        bottom: 40px;
+        left: 5px;
+        width: 220px;
+        z-index: 1500;
+      "
+    >
+      <div class="title-bar">
+        <div class="title-bar-text">Start Menu</div>
+      </div>
+      <div class="window-body">
+        <ul class="start-menu-list">
+          <li>
+            <a href="#" onclick="openWindow('about')"
+              ><img src="icons/about-me.png" /> About</a
+            >
+          </li>
+          <li>
+            <a href="#" onclick="openWindow('projects')"
+              ><img src="icons/projects.png" /> Projects</a
+            >
+          </li>
+          <li>
+            <a href="#" onclick="openWindow('contact')"
+              ><img src="icons/contact.png" /> Contact</a
+            >
+          </li>
+          <li>
+            <a href="#" onclick="openWindow('resume')"
+              ><img src="icons/resume.png" /> Resume</a
+            >
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="node_modules/os-gui/MenuBar.js"></script>
+    <script src="node_modules/os-gui/$Window.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

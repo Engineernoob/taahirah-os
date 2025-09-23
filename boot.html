@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Booting...</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        margin: 0;
+        background: #000080; /* Win98 dark blue */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 100vh;
+        color: white;
+        font-family: "W95", "MS Sans Serif", sans-serif;
+        overflow: hidden;
+      }
+
+      .boot-logo img {
+        width: 300px;
+        image-rendering: pixelated;
+        margin-bottom: 20px;
+      }
+
+      .boot-logo p {
+        font-size: 14px;
+        margin: 10px 0;
+      }
+
+      .boot-progress {
+        width: 300px;
+        height: 18px;
+        border: 2px inset #fff;
+        background: #000;
+        margin-top: 20px;
+        padding: 2px;
+        display: none; /* hidden until boot starts */
+      }
+
+      .boot-progress .progress-bar {
+        width: 0%;
+        height: 100%;
+        background: #00ff00;
+      }
+
+      @keyframes boot-progress {
+        from {
+          width: 0%;
+        }
+        to {
+          width: 100%;
+        }
+      }
+
+      /* Overlay */
+      #boot-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        z-index: 999;
+        color: white;
+        font-size: 18px;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Overlay -->
+    <div id="boot-overlay">
+      <p>▶ Click to Start TaahirahOS</p>
+    </div>
+
+    <div class="boot-logo" style="display: none">
+      <img src="icons/win-98-logo.png" alt="Windows 98" />
+      <p>Starting TaahirahOS...</p>
+      <div class="boot-progress">
+        <div class="progress-bar"></div>
+      </div>
+    </div>
+
+    <!-- Boot sound -->
+    <audio id="boot-sound">
+      <source src="sounds/winxp.mp3" type="audio/mpeg" />
+      <source src="sounds/win-start.ogg" type="audio/ogg" />
+    </audio>
+
+    <script>
+      const overlay = document.getElementById("boot-overlay");
+      const bootLogo = document.querySelector(".boot-logo");
+      const bootSound = document.getElementById("boot-sound");
+      const progressBar = document.querySelector(".progress-bar");
+      const progressContainer = document.querySelector(".boot-progress");
+
+      overlay.addEventListener("click", () => {
+        overlay.style.display = "none"; // remove overlay
+        bootLogo.style.display = "flex"; // show boot screen
+        progressContainer.style.display = "block"; // show progress bar
+
+        // Play boot sound
+        bootSound.volume = 0.6;
+        bootSound.play().catch(err => console.log("Autoplay blocked:", err));
+
+        // Animate progress bar
+        progressBar.style.animation = "boot-progress 3s linear forwards";
+
+        // Redirect after boot
+        setTimeout(() => {
+          window.location.href = "index.html";
+        }, 3500);
+      });
+    </script>
+  </body>
+</html>
+

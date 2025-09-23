@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Shutting Down...</title>
+    <link rel="stylesheet" href="style.css" />
+    <style>
+      body {
+        margin: 0;
+        background: #000000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        height: 100vh;
+        color: white;
+        font-family: "W95", "MS Sans Serif", sans-serif;
+        text-align: center;
+        overflow: hidden;
+      }
+
+      .shutdown-logo img {
+        max-width: 500px;
+        width: 90%;
+        margin-bottom: 30px;
+        animation: fadeIn 1.5s ease;
+      }
+
+      .shutdown-text {
+        font-size: 20px;
+        margin-top: 20px;
+        color: #ffcc00;
+        animation: blink 1.5s infinite;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0.6;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="shutdown-logo">
+      <img src="icons/windows_xp_shutdown_screen.jpg" alt="Shutting Down..." />
+    </div>
+
+    <div class="shutdown-text">
+      Please wait while your computer shuts down...
+    </div>
+
+    <!-- Shutdown sound -->
+    <audio id="shutdown-sound">
+      <source src="sounds/winxpshutdown.mp3" type="audio/mpeg" />
+      <source src="sounds/winxpshutdown.ogg" type="audio/ogg" />
+    </audio>
+
+    <script>
+      const sound = document.getElementById("shutdown-sound");
+
+      // Play shutdown sound as soon as page loads (safe if triggered by Start Menu "Shut Down" button)
+      window.addEventListener("DOMContentLoaded", () => {
+        sound.volume = 0.6;
+        sound.play().catch((err) => console.log("Autoplay blocked:", err));
+      });
+
+      // After sound finishes, "power off" (blank screen)
+      sound.onended = () => {
+        document.body.innerHTML = "";
+        document.body.style.background = "#000";
+      };
+    </script>
+  </body>
+</html>

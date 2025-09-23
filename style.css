@@ -1,0 +1,475 @@
+/* Load custom Windows 95 font */
+@font-face {
+  font-family: "W95";
+  src: url("fonts/w95font.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "W95";
+  src: url("fonts/w95font-bold.woff") format("woff");
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Windows 98 System Colors */
+:root {
+  --win98-desktop: #008080; /* Teal desktop background */
+  --win98-window: #c0c0c0; /* Window background */
+  --win98-titlebar: #000080; /* Active title bar (dark blue) */
+  --win98-titlebar-inactive: #808080; /* Inactive title bar */
+  --win98-titlebar-text: #ffffff; /* Title bar text */
+  --win98-titlebar-text-inactive: #c0c0c0;
+  --win98-border: #c0c0c0; /* Window border */
+  --win98-border-light: #ffffff; /* Light border */
+  --win98-border-dark: #808080; /* Dark border */
+  --win98-button-face: #c0c0c0; /* Button face */
+  --win98-button-light: #ffffff; /* Button highlight */
+  --win98-button-dark: #808080; /* Button shadow */
+  --win98-text: #000000; /* Text color */
+  --win98-selected: #000080; /* Selected items */
+  --win98-selected-text: #ffffff; /* Selected text */
+}
+
+/* Apply globally */
+body,
+button,
+input,
+textarea,
+.window-body,
+.desktop-icon span,
+#taskbar {
+  font-family: "W95", "MS Sans Serif", sans-serif;
+  font-size: 11px;
+  color: var(--win98-text);
+}
+
+/* Full desktop background */
+body,
+html {
+  height: 100%;
+  margin: 0;
+  background: var(--win98-desktop);
+  background-image: url("icons/wallpaper-1.png");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-attachment: fixed;
+  background-size: cover;
+  overflow: hidden;
+  cursor: default;
+}
+
+/* Desktop container */
+#desktop {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  padding: 20px;
+  gap: 30px;
+  height: calc(100% - 40px); /* leave space for taskbar */
+}
+
+/* Desktop icons */
+.desktop-icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 80px;
+  padding: 8px;
+  cursor: pointer;
+  color: var(--win98-text);
+  text-shadow: 1px 1px 0px var(--win98-border-light);
+  user-select: none;
+  border-radius: 4px;
+  transition: background-color 0.1s ease;
+}
+
+.desktop-icon:hover {
+  background-color: rgba(0, 0, 0, 0.1);
+}
+
+.desktop-icon img {
+  width: 32px;
+  height: 32px;
+  margin-bottom: 6px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.desktop-icon span {
+  font-size: 11px;
+  text-align: center;
+  word-wrap: break-word;
+  line-height: 1.2;
+  max-width: 70px;
+}
+
+/* Taskbar */
+#taskbar {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  height: 40px;
+  width: 100%;
+  background: var(--win98-button-face);
+  border-top: 2px solid var(--win98-border-light);
+  border-left: 2px solid var(--win98-border-light);
+  border-right: 2px solid var(--win98-border-dark);
+  border-bottom: 2px solid var(--win98-border-dark);
+  display: flex;
+  align-items: center;
+  box-shadow: inset 1px 1px 0px var(--win98-border-light),
+    inset -1px -1px 0px var(--win98-border-dark);
+  z-index: 1000;
+}
+
+/* Start button */
+.start-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  margin-left: 4px;
+  padding: 0 12px;
+  border: 2px outset var(--win98-button-light);
+  background: var(--win98-button-face);
+  cursor: pointer;
+  box-shadow: inset 1px 1px 0px var(--win98-button-light),
+    inset -1px -1px 0px var(--win98-button-dark);
+  font-weight: bold;
+  font-size: 11px;
+  color: var(--win98-text);
+}
+
+.start-btn:active {
+  border: 2px inset var(--win98-button-dark);
+  box-shadow: inset -1px -1px 0px var(--win98-button-light),
+    inset 1px 1px 0px var(--win98-button-dark);
+}
+
+.start-btn img {
+  height: 20px;
+  width: auto;
+  image-rendering: pixelated;
+  margin-right: 6px;
+}
+
+/* Taskbar buttons container */
+#taskbar-buttons {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+  padding: 0 4px;
+  flex-grow: 1; /* expand to fill space between start & clock */
+}
+
+/* Taskbar button style */
+.taskbar-btn {
+  height: 28px;
+  min-width: 90px;
+  padding: 0 8px;
+  font-size: 11px;
+  font-family: "W95", "MS Sans Serif", sans-serif;
+  border: 2px outset var(--win98-button-light);
+  background: var(--win98-button-face);
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  box-shadow: inset 1px 1px 0px var(--win98-button-light),
+    inset -1px -1px 0px var(--win98-button-dark);
+  color: var(--win98-text);
+}
+
+/* Button icon */
+.taskbar-btn img {
+  width: 16px;
+  height: 16px;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+/* Hover effect */
+.taskbar-btn:hover {
+  background: #dcdcdc;
+  box-shadow: inset 1px 1px 0px #ffffff,
+    inset -1px -1px 0px var(--win98-border-dark);
+}
+
+/* Active (pressed in) state */
+.taskbar-btn.active {
+  border: 2px inset var(--win98-button-dark);
+  background: var(--win98-window);
+  box-shadow: inset -1px -1px 0px var(--win98-button-light),
+    inset 1px 1px 0px var(--win98-button-dark);
+  color: var(--win98-text);
+}
+
+/* Spacer pushes clock to the far right */
+.taskbar-space {
+  flex-grow: 1;
+}
+
+/* Clock aligned right */
+.taskbar-clock {
+  font-size: 11px;
+  padding: 0 12px;
+  min-width: 60px;
+  text-align: right;
+  color: var(--win98-text);
+  font-weight: bold;
+}
+
+/* Windows 98 Window Styling */
+.window {
+  position: absolute;
+  background: var(--win98-window);
+  border: 2px solid var(--win98-border);
+  font-family: "W95", "MS Sans Serif", sans-serif;
+  font-size: 11px;
+  z-index: 100;
+  min-width: 100px;
+  min-height: 30px;
+  box-sizing: border-box; /* fixes bottom-left gap */
+}
+
+.window.active {
+  z-index: 200;
+}
+
+.window.inactive {
+  opacity: 0.9;
+}
+
+/* Window Title Bar */
+.title-bar {
+  background: linear-gradient(
+    to bottom,
+    var(--win98-titlebar),
+    var(--win98-titlebar)
+  );
+  color: var(--win98-titlebar-text);
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 2px 4px;
+  font-size: 11px;
+  font-weight: bold;
+  cursor: move;
+  user-select: none;
+}
+
+.title-bar.inactive {
+  background: linear-gradient(
+    to bottom,
+    var(--win98-titlebar-inactive),
+    var(--win98-titlebar-inactive)
+  );
+  color: var(--win98-titlebar-text-inactive);
+}
+
+.title-bar-text {
+  flex-grow: 1;
+  margin-left: 4px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Window Control Buttons */
+.title-bar-controls {
+  display: flex;
+  gap: 2px;
+}
+
+.title-bar-controls button {
+  width: 16px;
+  height: 14px;
+  border: 1px outset var(--win98-button-light);
+  background: var(--win98-button-face);
+  cursor: pointer;
+  font-size: 8px;
+  font-weight: bold;
+  color: var(--win98-text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 1px 1px 0px var(--win98-button-light),
+    inset -1px -1px 0px var(--win98-button-dark);
+}
+
+.title-bar-controls button:hover {
+  background: #e0e0e0;
+}
+
+.title-bar-controls button:active {
+  border: 1px inset var(--win98-button-dark);
+  box-shadow: inset -1px -1px 0px var(--win98-button-light),
+    inset 1px 1px 0px var(--win98-button-dark);
+}
+
+/* Window Body */
+.window-body {
+  background: var(--win98-window);
+  color: var(--win98-text);
+  padding: 0; /* iframe fits flush */
+  margin: 0;
+  font-size: 11px;
+  line-height: 1.4;
+  overflow: hidden;
+  box-sizing: border-box;
+  height: calc(100% - 20px);
+}
+
+/* Resize Grip (decorative) */
+.resize-grip {
+  position: absolute;
+  right: 2px;
+  bottom: 2px;
+  width: 16px;
+  height: 16px;
+  background: url("icons/resize-grip.png") no-repeat center center;
+  background-size: contain;
+  pointer-events: none;
+}
+
+/* ============================================
+   PINBALL GAME INTEGRATION STYLES
+   ============================================ */
+
+/* Pinball desktop icon styling */
+.pinball-icon {
+  position: relative;
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.1) 0%, rgba(0, 255, 136, 0.05) 100%);
+  border: 2px solid transparent;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.pinball-icon::before {
+  content: '';
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #00ff88, #00ccff, #ff6b35, #00ff88);
+  border-radius: 10px;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: rotate 3s linear infinite;
+}
+
+@keyframes rotate {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.pinball-icon:hover {
+  background: linear-gradient(135deg, rgba(0, 255, 136, 0.2) 0%, rgba(0, 255, 136, 0.1) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(0, 255, 136, 0.3);
+}
+
+.pinball-icon:hover::before {
+  opacity: 1;
+}
+
+.pinball-icon img {
+  filter: drop-shadow(0 0 5px rgba(0, 255, 136, 0.5));
+  transition: filter 0.3s ease;
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+}
+
+.pinball-icon:hover img {
+  filter: drop-shadow(0 0 10px rgba(0, 255, 136, 0.8));
+  animation: pulse-fast 0.5s infinite;
+}
+
+@keyframes pulse-fast {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+.pinball-icon span {
+  background: linear-gradient(45deg, #00ff88, #00ccff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: bold;
+  text-shadow: none;
+  transition: all 0.3s ease;
+}
+
+.pinball-icon:hover span {
+  text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+}
+
+/* Desktop-only behavior */
+@media (max-width: 768px) {
+  .pinball-icon {
+    display: none;
+  }
+}
+
+/* Pinball window specific styles */
+.window:has(iframe[src*="pinball.html"]) {
+  background: #000;
+  border: 2px solid #00ff88;
+}
+
+.window:has(iframe[src*="pinball.html"]) .title-bar {
+  background: linear-gradient(90deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  color: #00ff88;
+  border-bottom: 2px solid #00ff88;
+}
+
+.window:has(iframe[src*="pinball.html"]) .title-bar-text {
+  font-family: 'Orbitron', monospace;
+  font-weight: bold;
+  text-shadow: 0 0 10px #00ff88;
+  color: #00ff88;
+}
+
+.window:has(iframe[src*="pinball.html"]) .title-bar-controls button {
+  background: linear-gradient(45deg, #00ff88, #00ccff);
+  color: #000;
+  font-weight: bold;
+}
+
+.window:has(iframe[src*="pinball.html"]) .title-bar-controls button:hover {
+  background: linear-gradient(45deg, #00ccff, #00ff88);
+}
+
+/* Pinball taskbar button styling */
+.taskbar-btn:has(img[alt="3D Pinball: Space Cadet"]) {
+  background: linear-gradient(45deg, rgba(0, 255, 136, 0.1), rgba(0, 204, 255, 0.1));
+  border: 2px outset #00ff88;
+}
+
+.taskbar-btn:has(img[alt="3D Pinball: Space Cadet"]):hover {
+  background: linear-gradient(45deg, rgba(0, 255, 136, 0.2), rgba(0, 204, 255, 0.2));
+  box-shadow: 0 0 10px rgba(0, 255, 136, 0.3);
+}
+
+.taskbar-btn:has(img[alt="3D Pinball: Space Cadet"]) span {
+  background: linear-gradient(45deg, #00ff88, #00ccff);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  font-weight: bold;
+}
