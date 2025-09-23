@@ -8,24 +8,43 @@
       body {
         margin: 0;
         padding: 12px;
-        font-family: "W95", "MS Sans Serif", sans-serif;
+        font-family: "MS Sans Serif", "Tahoma", sans-serif;
+        font-size: 13px;
         background: transparent; /* let parent window color show */
+        line-height: 1.4;
       }
-      a {
-        color: black;
-        text-decoration: none;
+
+      h4 {
+        margin-top: 0;
+        font-size: 16px;
       }
-      a:hover {
-        text-decoration: underline;
-      }
+
       ul {
         margin: 0;
         padding-left: 18px;
       }
+
+      li {
+        margin-bottom: 8px;
+      }
+
+      a {
+        color: #000;
+        text-decoration: none;
+      }
+
+      a:hover {
+        text-decoration: underline;
+      }
+
+      .actions {
+        margin-top: 16px;
+        text-align: center;
+      }
     </style>
   </head>
   <body>
-    <h4>My Projects</h4>
+    <h4>📂 My Projects</h4>
     <ul>
       <li>
         <a href="https://github.com/Engineernoob/cue" target="_blank">
@@ -42,7 +61,7 @@
       </li>
     </ul>
 
-    <div style="margin-top: 16px; text-align: center">
+    <div class="actions">
       <button
         class="default"
         onclick="window.parent.postMessage('closeWindow','*')"

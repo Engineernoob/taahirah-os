@@ -4,26 +4,44 @@
   <head>
     <meta charset="UTF-8" />
     <title>About Me</title>
+
+    <!-- Windows 98 CSS -->
     <link rel="stylesheet" href="https://unpkg.com/98.css" />
+
     <style>
       body {
         margin: 0;
         padding: 10px;
-        font-family: "W95", "MS Sans Serif", sans-serif;
-        font-size: 14px;
-        background: transparent; /* match parent window */
+        font-family: "MS Sans Serif", "Tahoma", sans-serif;
+        font-size: 13px;
+        background: transparent; /* so the parent window background shows */
+        line-height: 1.5;
       }
-      legend.skills {
-        font-size: 16px;
-        font-weight: bold;
+
+      h2 {
+        margin-top: 0;
+        font-size: 18px;
       }
+
+      fieldset {
+        margin-top: 12px;
+        padding: 8px;
+      }
+
+      legend.skills,
       legend.funfacts {
-        font-size: 16px;
+        font-size: 15px;
         font-weight: bold;
+        padding: 2px 6px;
       }
+
       ul {
         margin: 0;
-        padding-left: 10px;
+        padding-left: 18px;
+      }
+
+      li {
+        margin-bottom: 4px;
       }
     </style>
   </head>
@@ -39,7 +57,7 @@
     </p>
 
     <fieldset>
-      <legend class="skills">Skills</legend>
+      <legend class="skills">🛠 Skills</legend>
       <ul>
         <li>Full-Stack Development (JS, Python, Rust)</li>
         <li>AI/ML Experiments (LLMs, Whisper, Transformers)</li>
@@ -53,10 +71,7 @@
         <li>I enjoy True Crime or History while coding.</li>
         <li>
           Big fan of
-          <b
-            >Windows 95/98 aesthetics even though I wasn't born until 1 day
-            after 98 came out.</b
-          >
+          <b>Windows 95/98 aesthetics—even though I was born the day after 98 launched!</b>
         </li>
         <li>Building OS-like projects for fun.</li>
       </ul>
