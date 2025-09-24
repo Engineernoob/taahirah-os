@@ -34,7 +34,8 @@ taahirah-os/
 ├── icons/              # Desktop + Start Menu icons
 ├── sounds/             # Boot/shutdown audio
 └── pinball/            # Full Pinball game
-🚀 Getting Started
+
+** 🚀 Getting Started **
 Run Locally
 git clone https://github.com/Engineernoob/taahirah-os.git
 cd taahirah-os
@@ -42,8 +43,8 @@ open index.html   # or use a live server
 
 GitHub Pages
 
-The site is live here:
-👉 https://engineernoob.github.io/taahirah-os
+**The site is live here:
+👉 https://engineernoob.github.io/taahirah-os**
 
 🛠️ Tech Stack
 
@@ -57,9 +58,6 @@ Canvas API – for the Pinball game
 
 Google Fonts: Orbitron – for retro arcade feel
 
-🎨 Screenshots
-
-(Optional: add screenshots of desktop, About window, and Pinball game)
 
 📜 License
 
