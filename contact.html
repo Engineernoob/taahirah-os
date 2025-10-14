@@ -5,51 +5,10 @@
     <title>Contact</title>
 
     <!-- Windows 98 CSS -->
-    <link rel="stylesheet" href="https://unpkg.com/98.css" />
-
-    <style>
-      body {
-        margin: 0;
-        padding: 12px;
-        font-family: "MS Sans Serif", "Tahoma", sans-serif;
-        font-size: 13px;
-        background: transparent; /* let parent window background show */
-        line-height: 1.4;
-      }
-
-      h4 {
-        margin-top: 0;
-        font-size: 16px;
-      }
-
-      form {
-        margin-top: 8px;
-      }
-
-      .field-row-stacked {
-        margin-bottom: 10px;
-      }
-
-      input,
-      textarea {
-        width: 100%;
-        box-sizing: border-box;
-        font-size: 13px;
-      }
-
-      textarea {
-        resize: vertical;
-      }
-
-      .form-actions {
-        margin-top: 12px;
-        display: flex;
-        justify-content: flex-end;
-        gap: 6px;
-      }
-    </style>
+    <link rel="stylesheet" href="vendor/98.css" />
+    <link rel="stylesheet" href="window-content.css" />
   </head>
-  <body>
+  <body class="window-content">
     <h4>📬 Contact Me</h4>
     <form
       onsubmit="alert('✅ Thank you! Your message has been sent.'); this.reset(); return false;"
@@ -76,4 +35,3 @@
     </form>
   </body>
 </html>
-

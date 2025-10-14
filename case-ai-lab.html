@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Case Study · Autonomous AI Lab</title>
+    <link rel="stylesheet" href="vendor/98.css" />
+    <link rel="stylesheet" href="window-content.css" />
+  </head>
+  <body class="window-content">
+    <div class="case-hero">
+      <h2>Autonomous AI Lab</h2>
+      <p>
+        A five-week sprint to build a fully autonomous R&amp;D assistant that
+        scouts research briefs, drafts experiments, and reports results back to
+        stakeholders inside a Win98-style desktop.
+      </p>
+      <img
+        src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWY5N292YTBsMTB4cWl1eXZyaGlqOXBzMDg1bzZ0dWVqcGx6ZXF5bCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/xTiTnqUxyWbsAXq7Ju/giphy.gif"
+        alt="Animated walkthrough of the autonomous AI lab workflow"
+      />
+    </div>
+
+    <section class="case-metrics" aria-label="Impact metrics">
+      <div class="case-metric">
+        <strong>72%</strong>
+        Less time from idea to prototype with self-healing pipelines.
+      </div>
+      <div class="case-metric">
+        <strong>4x</strong>
+        Increase in validated experiment volume per week.
+      </div>
+      <div class="case-metric">
+        <strong>98%</strong>
+        Automated test pass rate across generated research notebooks.
+      </div>
+    </section>
+
+    <section>
+      <h3>Build Timeline</h3>
+      <div class="timeline">
+        <article class="timeline-step" data-open="true">
+          <button type="button" aria-expanded="true">
+            <span>Week 1 — Discovery &amp; Guardrails</span>
+          </button>
+          <div class="timeline-panel">
+            <p>
+              Interviewed data scientists, mapped safety constraints, and
+              defined agent roles (Researcher, Reviewer, Operator). Drafted
+              policy flows that governed model autonomy and human approval
+              checkpoints.
+            </p>
+            <div class="case-links">
+              <a
+                href="https://github.com/Engineernoob/FERN"
+                target="_blank"
+                rel="noopener"
+                >Design notes</a
+              >
+              <a
+                href="https://www.loom.com/share/2e30d5080"
+                target="_blank"
+                rel="noopener"
+                >User interviews</a
+              >
+            </div>
+          </div>
+        </article>
+        <article class="timeline-step" data-open="false">
+          <button type="button" aria-expanded="false">
+            <span>Weeks 2-3 — Architecture &amp; Autonomy</span>
+          </button>
+          <div class="timeline-panel">
+            <p>
+              Composed a three-agent architecture using MCP tools, Redis for
+              job orchestration, and temporal snapshots for rapid rollback.
+              Added deterministic evaluation harnesses and policy prompts for
+              each agent persona.
+            </p>
+            <pre><code class="language-js">const labOrchestrator = createAgent({
+  name: "Operator",
+  goals: ["triage briefs", "dispatch labs", "publish reports"],
+  tools: [queueClient("redis"), gitOps(), notionPublisher()],
+  policy: guardrails.allowlist([
+    "create_experiment",
+    "submit_results",
+    "request_review",
+  ]),
+});
+
+labOrchestrator.on("experiment:ready", async (payload) => {
+  await reviewAgent.validate(payload);
+  await reportAgent.publish(payload);
+});</code></pre>
+          </div>
+        </article>
+        <article class="timeline-step" data-open="false">
+          <button type="button" aria-expanded="false">
+            <span>Weeks 4-5 — Validation &amp; Launch</span>
+          </button>
+          <div class="timeline-panel">
+            <p>
+              Ran 40+ dry runs with synthetic briefs, tuned governance prompts,
+              and shored up analytics dashboards. Delivered a sealed desktop
+              experience with one-click deployments to internal teams.
+            </p>
+            <div class="case-links">
+              <a href="https://github.com/Engineernoob/cue" target="_blank" rel="noopener"
+                >QA harness</a
+              >
+              <a
+                href="https://engineernoob.github.io/taahirah-os"
+                target="_blank"
+                rel="noopener"
+                >Live prototype</a
+              >
+            </div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <section>
+      <h3>What recruiters loved</h3>
+      <ul>
+        <li>Transparent governance narrative with measurable autonomy gains.</li>
+        <li>
+          Pluggable architecture that demoed clean hand-offs between agents and
+          human reviewers.
+        </li>
+        <li>
+          Visually rich walkthroughs captured directly inside the Win98 desktop
+          metaphor they see on this portfolio.
+        </li>
+      </ul>
+    </section>
+
+    <script>
+      const steps = document.querySelectorAll(".timeline-step");
+      steps.forEach((step) => {
+        const button = step.querySelector("button");
+        button.addEventListener("click", () => {
+          const isOpen = step.getAttribute("data-open") === "true";
+          step.setAttribute("data-open", String(!isOpen));
+          button.setAttribute("aria-expanded", String(!isOpen));
+        });
+      });
+    </script>
+  </body>
+</html>

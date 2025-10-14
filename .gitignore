@@ -65,4 +65,4 @@ build/
 !icons/**
 !sounds/**
 !fonts/**
-
+!vendor/**

@@ -1,7 +1,9 @@
 {
+  "scripts": {
+    "build": "node tools/build.js"
+  },
   "dependencies": {
     "98.css": "^0.1.21",
-    "jquery": "^3.7.1",
     "os-gui": "^0.7.3"
   }
 }

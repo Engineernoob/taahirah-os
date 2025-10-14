@@ -3,54 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <title>Projects</title>
-    <link rel="stylesheet" href="https://unpkg.com/98.css" />
-    <style>
-      body {
-        margin: 0;
-        padding: 12px;
-        font-family: "MS Sans Serif", "Tahoma", sans-serif;
-        font-size: 13px;
-        background: transparent; /* let parent window color show */
-        line-height: 1.4;
-      }
-
-      h4 {
-        margin-top: 0;
-        font-size: 16px;
-      }
-
-      ul {
-        margin: 0;
-        padding-left: 18px;
-      }
-
-      li {
-        margin-bottom: 8px;
-      }
-
-      a {
-        color: #000;
-        text-decoration: none;
-      }
-
-      a:hover {
-        text-decoration: underline;
-      }
-
-      /* Ensure proper text wrapping for long descriptions */
-      a br {
-        line-height: 1.4;
-      }
-
-      .actions {
-        margin-top: 16px;
-        text-align: center;
-      }
-    </style>
+    <link rel="stylesheet" href="vendor/98.css" />
+    <link rel="stylesheet" href="window-content.css" />
   </head>
-  <body>
+  <body class="window-content">
     <h4>📂 My Projects</h4>
-    <ul>
+    <ul class="project-list">
       <li>
         <a href="https://github.com/Engineernoob/cue" target="_blank">
           Cue – AI-powered Interview Assistant
@@ -74,7 +32,7 @@
       </li>
     </ul>
 
-    <div class="actions">
+    <div class="content-actions">
       <button
         class="default"
         onclick="window.parent.postMessage('closeWindow','*')"

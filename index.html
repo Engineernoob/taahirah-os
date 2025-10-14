@@ -5,19 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Portfolio</title>
 
-    <!-- 98.css (UI look) -->
-    <link rel="stylesheet" href="https://unpkg.com/98.css" />
-
-    <!-- os-gui (Windows 98 window system) -->
-    <link rel="stylesheet" href="https://unpkg.com/os-gui/dist/layout.css" />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/os-gui/dist/windows-98.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://unpkg.com/os-gui/dist/windows-default.css"
-    />
+    <!-- Local copies of 98.css + os-gui -->
+    <link rel="stylesheet" href="vendor/98.css" />
+    <link rel="stylesheet" href="vendor/os-gui-layout.css" />
+    <link rel="stylesheet" href="vendor/os-gui-windows-98.css" />
+    <link rel="stylesheet" href="vendor/os-gui-windows-default.css" />
 
     <!-- Custom styles -->
     <link rel="stylesheet" href="style.css" />
@@ -33,51 +25,82 @@
   <body>
     <!-- Desktop -->
     <div id="desktop">
-      <div class="desktop-icon" onclick="openWindow('about')">
-        <img src="icons/about-me.png" alt="About" />
-        <span>About Me</span>
-      </div>
-      <div class="desktop-icon" onclick="openWindow('projects')">
-        <img src="icons/projects.png" alt="Projects" />
-        <span>Projects</span>
-      </div>
-      <div class="desktop-icon" onclick="openWindow('contact')">
-        <img src="icons/contact.png" alt="Contact" />
-        <span>Contact</span>
-      </div>
-      <div
-        class="desktop-icon pinball-icon"
-        onclick="openWindow('pinball')"
-        id="pinball-desktop-icon"
+      <button
+        type="button"
+        class="desktop-icon"
+        data-window="about"
+        aria-label="Open About Me window"
       >
-        <img src="icons/computer-icon.png" alt="Pinball" />
+        <img src="icons/about-me.png" alt="" />
+        <span>About Me</span>
+      </button>
+      <button
+        type="button"
+        class="desktop-icon"
+        data-window="projects"
+        aria-label="Open Projects window"
+      >
+        <img src="icons/projects.png" alt="" />
+        <span>Projects</span>
+      </button>
+      <button
+        type="button"
+        class="desktop-icon"
+        data-window="case-study"
+        aria-label="Open case study window"
+      >
+        <img src="icons/win-98-logo.png" alt="" />
+        <span>Case Study</span>
+      </button>
+      <button
+        type="button"
+        class="desktop-icon"
+        data-window="contact"
+        aria-label="Open Contact window"
+      >
+        <img src="icons/contact.png" alt="" />
+        <span>Contact</span>
+      </button>
+      <button
+        type="button"
+        class="desktop-icon"
+        data-window="skills-radar"
+        aria-label="Open skills radar window"
+      >
+        <img src="icons/computer-icon.png" alt="" />
+        <span>Skills Radar</span>
+      </button>
+      <button
+        type="button"
+        class="desktop-icon pinball-icon"
+        data-window="pinball"
+        id="pinball-desktop-icon"
+        aria-label="Open Pinball game window"
+      >
+        <img src="icons/computer-icon.png" alt="" />
         <span>Pinball Game</span>
-      </div>
+      </button>
     </div>
 
     <!-- Taskbar -->
     <div id="taskbar">
-      <div class="start-btn" onclick="toggleStartMenu()">
-        <img src="icons/start-button.png" alt="Start" />
-      </div>
+      <button
+        type="button"
+        id="start-button"
+        class="start-btn"
+        aria-haspopup="true"
+        aria-expanded="false"
+      >
+        <img src="icons/start-button.png" alt="" />
+        <span>Start</span>
+      </button>
       <div id="taskbar-buttons"></div>
       <div class="taskbar-space"></div>
       <div class="taskbar-clock" id="clock"></div>
     </div>
 
     <!-- Start Menu -->
-    <div
-      id="start-menu"
-      class="window"
-      style="
-        display: none;
-        position: fixed;
-        bottom: 40px;
-        left: 5px;
-        width: 220px;
-        z-index: 1500;
-      "
-    >
+    <div id="start-menu" class="window start-menu" hidden>
       <div class="title-bar">
         <div class="title-bar-text">Start Menu</div>
       </div>
@@ -94,6 +117,11 @@
             >
           </li>
           <li>
+            <a href="#" onclick="openWindow('case-study')"
+              ><img src="icons/win-98-logo.png" /> Case Study</a
+            >
+          </li>
+          <li>
             <a href="#" onclick="openWindow('contact')"
               ><img src="icons/contact.png" /> Contact</a
             >
@@ -103,14 +131,16 @@
               ><img src="icons/resume.png" /> Resume</a
             >
           </li>
+          <li>
+            <a href="#" onclick="openWindow('skills-radar')"
+              ><img src="icons/computer-icon.png" /> Skills Radar</a
+            >
+          </li>
         </ul>
       </div>
     </div>
 
     <!-- Scripts -->
-    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-    <script src="https://unpkg.com/os-gui/dist/MenuBar.js"></script>
-    <script src="https://unpkg.com/os-gui/dist/$Window.js"></script>
     <script src="script.js"></script>
   </body>
 </html>

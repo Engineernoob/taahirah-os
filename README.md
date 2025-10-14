@@ -39,7 +39,11 @@ taahirah-os/
 Run Locally
 git clone https://github.com/Engineernoob/taahirah-os.git
 cd taahirah-os
+npm install
 open index.html   # or use a live server
+
+Build & Deploy
+npm run build     # outputs a dist/ folder with minified assets
 
 GitHub Pages
 

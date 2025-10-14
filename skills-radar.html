@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Skills Radar</title>
+    <link rel="stylesheet" href="vendor/98.css" />
+    <link rel="stylesheet" href="window-content.css" />
+  </head>
+  <body class="window-content">
+    <h2>Tech Stack Navigator</h2>
+    <p>
+      Explore the disciplines I invest in the most. Hover or tap each slice to
+      reveal recent tooling choices and jump straight into supporting repos.
+    </p>
+
+    <div class="radar-layout">
+      <section class="radar-stage" aria-label="Skills radar chart">
+        <canvas id="skills-radar" width="360" height="360"></canvas>
+      </section>
+      <section class="radar-legend" id="radar-legend" aria-label="Skill legend"></section>
+    </div>
+
+    <div class="radar-detail" id="radar-detail" aria-live="polite"></div>
+
+    <script>
+      const data = [
+        {
+          label: "AI Agents",
+          value: 92,
+          link: "https://github.com/Engineernoob/FERN",
+          tools: ["MCP", "LangGraph", "Redis Streams"],
+          description:
+            "Production-grade planners and reviewers that self-heal workflows and surface governance context in real time.",
+        },
+        {
+          label: "Systems Design",
+          value: 88,
+          link: "https://github.com/Engineernoob/cue",
+          tools: ["Temporal", "gRPC", "OpenTelemetry"],
+          description:
+            "Design docs and event-driven topologies that keep async products observable and resilient under load spikes.",
+        },
+        {
+          label: "Frontend Experiments",
+          value: 75,
+          link: "https://engineernoob.github.io/taahirah-os",
+          tools: ["Canvas", "Web Components", "Accessibility audits"],
+          description:
+            "Delightful OS-inspired UX, performance budgets under 100KB, and tooling that pairs nostalgic aesthetics with modern DX.",
+        },
+        {
+          label: "Developer Experience",
+          value: 83,
+          link: "https://github.com/Engineernoob/Quantum-Lottery-Predictor",
+          tools: ["Nx", "Taskfile", "Storybook"],
+          description:
+            "Testing harnesses, operable pipelines, and shared patterns that unblock teammates shipping across stacks.",
+        },
+        {
+          label: "Security & Privacy",
+          value: 68,
+          link: "https://github.com/Engineernoob/fernbot",
+          tools: ["OPA", "Zed Attack", "Secret scanning"],
+          description:
+            "Defense-in-depth reviews, data minimisation strategies, and automated guardrails for secrets & PII handling.",
+        },
+      ];
+
+      const canvas = document.getElementById("skills-radar");
+      const ctx = canvas.getContext("2d");
+      const legend = document.getElementById("radar-legend");
+      const detail = document.getElementById("radar-detail");
+      let activeIndex = 0;
+
+      function polarToCartesian(angle, radius) {
+        return {
+          x: canvas.width / 2 + radius * Math.cos(angle),
+          y: canvas.height / 2 + radius * Math.sin(angle),
+        };
+      }
+
+      function drawRadar() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        const center = { x: canvas.width / 2, y: canvas.height / 2 };
+        const maxRadius = Math.min(canvas.width, canvas.height) / 2 - 24;
+        const rings = 4;
+        const axisCount = data.length;
+
+        ctx.save();
+        ctx.translate(0.5, 0.5);
+
+        // Rings
+        for (let i = 1; i <= rings; i += 1) {
+          ctx.beginPath();
+          ctx.strokeStyle = "rgba(0, 0, 0, 0.15)";
+          const radius = (maxRadius / rings) * i;
+          ctx.arc(center.x, center.y, radius, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+
+        // Axes and labels
+        data.forEach((entry, index) => {
+          const angle = (Math.PI * 2 * index) / axisCount - Math.PI / 2;
+          const point = polarToCartesian(angle, maxRadius);
+
+          ctx.beginPath();
+          ctx.moveTo(center.x, center.y);
+          ctx.lineTo(point.x, point.y);
+          ctx.strokeStyle = "rgba(0, 0, 0, 0.25)";
+          ctx.stroke();
+
+          const labelPoint = polarToCartesian(angle, maxRadius + 14);
+          ctx.fillStyle = "#000";
+          ctx.font = "12px 'MS Sans Serif', sans-serif";
+          ctx.textAlign = "center";
+          ctx.textBaseline = "middle";
+          ctx.fillText(entry.label, labelPoint.x, labelPoint.y);
+        });
+
+        // Filled shape
+        ctx.beginPath();
+        data.forEach((entry, index) => {
+          const normalized = entry.value / 100;
+          const angle = (Math.PI * 2 * index) / axisCount - Math.PI / 2;
+          const point = polarToCartesian(angle, maxRadius * normalized);
+          if (index === 0) {
+            ctx.moveTo(point.x, point.y);
+          } else {
+            ctx.lineTo(point.x, point.y);
+          }
+        });
+        ctx.closePath();
+        ctx.fillStyle = "rgba(0, 128, 255, 0.25)";
+        ctx.strokeStyle = "rgba(0, 128, 255, 0.8)";
+        ctx.lineWidth = 2;
+        ctx.fill();
+        ctx.stroke();
+
+        // Highlight active slice
+        const activeEntry = data[activeIndex];
+        const highlightAngle =
+          (Math.PI * 2 * activeIndex) / axisCount - Math.PI / 2;
+        const highlightPoint = polarToCartesian(
+          highlightAngle,
+          (maxRadius * activeEntry.value) / 100
+        );
+
+        ctx.beginPath();
+        ctx.fillStyle = "rgba(0, 128, 128, 0.2)";
+        ctx.moveTo(center.x, center.y);
+        ctx.lineTo(
+          ...Object.values(
+            polarToCartesian(highlightAngle - (Math.PI * 2) / axisCount / 2, maxRadius)
+          )
+        );
+        ctx.lineTo(highlightPoint.x, highlightPoint.y);
+        ctx.lineTo(
+          ...Object.values(
+            polarToCartesian(
+              highlightAngle + (Math.PI * 2) / axisCount / 2,
+              maxRadius
+            )
+          )
+        );
+        ctx.closePath();
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(highlightPoint.x, highlightPoint.y, 6, 0, Math.PI * 2);
+        ctx.fillStyle = "#004080";
+        ctx.strokeStyle = "#ffffff";
+        ctx.lineWidth = 2;
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.restore();
+      }
+
+      function buildLegend() {
+        legend.innerHTML = "";
+        data.forEach((entry, index) => {
+          const card = document.createElement("article");
+          card.className = "radar-entry";
+          card.dataset.index = index;
+          card.dataset.active = String(index === activeIndex);
+
+          const heading = document.createElement("strong");
+          heading.textContent = entry.label;
+          const badge = document.createElement("span");
+          badge.textContent = `${entry.value}/100`;
+          heading.appendChild(badge);
+
+          const toolList = document.createElement("div");
+          toolList.textContent = entry.tools.join(" • ");
+
+          const repo = document.createElement("a");
+          repo.href = entry.link;
+          repo.target = "_blank";
+          repo.rel = "noopener";
+          repo.textContent = "View supporting work";
+
+          card.appendChild(heading);
+          card.appendChild(toolList);
+          card.appendChild(repo);
+
+          const activate = () => setActive(index);
+          card.addEventListener("mouseenter", activate);
+          card.addEventListener("focus", activate);
+          card.addEventListener("click", activate);
+
+          card.tabIndex = 0;
+          legend.appendChild(card);
+        });
+      }
+
+      function setActive(index) {
+        activeIndex = index;
+        document
+          .querySelectorAll(".radar-entry")
+          .forEach((node, idx) => node.dataset.active = String(idx === index));
+        updateDetail();
+        drawRadar();
+      }
+
+      function updateDetail() {
+        const entry = data[activeIndex];
+        detail.innerHTML = `
+          <strong>${entry.label}</strong>
+          <p>${entry.description}</p>
+          <p><code>${entry.tools.join(" | ")}</code></p>
+        `;
+      }
+
+      buildLegend();
+      updateDetail();
+      drawRadar();
+    </script>
+  </body>
+</html>
