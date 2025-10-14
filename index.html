@@ -56,7 +56,7 @@
         data-window="pinball"
         title="Pinball Game"
       >
-        <img src="icons/computer-icon.png" alt="Pinball Game Icon" />
+        <img src="icons/game.png" alt="Pinball Game Icon" />
         <span>Pinball Game</span>
       </div>
 
@@ -109,45 +109,45 @@
       <div class="window-body">
         <ul class="start-menu-list">
           <li>
-            <a href="#" onclick="openWindow('about')"
-              ><img src="icons/about-me.png" /> About</a
-            >
+            <button data-window="about">
+              <img src="icons/about-me.png" alt="" /> About
+            </button>
           </li>
           <li>
-            <a href="#" onclick="openWindow('projects')"
-              ><img src="icons/projects.png" /> Projects</a
-            >
+            <button data-window="projects">
+              <img src="icons/projects.png" alt="" /> Projects
+            </button>
           </li>
           <li>
-            <a href="#" onclick="openWindow('case-study')"
-              ><img src="icons/win-98-logo.png" /> Case Study</a
-            >
+            <button data-window="case-study">
+              <img src="icons/win-98-logo.png" alt="" /> Case Study
+            </button>
           </li>
           <li>
-            <a href="#" onclick="openWindow('contact')"
-              ><img src="icons/contact.png" /> Contact</a
-            >
+            <button data-window="contact">
+              <img src="icons/contact.png" alt="" /> Contact
+            </button>
           </li>
           <li>
-            <a href="#" onclick="openWindow('skills-radar')"
-              ><img src="icons/computer-icon.png" /> Skills Radar</a
-            >
+            <button data-window="skills-radar">
+              <img src="icons/skills.png" alt="" /> Skills Radar
+            </button>
           </li>
           <li>
-            <a href="#" onclick="openWindow('pinball')"
-              ><img src="icons/computer-icon.png" /> Pinball Game</a
-            >
+            <button data-window="pinball">
+              <img src="icons/game.png" alt="" /> Pinball Game
+            </button>
           </li>
           <li>
-            <a href="#" onclick="openWindow('ada')"
-              ><img src="icons/ada-icon.png" /> Ada Assistant</a
-            >
+            <button data-window="ada">
+              <img src="icons/ada-icon.png" alt="" /> Ada Assistant
+            </button>
           </li>
           <hr />
           <li>
-            <a href="shutdown.html"
-              ><img src="icons/shutdown.png" /> Shut Down</a
-            >
+            <button data-action="shutdown">
+              <img src="icons/shutdown.png" alt="" /> Shut Down
+            </button>
           </li>
         </ul>
       </div>
@@ -159,30 +159,63 @@
     <!-- Boot + Ada Hooks -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        // Boot screen on first visit
+        // --- Boot screen (first visit only)
         if (!sessionStorage.getItem("booted")) {
           sessionStorage.setItem("booted", "true");
-          window.location.href = "boot.html";
+          window.location.replace("boot.html");
+          return; // Stop further loading so no flashes
         }
 
-        // Ada AI Assistant sound cue
-        const ada = document.getElementById("ada-icon");
-        if (ada) {
-          ada.addEventListener("click", () => {
+        // --- Ada AI Assistant setup
+        const adaIcon = document.getElementById("ada-icon");
+        if (adaIcon) {
+          adaIcon.addEventListener("click", () => {
+            // Open Ada window
             openWindow("ada");
-            const audio = new Audio("sounds/ada-boot.mp3");
-            audio.volume = 0.7;
-            audio.play().catch(() => {});
+
+            // Play Ada boot tone (only once per session)
+            if (!sessionStorage.getItem("adaPlayed")) {
+              const audio = new Audio("sounds/ada-boot.mp3");
+              audio.volume = 0.7;
+              audio.play().catch(() => {});
+              sessionStorage.setItem("adaPlayed", "true");
+            }
+          });
+        }
+
+        // --- Shutdown handling
+        const shutdownLink = document.querySelector("[data-action='shutdown']");
+        if (shutdownLink) {
+          shutdownLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            playShutdownAndExit();
           });
         }
       });
 
-      // Shutdown sound before leaving
-      window.addEventListener("beforeunload", () => {
-        const shutdown = new Audio("sounds/winxpshutdown.mp3");
-        shutdown.volume = 0.6;
-        shutdown.play().catch(() => {});
+      // --- Shutdown sound & redirect
+      function playShutdownAndExit() {
+        const shutdownAudio = new Audio("sounds/winxpshutdown.mp3");
+        shutdownAudio.volume = 0.6;
+
+        // Wait for sound before redirecting
+        shutdownAudio.play().catch(() => {
+          window.location.href = "shutdown.html";
+        });
+
+        shutdownAudio.addEventListener("ended", () => {
+          window.location.href = "shutdown.html";
+        });
+      }
+
+      // --- Fallback before tab close (for non-click exits)
+      window.addEventListener("beforeunload", (e) => {
+        const shutdownAudio = new Audio("sounds/winxpshutdown.mp3");
+        shutdownAudio.volume = 0.4;
+        shutdownAudio.play().catch(() => {});
       });
+    </script>
+
     </script>
   </body>
 </html>
