@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Ada Assistant</title>
+    <link rel="stylesheet" href="vendor/98.css" />
+    <link rel="stylesheet" href="window-content.css" />
+    <style>
+      body {
+        font-family: "MS Sans Serif", sans-serif;
+        background: #c0c0c0;
+        margin: 0;
+        padding: 10px;
+      }
+
+      h3 {
+        margin: 0 0 8px 0;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      h3 img {
+        width: 20px;
+        height: 20px;
+      }
+
+      #chat-box {
+        background: white;
+        border: inset 2px #fff;
+        height: 300px;
+        overflow-y: auto;
+        padding: 6px;
+        font-size: 13px;
+        line-height: 1.4;
+      }
+
+      #chat-box p {
+        margin: 4px 0;
+      }
+
+      #chat-box .user {
+        color: #003366;
+      }
+
+      #chat-box .ada {
+        color: #006400;
+      }
+
+      form {
+        display: flex;
+        margin-top: 8px;
+      }
+
+      input[type="text"] {
+        flex: 1;
+        margin-right: 4px;
+      }
+
+      button {
+        min-width: 70px;
+      }
+
+      .typing {
+        font-style: italic;
+        color: #666;
+      }
+    </style>
+  </head>
+  <body class="window-content">
+    <h3>
+      <img src="icons/ai-chip.png" alt="AI Icon" />
+      Ada Assistant
+    </h3>
+
+    <div id="chat-box">
+      <p class="ada">
+        <b>Ada:</b> Hello Taahirah 👋 — Ada is online and synced with your local
+        model!
+      </p>
+    </div>
+
+    <form id="chat-form" autocomplete="off">
+      <input
+        type="text"
+        id="user-input"
+        placeholder="Ask me anything..."
+        required
+      />
+      <button type="submit" class="default">Send</button>
+    </form>
+
+    <script>
+      const chatBox = document.getElementById("chat-box");
+      const form = document.getElementById("chat-form");
+      const input = document.getElementById("user-input");
+
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const message = input.value.trim();
+        if (!message) return;
+
+        addMessage("user", message);
+        input.value = "";
+
+        // Create typing placeholder
+        const typing = document.createElement("p");
+        typing.className = "typing";
+        typing.textContent = "Ada is thinking...";
+        chatBox.appendChild(typing);
+        chatBox.scrollTop = chatBox.scrollHeight;
+
+        try {
+          const reply = await queryOllama(message);
+          typing.remove();
+          addMessage("ada", reply || "(no response)");
+        } catch (err) {
+          typing.remove();
+          addMessage(
+            "ada",
+            "⚠️ Could not reach local model. Make sure Ollama is running on port 11434.",
+          );
+          console.error(err);
+        }
+      });
+
+      function addMessage(sender, text) {
+        const p = document.createElement("p");
+        p.className = sender;
+        p.innerHTML =
+          sender === "user" ? `<b>You:</b> ${text}` : `<b>Ada:</b> ${text}`;
+        chatBox.appendChild(p);
+        chatBox.scrollTop = chatBox.scrollHeight;
+      }
+
+      async function queryOllama(prompt) {
+        const response = await fetch("http://localhost:11434/api/chat", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            model: "gemma:3-1b",
+            stream: false,
+            messages: [
+              {
+                role: "system",
+                content:
+                  "You are Ada, retro Windows-style AI assistant inside TaahirahOS portfolio. Speak casually, helpfully, and keep answers concise and friendly.",
+              },
+              { role: "user", content: prompt },
+            ],
+          }),
+        });
+
+        if (!response.ok) throw new Error("Ollama request failed");
+        const data = await response.json();
+        return data?.message?.content || "No reply";
+      }
+    </script>
+  </body>
+</html>

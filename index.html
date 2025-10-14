@@ -159,7 +159,6 @@
     <!-- Boot + Ada Hooks -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        // --- Boot screen (first visit only)
         // Only trigger boot if system isn't already booted or coming from shutdown
         if (!sessionStorage.getItem("booted") && !sessionStorage.getItem("restarting")) {
           sessionStorage.setItem("booted", "true");
