@@ -399,13 +399,23 @@ function closeWindowById(id) {
 }
 
 function handleWindowMessage(event) {
-  if (event.data !== "closeWindow") return;
-  for (const [id, entry] of windowRegistry.entries()) {
-    const iframe = entry.win.querySelector("iframe");
-    if (iframe && iframe.contentWindow === event.source) {
-      closeWindowById(id);
-      break;
+  const data = event.data;
+
+  if (data === "closeWindow") {
+    // Close the window that sent this message
+    for (const [id, entry] of windowRegistry.entries()) {
+      const iframe = entry.win.querySelector("iframe");
+      if (iframe && iframe.contentWindow === event.source) {
+        closeWindowById(id);
+        break;
+      }
     }
+    return;
+  }
+
+  // Handle opening project windows via postMessage bridge
+  if (data && data.action === "openProject" && data.project) {
+    openWindow(data.project);
   }
 }
 

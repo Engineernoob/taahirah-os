@@ -42,35 +42,33 @@
     </style>
   </head>
   <body class="window-content">
-    <h4>📂 My Projects</h4>
+    <h4>Projects</h4>
     <ul class="project-list">
       <li>
-        <button onclick="window.parent.openWindow('cue')">
-          Cue – AI-powered Interview Assistant
-        </button>
+        <button data-project="cue">Cue – AI-powered Interview Assistant</button>
       </li>
       <li>
-        <button onclick="window.parent.openWindow('fern')">
+        <button data-project="fern">
           FERN – Autonomous Full-stack Reinforcement Agent
         </button>
       </li>
       <li>
-        <button onclick="window.parent.openWindow('villacard')">
+        <button data-project="villacard">
           VillaCard – AI Concierge &amp; Property Dashboard
         </button>
       </li>
       <li>
-        <button onclick="window.parent.openWindow('cortex')">
+        <button data-project="cortex">
           Cortex – Local RAG Knowledge Workspace
         </button>
       </li>
       <li>
-        <button onclick="window.parent.openWindow('aegis')">
+        <button data-project="aegis">
           Aegis – Private-Sector Intelligence Platform
         </button>
       </li>
       <li>
-        <button onclick="window.parent.openWindow('quantum')">
+        <button data-project="quantum">
           Quantum Lottery Predictor – Quantum Randomness Experiments
         </button>
       </li>
@@ -84,5 +82,15 @@
         OK
       </button>
     </div>
+
+    <script>
+      // Relay project clicks safely to the parent window
+      document.querySelectorAll("[data-project]").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const project = btn.dataset.project;
+          window.parent.postMessage({ action: "openProject", project }, "*");
+        });
+      });
+    </script>
   </body>
 </html>
