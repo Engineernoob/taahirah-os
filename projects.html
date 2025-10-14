@@ -1,34 +1,78 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <title>Projects</title>
-    <link rel="stylesheet" href="vendor/98.css" />
+    <link rel="stylesheet" href="https://unpkg.com/98.css" />
     <link rel="stylesheet" href="window-content.css" />
+    <style>
+      body {
+        font-family: "MS Sans Serif", sans-serif;
+        background: #c0c0c0;
+        margin: 0;
+        padding: 16px;
+      }
+      h4 {
+        margin-top: 0;
+      }
+      .project-list {
+        list-style: none;
+        padding-left: 0;
+      }
+      .project-list li {
+        margin-bottom: 14px;
+      }
+      .project-list button {
+        background: none;
+        border: none;
+        font: inherit;
+        color: black;
+        text-align: left;
+        cursor: pointer;
+        line-height: 1.4;
+      }
+      .project-list button:hover {
+        text-decoration: underline;
+        color: #004080;
+      }
+      .content-actions {
+        margin-top: 20px;
+        text-align: right;
+      }
+    </style>
   </head>
   <body class="window-content">
     <h4>📂 My Projects</h4>
     <ul class="project-list">
       <li>
-        <a href="https://github.com/Engineernoob/cue" target="_blank">
+        <button onclick="window.parent.openWindow('cue')">
           Cue – AI-powered Interview Assistant
-        </a>
+        </button>
       </li>
       <li>
-        <a
-          href="https://github.com/Engineernoob/Quantum-Lottery-Predictor"
-          target="_blank"
-        >
-          Quantum Lottery Predictor – Quantum-inspired randomness experiments
-        </a>
+        <button onclick="window.parent.openWindow('fern')">
+          FERN – Autonomous Full-stack Reinforcement Agent
+        </button>
       </li>
-
       <li>
-        <a href="https://github.com/Engineernoob/FERN" target="_blank">
-          FERN – Full-stack Engineering Reinforcement Navigator<br>
-          An autonomous, MCP-powered, reinforcement-learning coding agent that<br>
-          plans, builds, reviews, and improves software projects while you sleep.
-        </a>
+        <button onclick="window.parent.openWindow('villacard')">
+          VillaCard – AI Concierge &amp; Property Dashboard
+        </button>
+      </li>
+      <li>
+        <button onclick="window.parent.openWindow('cortex')">
+          Cortex – Local RAG Knowledge Workspace
+        </button>
+      </li>
+      <li>
+        <button onclick="window.parent.openWindow('aegis')">
+          Aegis – Private-Sector Intelligence Platform
+        </button>
+      </li>
+      <li>
+        <button onclick="window.parent.openWindow('quantum')">
+          Quantum Lottery Predictor – Quantum Randomness Experiments
+        </button>
       </li>
     </ul>
 

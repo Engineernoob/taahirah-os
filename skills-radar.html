@@ -1,23 +1,78 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Skills Radar</title>
-    <link rel="stylesheet" href="vendor/98.css" />
-    <link rel="stylesheet" href="window-content.css" />
+    <title>Skills Radar – Taahirah OS</title>
+    <link rel="stylesheet" href="https://unpkg.com/98.css" />
+    <style>
+      body {
+        font-family: "MS Sans Serif", sans-serif;
+        background: #c0c0c0;
+        margin: 0;
+        padding: 16px;
+      }
+      h2 {
+        margin-top: 0;
+      }
+      .radar-layout {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        align-items: flex-start;
+      }
+      canvas {
+        background: #f8f8f8;
+        border: 2px inset #808080;
+        border-radius: 4px;
+      }
+      .radar-legend {
+        flex: 1;
+        min-width: 220px;
+      }
+      .radar-entry {
+        background: #fff;
+        border: 2px outset #808080;
+        padding: 6px;
+        margin-bottom: 8px;
+        cursor: pointer;
+      }
+      .radar-entry[data-active="true"] {
+        background: #e0f0ff;
+        border: 2px inset #004080;
+      }
+      .radar-entry strong {
+        display: flex;
+        justify-content: space-between;
+      }
+      .radar-entry a {
+        display: inline-block;
+        margin-top: 4px;
+        font-size: 12px;
+      }
+      .radar-detail {
+        margin-top: 10px;
+        background: #fff;
+        border: 2px inset #808080;
+        padding: 8px;
+      }
+    </style>
   </head>
   <body class="window-content">
     <h2>Tech Stack Navigator</h2>
     <p>
-      Explore the disciplines I invest in the most. Hover or tap each slice to
-      reveal recent tooling choices and jump straight into supporting repos.
+      Explore my strongest disciplines. Hover or tap each slice to see tools,
+      frameworks, and linked projects.
     </p>
 
     <div class="radar-layout">
       <section class="radar-stage" aria-label="Skills radar chart">
         <canvas id="skills-radar" width="360" height="360"></canvas>
       </section>
-      <section class="radar-legend" id="radar-legend" aria-label="Skill legend"></section>
+      <section
+        class="radar-legend"
+        id="radar-legend"
+        aria-label="Skill legend"
+      ></section>
     </div>
 
     <div class="radar-detail" id="radar-detail" aria-live="polite"></div>
@@ -25,44 +80,44 @@
     <script>
       const data = [
         {
-          label: "AI Agents",
-          value: 92,
+          label: "AI & Agents",
+          value: 95,
           link: "https://github.com/Engineernoob/FERN",
-          tools: ["MCP", "LangGraph", "Redis Streams"],
+          tools: ["Ollama", "LangGraph", "CrewAI", "n8n"],
           description:
-            "Production-grade planners and reviewers that self-heal workflows and surface governance context in real time.",
+            "Local-first AI systems, reinforcement loops, and multi-agent frameworks (FERN, Kairo, Cue).",
         },
         {
-          label: "Systems Design",
-          value: 88,
-          link: "https://github.com/Engineernoob/cue",
-          tools: ["Temporal", "gRPC", "OpenTelemetry"],
-          description:
-            "Design docs and event-driven topologies that keep async products observable and resilient under load spikes.",
-        },
-        {
-          label: "Frontend Experiments",
-          value: 75,
+          label: "Full-Stack Engineering",
+          value: 90,
           link: "https://engineernoob.github.io/taahirah-os",
-          tools: ["Canvas", "Web Components", "Accessibility audits"],
+          tools: ["Next.js 15", "TypeScript", "Supabase", "Docker"],
           description:
-            "Delightful OS-inspired UX, performance budgets under 100KB, and tooling that pairs nostalgic aesthetics with modern DX.",
+            "Building end-to-end apps like VillaCard, Cortex, and Taahirah-OS with clean architecture & modern stacks.",
         },
         {
-          label: "Developer Experience",
-          value: 83,
-          link: "https://github.com/Engineernoob/Quantum-Lottery-Predictor",
-          tools: ["Nx", "Taskfile", "Storybook"],
+          label: "Systems & Infrastructure",
+          value: 85,
+          link: "https://github.com/Engineernoob/Stratus",
+          tools: ["Go", "Redis", "PostgreSQL", "Kestra"],
           description:
-            "Testing harnesses, operable pipelines, and shared patterns that unblock teammates shipping across stacks.",
+            "Distributed workflows, event pipelines, and local-first backends with DuckDB and Kestra flows.",
         },
         {
           label: "Security & Privacy",
-          value: 68,
-          link: "https://github.com/Engineernoob/fernbot",
-          tools: ["OPA", "Zed Attack", "Secret scanning"],
+          value: 80,
+          link: "https://github.com/Engineernoob/Aegis",
+          tools: ["Zero Trust", "Encryption", "OPA", "Firewalls"],
           description:
-            "Defense-in-depth reviews, data minimisation strategies, and automated guardrails for secrets & PII handling.",
+            "Privacy-centric OS designs (UmbraOS) and Palantir-style analytics with strong data-governance boundaries.",
+        },
+        {
+          label: "Creative UX & Design",
+          value: 77,
+          link: "https://github.com/Engineernoob/Vesta",
+          tools: ["Tailwind", "Framer Motion", "Radix UI", "Figma"],
+          description:
+            "Retro-modern UX like Win95 desktops, cinematic intros, and interactive dashboards (VillaCard, Vesta).",
         },
       ];
 
@@ -89,8 +144,7 @@
         ctx.save();
         ctx.translate(0.5, 0.5);
 
-        // Rings
-        for (let i = 1; i <= rings; i += 1) {
+        for (let i = 1; i <= rings; i++) {
           ctx.beginPath();
           ctx.strokeStyle = "rgba(0, 0, 0, 0.15)";
           const radius = (maxRadius / rings) * i;
@@ -98,7 +152,6 @@
           ctx.stroke();
         }
 
-        // Axes and labels
         data.forEach((entry, index) => {
           const angle = (Math.PI * 2 * index) / axisCount - Math.PI / 2;
           const point = polarToCartesian(angle, maxRadius);
@@ -117,17 +170,14 @@
           ctx.fillText(entry.label, labelPoint.x, labelPoint.y);
         });
 
-        // Filled shape
         ctx.beginPath();
         data.forEach((entry, index) => {
           const normalized = entry.value / 100;
           const angle = (Math.PI * 2 * index) / axisCount - Math.PI / 2;
           const point = polarToCartesian(angle, maxRadius * normalized);
-          if (index === 0) {
-            ctx.moveTo(point.x, point.y);
-          } else {
-            ctx.lineTo(point.x, point.y);
-          }
+          index === 0
+            ? ctx.moveTo(point.x, point.y)
+            : ctx.lineTo(point.x, point.y);
         });
         ctx.closePath();
         ctx.fillStyle = "rgba(0, 128, 255, 0.25)";
@@ -136,34 +186,13 @@
         ctx.fill();
         ctx.stroke();
 
-        // Highlight active slice
         const activeEntry = data[activeIndex];
         const highlightAngle =
           (Math.PI * 2 * activeIndex) / axisCount - Math.PI / 2;
         const highlightPoint = polarToCartesian(
           highlightAngle,
-          (maxRadius * activeEntry.value) / 100
+          (maxRadius * activeEntry.value) / 100,
         );
-
-        ctx.beginPath();
-        ctx.fillStyle = "rgba(0, 128, 128, 0.2)";
-        ctx.moveTo(center.x, center.y);
-        ctx.lineTo(
-          ...Object.values(
-            polarToCartesian(highlightAngle - (Math.PI * 2) / axisCount / 2, maxRadius)
-          )
-        );
-        ctx.lineTo(highlightPoint.x, highlightPoint.y);
-        ctx.lineTo(
-          ...Object.values(
-            polarToCartesian(
-              highlightAngle + (Math.PI * 2) / axisCount / 2,
-              maxRadius
-            )
-          )
-        );
-        ctx.closePath();
-        ctx.fill();
 
         ctx.beginPath();
         ctx.arc(highlightPoint.x, highlightPoint.y, 6, 0, Math.PI * 2);
@@ -207,7 +236,6 @@
           card.addEventListener("mouseenter", activate);
           card.addEventListener("focus", activate);
           card.addEventListener("click", activate);
-
           card.tabIndex = 0;
           legend.appendChild(card);
         });
@@ -217,7 +245,9 @@
         activeIndex = index;
         document
           .querySelectorAll(".radar-entry")
-          .forEach((node, idx) => node.dataset.active = String(idx === index));
+          .forEach(
+            (node, idx) => (node.dataset.active = String(idx === index)),
+          );
         updateDetail();
         drawRadar();
       }

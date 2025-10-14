@@ -1,44 +1,112 @@
-<!-- about-me.html -->
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>About Me</title>
+    <title>About Me · Taahirah</title>
 
     <!-- Windows 98 CSS -->
-    <link rel="stylesheet" href="vendor/98.css" />
+    <link rel="stylesheet" href="https://unpkg.com/98.css" />
     <link rel="stylesheet" href="window-content.css" />
+
+    <style>
+      body {
+        font-family: "MS Sans Serif", sans-serif;
+        background: #c0c0c0;
+        margin: 0;
+        padding: 16px;
+        color: #000;
+      }
+
+      h2 {
+        margin-top: 0;
+        color: #000080;
+      }
+
+      p {
+        margin-bottom: 10px;
+        line-height: 1.4;
+      }
+
+      fieldset {
+        margin-top: 16px;
+        border: 2px inset #808080;
+        background: #e0e0e0;
+        padding: 8px 12px;
+      }
+
+      legend {
+        background: #c0c0c0;
+        border: 2px outset #808080;
+        padding: 2px 8px;
+        font-weight: bold;
+      }
+
+      ul {
+        margin: 8px 0;
+        padding-left: 20px;
+      }
+
+      li {
+        margin-bottom: 6px;
+      }
+
+      .skills legend {
+        color: #004080;
+      }
+
+      .funfacts legend {
+        color: #800000;
+      }
+
+      .signature {
+        margin-top: 20px;
+        text-align: right;
+        font-style: italic;
+        color: #004080;
+      }
+    </style>
   </head>
-  <body class="window-content window-content--cozy">
+
+  <body class="window-content">
     <h2>👋 Hello!</h2>
+
     <p>
-      I’m <b>Taahirah</b>, a <b>Software Engineer</b> and
-      <b>AI/ML Enthusiast</b>.
-    </p>
-    <p>
-      I love building <b>retro-inspired UIs</b>, intelligent
-      <b>agentic systems</b>, and <b>creative software tools</b>.
+      I’m <b>Taahirah Denmark</b>, a <b>Software Engineer</b> and
+      <b>AI/ML Enthusiast</b> passionate about designing systems that think,
+      learn, and feel intuitive to use.
     </p>
 
-    <fieldset>
-      <legend class="skills">🛠 Skills</legend>
+    <p>
+      My work blends <b>retro computing aesthetics</b> with
+      <b>modern agentic intelligence</b> — reimagining productivity through the
+      lens of nostalgia and technical precision.
+    </p>
+
+    <fieldset class="skills">
+      <legend>🛠 Skills</legend>
       <ul>
-        <li>Full-Stack Development (JS, Python, Rust)</li>
-        <li>AI/ML Experiments (LLMs, Whisper, Transformers)</li>
-        <li>Systems Architecture & Security</li>
+        <li>Full-Stack Development — <b>TypeScript, Python, Rust</b></li>
+        <li>AI/ML Systems — <b>LLMs, Whisper.cpp, Ollama, Transformers</b></li>
+        <li>Distributed Architecture & Systems Security</li>
+        <li>UI/UX Engineering — <b>Next.js, Tailwind, 98.css</b></li>
       </ul>
     </fieldset>
 
-    <fieldset>
-      <legend class="funfacts">🌟 Fun Facts</legend>
+    <fieldset class="funfacts">
+      <legend>🌟 Fun Facts</legend>
       <ul>
-        <li>I enjoy True Crime or History while coding.</li>
+        <li>I often code while listening to True Crime or History podcasts.</li>
         <li>
-          Big fan of
-          <b>Windows 95/98 aesthetics—even though I was born the day after 98 launched!</b>
+          Obsessed with
+          <b
+            >Windows 95/98 aesthetics—even though I was born the day after 98
+            launched!</b
+          >
         </li>
-        <li>Building OS-like projects for fun.</li>
+        <li>I build OS-like projects just for fun (like this one 👀).</li>
       </ul>
     </fieldset>
+
+    <div class="signature">— Taahirah · 2025</div>
   </body>
 </html>

@@ -13,7 +13,7 @@ updateClock();
 
 // -------------------- Global State --------------------
 let startMenuEl;
-let startButtonEl;
+let startIconEl;
 let taskbarButtonsEl;
 let desktopEl;
 
@@ -71,6 +71,54 @@ const WINDOW_PRESETS = {
     width: 900,
     height: 700,
   },
+  ada: {
+    title: "Ada Assistant",
+    icon: "icons/ada-icon.png",
+    file: "ada.html",
+    width: 640,
+    height: 520,
+  },
+};
+
+// -------------------- Project Windows --------------------
+WINDOW_PRESETS.cue = {
+  title: "Cue · AI Interview Assistant",
+  icon: "icons/projects.png",
+  file: "projects/cue.html",
+  width: 640,
+  height: 520,
+};
+
+WINDOW_PRESETS.fern = {
+  title: "FERN · Reinforcement Coding Agent",
+  icon: "icons/projects.png",
+  file: "projects/fern.html",
+  width: 640,
+  height: 520,
+};
+
+WINDOW_PRESETS.villacard = {
+  title: "VillaCard · AI Concierge & Property Dashboard",
+  icon: "icons/projects.png",
+  file: "projects/villacard.html",
+  width: 720,
+  height: 540,
+};
+
+WINDOW_PRESETS.cortex = {
+  title: "Cortex · Local Knowledge Workspace",
+  icon: "icons/projects.png",
+  file: "projects/cortex.html",
+  width: 720,
+  height: 540,
+};
+
+WINDOW_PRESETS.quantum = {
+  title: "Quantum Lottery Predictor",
+  icon: "icons/projects.png",
+  file: "projects/quantum.html",
+  width: 640,
+  height: 520,
 };
 
 // -------------------- Pinball Icon Animation --------------------
@@ -99,7 +147,7 @@ function initPinballIcon() {
 // -------------------- Setup --------------------
 document.addEventListener("DOMContentLoaded", () => {
   startMenuEl = document.getElementById("start-menu");
-  startButtonEl = document.getElementById("start-button");
+  startIconEl = document.getElementById("start-icon");
   taskbarButtonsEl = document.getElementById("taskbar-buttons");
   desktopEl = document.getElementById("desktop");
 
@@ -114,26 +162,15 @@ function setupDesktopIcons() {
   icons.forEach((icon) => {
     icon.addEventListener("click", () => {
       const type = icon.dataset.window;
-      if (type) {
-        openWindow(type);
-      }
+      if (type) openWindow(type);
     });
   });
 }
 
 function setupStartMenu() {
-  if (!startButtonEl || !startMenuEl) return;
+  if (!startIconEl || !startMenuEl) return;
 
-  startButtonEl.addEventListener("click", () => {
-    toggleStartMenu();
-  });
-
-  startButtonEl.addEventListener("keydown", (event) => {
-    if (event.key === "ArrowDown") {
-      event.preventDefault();
-      toggleStartMenu(true);
-    }
-  });
+  startIconEl.addEventListener("click", () => toggleStartMenu());
 }
 
 function setupGlobalListeners() {
@@ -141,7 +178,7 @@ function setupGlobalListeners() {
     if (!startMenuEl || startMenuEl.hasAttribute("hidden")) return;
     if (
       !startMenuEl.contains(event.target) &&
-      (!startButtonEl || !startButtonEl.contains(event.target))
+      (!startIconEl || !startIconEl.contains(event.target))
     ) {
       toggleStartMenu(false);
     }
@@ -153,42 +190,29 @@ function setupGlobalListeners() {
       return;
     }
 
-    const commandKeyPressed =
+    const openKey =
       event.key === "Meta" || (event.ctrlKey && event.key === "Escape");
-    if (commandKeyPressed && !event.repeat) {
+    if (openKey && !event.repeat) {
       event.preventDefault();
       toggleStartMenu();
-      if (startButtonEl) {
-        startButtonEl.focus();
-      }
     }
   });
 
   window.addEventListener("message", handleWindowMessage);
 }
 
-function focusFirstStartMenuItem() {
-  if (!startMenuEl) return;
-  const firstLink = startMenuEl.querySelector(".start-menu-list a");
-  if (firstLink) {
-    firstLink.focus();
-  }
-}
-
 function toggleStartMenu(forceOpen) {
-  if (!startMenuEl || !startButtonEl) return;
+  if (!startMenuEl || !startIconEl) return;
 
   const isHidden = startMenuEl.hasAttribute("hidden");
-  const shouldOpen =
-    typeof forceOpen === "boolean" ? forceOpen : isHidden;
+  const shouldOpen = typeof forceOpen === "boolean" ? forceOpen : isHidden;
 
   if (shouldOpen) {
     startMenuEl.removeAttribute("hidden");
-    startButtonEl.setAttribute("aria-expanded", "true");
-    requestAnimationFrame(focusFirstStartMenuItem);
+    startIconEl.setAttribute("aria-expanded", "true");
   } else if (!isHidden) {
     startMenuEl.setAttribute("hidden", "");
-    startButtonEl.setAttribute("aria-expanded", "false");
+    startIconEl.setAttribute("aria-expanded", "false");
   }
 }
 
@@ -200,13 +224,11 @@ function openWindow(type) {
   const preset = WINDOW_PRESETS[type];
   if (!preset) return;
 
-  // Bring existing window to front if already open.
+  // Bring existing window to front if already open
   for (const entry of windowRegistry.values()) {
     if (entry.meta.type === type) {
       const { win, btn } = entry;
-      if (win.style.display === "none") {
-        win.style.display = "block";
-      }
+      if (win.style.display === "none") win.style.display = "block";
       bringToFront(win);
       setTaskButtonState(btn, true);
       return;
@@ -249,59 +271,48 @@ function makeIframeWindow({ title, icon, file, width, height, type }) {
   desktopEl.appendChild(win);
 
   const btn = createTaskButton({ id: windowId, title, icon, win });
-  windowRegistry.set(windowId, {
-    win,
-    btn,
-    meta: { type },
-  });
+  windowRegistry.set(windowId, { win, btn, meta: { type } });
 
   const titleBar = win.querySelector(".title-bar");
   const closeBtn = win.querySelector('[aria-label="Close"]');
   const minBtn = win.querySelector('[aria-label="Minimize"]');
   const maxBtn = win.querySelector('[aria-label="Maximize"]');
 
-  if (closeBtn) {
+  if (closeBtn)
     closeBtn.addEventListener("click", () => closeWindowById(windowId));
-  }
-
-  if (minBtn) {
+  if (minBtn)
     minBtn.addEventListener("click", () => {
       win.style.display = "none";
       setTaskButtonState(btn, false);
     });
-  }
+  if (maxBtn) maxBtn.addEventListener("click", () => toggleMaximize(win));
 
-  if (maxBtn) {
-    maxBtn.addEventListener("click", () => {
-      const isMaximized = win.classList.contains("maximized");
-      if (isMaximized) {
-        win.classList.remove("maximized");
-        if (win.dataset.prevLeft && win.dataset.prevTop) {
-          win.style.left = win.dataset.prevLeft;
-          win.style.top = win.dataset.prevTop;
-          win.style.width = win.dataset.prevWidth;
-          win.style.height = win.dataset.prevHeight;
-        }
-      } else {
-        win.dataset.prevLeft = win.style.left;
-        win.dataset.prevTop = win.style.top;
-        win.dataset.prevWidth = win.style.width;
-        win.dataset.prevHeight = win.style.height;
-        win.classList.add("maximized");
-        win.style.left = "0";
-        win.style.top = "0";
-        win.style.width = "100%";
-        win.style.height = "calc(100% - 40px)";
-      }
-      bringToFront(win);
-    });
-  }
-
-  if (titleBar) {
-    makeDraggable(win, titleBar);
-  }
-
+  if (titleBar) makeDraggable(win, titleBar);
   win.addEventListener("mousedown", () => bringToFront(win));
+  bringToFront(win);
+}
+
+function toggleMaximize(win) {
+  const isMaximized = win.classList.contains("maximized");
+  if (isMaximized) {
+    win.classList.remove("maximized");
+    if (win.dataset.prevLeft && win.dataset.prevTop) {
+      win.style.left = win.dataset.prevLeft;
+      win.style.top = win.dataset.prevTop;
+      win.style.width = win.dataset.prevWidth;
+      win.style.height = win.dataset.prevHeight;
+    }
+  } else {
+    win.dataset.prevLeft = win.style.left;
+    win.dataset.prevTop = win.style.top;
+    win.dataset.prevWidth = win.style.width;
+    win.dataset.prevHeight = win.style.height;
+    win.classList.add("maximized");
+    win.style.left = "0";
+    win.style.top = "0";
+    win.style.width = "100%";
+    win.style.height = "calc(100% - 40px)";
+  }
   bringToFront(win);
 }
 
@@ -344,28 +355,25 @@ function setTaskButtonState(btn, isActive) {
 }
 
 function bringToFront(win) {
-  zIndexCounter += 1;
+  zIndexCounter++;
   win.style.zIndex = zIndexCounter;
-
-  document.querySelectorAll('.window[data-window-id]').forEach((otherWin) => {
-    if (otherWin !== win) {
-      otherWin.classList.remove("active");
-    }
+  document.querySelectorAll(".window[data-window-id]").forEach((otherWin) => {
+    otherWin.classList.toggle("active", otherWin === win);
   });
-  win.classList.add("active");
-
   const windowId = win.dataset.windowId;
   for (const entry of windowRegistry.values()) {
     const isCurrent = entry.win.dataset.windowId === windowId;
-    setTaskButtonState(entry.btn, isCurrent && entry.win.style.display !== "none");
+    setTaskButtonState(
+      entry.btn,
+      isCurrent && entry.win.style.display !== "none",
+    );
   }
 }
 
 function makeDraggable(win, handle) {
-  let offsetX = 0;
-  let offsetY = 0;
-  let isDown = false;
-
+  let offsetX = 0,
+    offsetY = 0,
+    isDown = false;
   handle.addEventListener("mousedown", (event) => {
     if (win.classList.contains("maximized")) return;
     isDown = true;
@@ -373,44 +381,25 @@ function makeDraggable(win, handle) {
     offsetY = event.clientY - win.offsetTop;
     bringToFront(win);
   });
-
   document.addEventListener("mousemove", (event) => {
     if (!isDown) return;
     win.style.left = event.clientX - offsetX + "px";
     win.style.top = event.clientY - offsetY + "px";
   });
-
-  document.addEventListener("mouseup", () => {
-    isDown = false;
-  });
+  document.addEventListener("mouseup", () => (isDown = false));
 }
 
 function closeWindowById(id) {
   const entry = windowRegistry.get(id);
   if (!entry) return;
-
   const { win, btn } = entry;
-  if (btn && btn.parentNode) {
-    btn.parentNode.removeChild(btn);
-  }
-  if (win && win.parentNode) {
-    win.parentNode.removeChild(win);
-  }
-
+  btn?.remove();
+  win?.remove();
   windowRegistry.delete(id);
-
-  const remaining = Array.from(windowRegistry.values()).filter(
-    ({ win: remainingWin }) => remainingWin.style.display !== "none"
-  );
-  if (remaining.length) {
-    const last = remaining[remaining.length - 1];
-    bringToFront(last.win);
-  }
 }
 
 function handleWindowMessage(event) {
   if (event.data !== "closeWindow") return;
-
   for (const [id, entry] of windowRegistry.entries()) {
     const iframe = entry.win.querySelector("iframe");
     if (iframe && iframe.contentWindow === event.source) {

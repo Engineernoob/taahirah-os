@@ -1,11 +1,11 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Portfolio</title>
+    <title>Taahirah-OS · Portfolio Desktop</title>
 
-    <!-- Local copies of 98.css + os-gui -->
+    <!-- Local vendor styles -->
     <link rel="stylesheet" href="vendor/98.css" />
     <link rel="stylesheet" href="vendor/os-gui-layout.css" />
     <link rel="stylesheet" href="vendor/os-gui-windows-98.css" />
@@ -14,93 +14,95 @@
     <!-- Custom styles -->
     <link rel="stylesheet" href="style.css" />
 
-    <!-- Google Fonts for Pinball Game -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <!-- Fonts -->
     <link
       href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap"
       rel="stylesheet"
     />
+    <link rel="icon" href="icons/win-98-logo.png" type="image/png" />
   </head>
+
   <body>
     <!-- Desktop -->
-    <div id="desktop">
-      <button
-        type="button"
-        class="desktop-icon"
-        data-window="about"
-        aria-label="Open About Me window"
-      >
-        <img src="icons/about-me.png" alt="" />
+    <main id="desktop" role="main" aria-label="Desktop environment">
+      <div class="desktop-icon" data-window="about" title="About Me">
+        <img src="icons/about-me.png" alt="About Icon" />
         <span>About Me</span>
-      </button>
-      <button
-        type="button"
-        class="desktop-icon"
-        data-window="projects"
-        aria-label="Open Projects window"
-      >
-        <img src="icons/projects.png" alt="" />
+      </div>
+
+      <div class="desktop-icon" data-window="projects" title="Projects">
+        <img src="icons/projects.png" alt="Projects Icon" />
         <span>Projects</span>
-      </button>
-      <button
-        type="button"
-        class="desktop-icon"
-        data-window="case-study"
-        aria-label="Open case study window"
-      >
-        <img src="icons/win-98-logo.png" alt="" />
+      </div>
+
+      <div class="desktop-icon" data-window="case-study" title="Case Study">
+        <img src="icons/win-98-logo.png" alt="Case Study Icon" />
         <span>Case Study</span>
-      </button>
-      <button
-        type="button"
-        class="desktop-icon"
-        data-window="contact"
-        aria-label="Open Contact window"
-      >
-        <img src="icons/contact.png" alt="" />
+      </div>
+
+      <div class="desktop-icon" data-window="contact" title="Contact">
+        <img src="icons/contact.png" alt="Contact Icon" />
         <span>Contact</span>
-      </button>
-      <button
-        type="button"
-        class="desktop-icon"
-        data-window="skills-radar"
-        aria-label="Open skills radar window"
-      >
-        <img src="icons/computer-icon.png" alt="" />
+      </div>
+
+      <div class="desktop-icon" data-window="skills-radar" title="Skills Radar">
+        <img src="icons/computer-icon.png" alt="Skills Radar Icon" />
         <span>Skills Radar</span>
-      </button>
-      <button
-        type="button"
+      </div>
+
+      <div
         class="desktop-icon pinball-icon"
-        data-window="pinball"
         id="pinball-desktop-icon"
-        aria-label="Open Pinball game window"
+        data-window="pinball"
+        title="Pinball Game"
       >
-        <img src="icons/computer-icon.png" alt="" />
+        <img src="icons/computer-icon.png" alt="Pinball Game Icon" />
         <span>Pinball Game</span>
-      </button>
-    </div>
+      </div>
+
+      <!-- Ada (AI Assistant) Icon -->
+      <div
+        class="desktop-icon"
+        id="ada-icon"
+        data-window="ada"
+        title="Ada — Your AI Assistant"
+      >
+        <img src="icons/ada-icon.png" alt="Ada AI Icon" />
+        <span>Ada</span>
+      </div>
+    </main>
 
     <!-- Taskbar -->
-    <div id="taskbar">
-      <button
-        type="button"
-        id="start-button"
-        class="start-btn"
+    <footer id="taskbar" role="contentinfo" aria-label="Taskbar">
+      <!-- Start Icon Only -->
+      <img
+        id="start-icon"
+        src="icons/start-button.png"
+        alt="Start Menu"
+        title="Open Start Menu"
+        style="
+          height: 36px;
+          width: auto;
+          margin-left: 6px;
+          cursor: pointer;
+          image-rendering: pixelated;
+        "
         aria-haspopup="true"
         aria-expanded="false"
-      >
-        <img src="icons/start-button.png" alt="" />
-        <span>Start</span>
-      </button>
-      <div id="taskbar-buttons"></div>
+      />
+
+      <div id="taskbar-buttons" role="tablist" aria-label="Open windows"></div>
       <div class="taskbar-space"></div>
-      <div class="taskbar-clock" id="clock"></div>
-    </div>
+      <div class="taskbar-clock" id="clock" aria-live="polite"></div>
+    </footer>
 
     <!-- Start Menu -->
-    <div id="start-menu" class="window start-menu" hidden>
+    <nav
+      id="start-menu"
+      class="window start-menu"
+      hidden
+      aria-label="Start Menu"
+    >
       <div class="title-bar">
         <div class="title-bar-text">Start Menu</div>
       </div>
@@ -127,20 +129,60 @@
             >
           </li>
           <li>
-            <a href="#" onclick="openWindow('resume')"
-              ><img src="icons/resume.png" /> Resume</a
-            >
-          </li>
-          <li>
             <a href="#" onclick="openWindow('skills-radar')"
               ><img src="icons/computer-icon.png" /> Skills Radar</a
             >
           </li>
+          <li>
+            <a href="#" onclick="openWindow('pinball')"
+              ><img src="icons/computer-icon.png" /> Pinball Game</a
+            >
+          </li>
+          <li>
+            <a href="#" onclick="openWindow('ada')"
+              ><img src="icons/ada-icon.png" /> Ada Assistant</a
+            >
+          </li>
+          <hr />
+          <li>
+            <a href="shutdown.html"
+              ><img src="icons/shutdown.png" /> Shut Down</a
+            >
+          </li>
         </ul>
       </div>
-    </div>
+    </nav>
 
     <!-- Scripts -->
     <script src="script.js"></script>
+
+    <!-- Boot + Ada Hooks -->
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Boot screen on first visit
+        if (!sessionStorage.getItem("booted")) {
+          sessionStorage.setItem("booted", "true");
+          window.location.href = "boot.html";
+        }
+
+        // Ada AI Assistant sound cue
+        const ada = document.getElementById("ada-icon");
+        if (ada) {
+          ada.addEventListener("click", () => {
+            openWindow("ada");
+            const audio = new Audio("sounds/ada-boot.mp3");
+            audio.volume = 0.7;
+            audio.play().catch(() => {});
+          });
+        }
+      });
+
+      // Shutdown sound before leaving
+      window.addEventListener("beforeunload", () => {
+        const shutdown = new Audio("sounds/winxpshutdown.mp3");
+        shutdown.volume = 0.6;
+        shutdown.play().catch(() => {});
+      });
+    </script>
   </body>
 </html>

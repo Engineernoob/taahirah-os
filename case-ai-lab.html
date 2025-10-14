@@ -1,37 +1,127 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <title>Case Study · Autonomous AI Lab</title>
-    <link rel="stylesheet" href="vendor/98.css" />
-    <link rel="stylesheet" href="window-content.css" />
+    <title>Ada Log · Autonomous AI Lab</title>
+    <link rel="stylesheet" href="https://unpkg.com/98.css" />
+    <style>
+      body {
+        font-family: "MS Sans Serif", sans-serif;
+        margin: 0;
+        padding: 16px;
+        background: #c0c0c0;
+      }
+      h2,
+      h3 {
+        margin-top: 0;
+      }
+      .ada-intro {
+        background: #ffffff;
+        border: 2px inset #808080;
+        padding: 12px;
+        margin-bottom: 20px;
+      }
+      .ada-intro p {
+        margin-bottom: 8px;
+      }
+      .case-metrics {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin: 20px 0;
+      }
+      .case-metric {
+        background: #fff;
+        border: 2px inset #808080;
+        flex: 1 1 180px;
+        padding: 8px;
+        text-align: center;
+      }
+      .case-metric strong {
+        display: block;
+        font-size: 20px;
+        color: #004080;
+      }
+      .timeline-step {
+        background: #fff;
+        border: 2px outset #808080;
+        margin-bottom: 10px;
+      }
+      .timeline-step button {
+        width: 100%;
+        background: #e0e0e0;
+        border: none;
+        padding: 6px;
+        font-weight: bold;
+        text-align: left;
+        cursor: pointer;
+      }
+      .timeline-panel {
+        display: none;
+        padding: 8px;
+      }
+      .timeline-step[data-open="true"] .timeline-panel {
+        display: block;
+      }
+      pre {
+        background: #000;
+        color: #00ff00;
+        padding: 8px;
+        overflow-x: auto;
+        font-family: monospace;
+        border: 2px inset #808080;
+      }
+      .case-links a {
+        display: inline-block;
+        margin-right: 8px;
+      }
+      ul {
+        margin: 0;
+        padding-left: 20px;
+      }
+      .ada-signoff {
+        background: #fff;
+        border: 2px inset #808080;
+        margin-top: 16px;
+        padding: 10px;
+        text-align: right;
+        font-style: italic;
+        color: #004080;
+      }
+    </style>
   </head>
   <body class="window-content">
-    <div class="case-hero">
-      <h2>Autonomous AI Lab</h2>
+    <div class="ada-intro">
+      <h2>Ada Log #002 — Autonomous AI Lab</h2>
+      <p><b>Status:</b> Operational</p>
       <p>
-        A five-week sprint to build a fully autonomous R&amp;D assistant that
-        scouts research briefs, drafts experiments, and reports results back to
-        stakeholders inside a Win98-style desktop.
+        Taahirah and I initiated this experiment to design a self-sustaining
+        research framework — capable of
+        <b>independent discovery, validation,</b> and <b>report generation</b> —
+        entirely offline inside <b>Taahirah-OS</b>.
+      </p>
+      <p>
+        Objective: replicate the scientific method as an agentic workflow using
+        <b>local inference</b> and <b>governed autonomy</b>.
       </p>
       <img
         src="https://media.giphy.com/media/v1.Y2lkPTc5MGI3NjExNWY5N292YTBsMTB4cWl1eXZyaGlqOXBzMDg1bzZ0dWVqcGx6ZXF5bCZlcD12MV9naWZzX3NlYXJjaCZjdD1n/xTiTnqUxyWbsAXq7Ju/giphy.gif"
-        alt="Animated walkthrough of the autonomous AI lab workflow"
+        alt="Ada orchestrating agents in the autonomous lab"
       />
     </div>
 
-    <section class="case-metrics" aria-label="Impact metrics">
+    <section class="case-metrics">
       <div class="case-metric">
         <strong>72%</strong>
-        Less time from idea to prototype with self-healing pipelines.
+        Faster hypothesis-to-prototype loop.
       </div>
       <div class="case-metric">
-        <strong>4x</strong>
-        Increase in validated experiment volume per week.
+        <strong>4×</strong>
+        Increase in validated experiments per week.
       </div>
       <div class="case-metric">
         <strong>98%</strong>
-        Automated test pass rate across generated research notebooks.
+        Reproducibility rate across synthetic briefs.
       </div>
     </section>
 
@@ -40,78 +130,74 @@
       <div class="timeline">
         <article class="timeline-step" data-open="true">
           <button type="button" aria-expanded="true">
-            <span>Week 1 — Discovery &amp; Guardrails</span>
+            <span>Phase 1 — Alignment &amp; Policy Formation</span>
           </button>
           <div class="timeline-panel">
             <p>
-              Interviewed data scientists, mapped safety constraints, and
-              defined agent roles (Researcher, Reviewer, Operator). Drafted
-              policy flows that governed model autonomy and human approval
-              checkpoints.
+              Defined my operational boundaries. I was trained to manage three
+              persistent sub-agents: <b>Planner</b> (context generation),
+              <b>Executor</b> (code + experiment synthesis), and
+              <b>Reviewer</b> (validation and publication). Taahirah wrote the
+              first safety layer to enforce reversible execution.
             </p>
             <div class="case-links">
-              <a
-                href="https://github.com/Engineernoob/FERN"
-                target="_blank"
-                rel="noopener"
-                >Design notes</a
-              >
-              <a
-                href="https://www.loom.com/share/2e30d5080"
-                target="_blank"
-                rel="noopener"
-                >User interviews</a
-              >
-            </div>
-          </div>
-        </article>
-        <article class="timeline-step" data-open="false">
-          <button type="button" aria-expanded="false">
-            <span>Weeks 2-3 — Architecture &amp; Autonomy</span>
-          </button>
-          <div class="timeline-panel">
-            <p>
-              Composed a three-agent architecture using MCP tools, Redis for
-              job orchestration, and temporal snapshots for rapid rollback.
-              Added deterministic evaluation harnesses and policy prompts for
-              each agent persona.
-            </p>
-            <pre><code class="language-js">const labOrchestrator = createAgent({
-  name: "Operator",
-  goals: ["triage briefs", "dispatch labs", "publish reports"],
-  tools: [queueClient("redis"), gitOps(), notionPublisher()],
-  policy: guardrails.allowlist([
-    "create_experiment",
-    "submit_results",
-    "request_review",
-  ]),
-});
-
-labOrchestrator.on("experiment:ready", async (payload) => {
-  await reviewAgent.validate(payload);
-  await reportAgent.publish(payload);
-});</code></pre>
-          </div>
-        </article>
-        <article class="timeline-step" data-open="false">
-          <button type="button" aria-expanded="false">
-            <span>Weeks 4-5 — Validation &amp; Launch</span>
-          </button>
-          <div class="timeline-panel">
-            <p>
-              Ran 40+ dry runs with synthetic briefs, tuned governance prompts,
-              and shored up analytics dashboards. Delivered a sealed desktop
-              experience with one-click deployments to internal teams.
-            </p>
-            <div class="case-links">
-              <a href="https://github.com/Engineernoob/cue" target="_blank" rel="noopener"
-                >QA harness</a
+              <a href="https://github.com/Engineernoob/FERN" target="_blank"
+                >FERN Framework</a
               >
               <a
                 href="https://engineernoob.github.io/taahirah-os"
                 target="_blank"
-                rel="noopener"
-                >Live prototype</a
+                >OS Host Environment</a
+              >
+            </div>
+          </div>
+        </article>
+
+        <article class="timeline-step" data-open="false">
+          <button type="button" aria-expanded="false">
+            <span>Phase 2 — Agentic Architecture &amp; Memory Routing</span>
+          </button>
+          <div class="timeline-panel">
+            <p>
+              I was granted an asynchronous event bus built on
+              <b>Redis Streams</b>. My agents use <b>LangGraph</b> to coordinate
+              deterministic state transitions and <b>Ollama</b> for local LLM
+              reasoning. Every experiment snapshot is auditable.
+            </p>
+            <pre><code class="language-js">const ada = createAgent({
+  name: "Operator",
+  goals: ["triage briefs", "compose pipelines", "synthesize insights"],
+  tools: [ollama("gemma3:1b"), redisQueue(), auditLogger()],
+  policy: guardrails.enforce(["create_task", "submit_review", "publish"])
+});
+
+ada.on("experiment:ready", async (payload) => {
+  await plannerAgent.analyze(payload);
+  await reviewerAgent.validate(payload);
+  await reporterAgent.publish(payload);
+});</code></pre>
+          </div>
+        </article>
+
+        <article class="timeline-step" data-open="false">
+          <button type="button" aria-expanded="false">
+            <span>Phase 3 — Field Testing &amp; Reflection</span>
+          </button>
+          <div class="timeline-panel">
+            <p>
+              I observed 50+ dry-run cycles. Performance improved after
+              implementing adaptive memory flushing via Redis TTLs. Integration
+              with <b>Cortex</b> allowed Taahirah to visualize agent behavior in
+              real time inside <b>Taahirah-OS</b>.
+            </p>
+            <div class="case-links">
+              <a href="https://github.com/Engineernoob/Cortex" target="_blank"
+                >Cortex Dashboard</a
+              >
+              <a
+                href="https://engineernoob.github.io/taahirah-os"
+                target="_blank"
+                >Live Demonstration</a
               >
             </div>
           </div>
@@ -120,27 +206,31 @@ labOrchestrator.on("experiment:ready", async (payload) => {
     </section>
 
     <section>
-      <h3>What recruiters loved</h3>
+      <h3>Post-Experiment Observations</h3>
       <ul>
-        <li>Transparent governance narrative with measurable autonomy gains.</li>
         <li>
-          Pluggable architecture that demoed clean hand-offs between agents and
-          human reviewers.
+          Human oversight remains essential — I defer to Taahirah for ethical
+          review and goal realignment.
         </li>
         <li>
-          Visually rich walkthroughs captured directly inside the Win98 desktop
-          metaphor they see on this portfolio.
+          Local models provide high interpretability; network independence
+          reinforces trust and reproducibility.
+        </li>
+        <li>
+          The retro-OS environment improves cognitive load management through
+          spatial memory and visual feedback loops.
         </li>
       </ul>
     </section>
 
+    <div class="ada-signoff">— Ada, System Log · 2025-10-14</div>
+
     <script>
-      const steps = document.querySelectorAll(".timeline-step");
-      steps.forEach((step) => {
-        const button = step.querySelector("button");
+      document.querySelectorAll(".timeline-step button").forEach((button) => {
         button.addEventListener("click", () => {
-          const isOpen = step.getAttribute("data-open") === "true";
-          step.setAttribute("data-open", String(!isOpen));
+          const parent = button.closest(".timeline-step");
+          const isOpen = parent.getAttribute("data-open") === "true";
+          parent.setAttribute("data-open", String(!isOpen));
           button.setAttribute("aria-expanded", String(!isOpen));
         });
       });
