@@ -7,7 +7,7 @@
     <style>
       body {
         margin: 0;
-        background: #000000;
+        background: #000;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -20,68 +20,108 @@
       }
 
       .shutdown-logo img {
-        max-width: 500px;
+        max-width: 480px;
         width: 90%;
         margin-bottom: 30px;
-        animation: fadeIn 1.5s ease;
+        animation: fadeIn 2s ease forwards;
+        opacity: 0;
       }
 
       .shutdown-text {
         font-size: 20px;
-        margin-top: 20px;
         color: #ffcc00;
-        animation: blink 1.5s infinite;
+        animation: blink 1.8s infinite;
+      }
+
+      #fade-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #000;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 999;
+        transition: opacity 2s ease;
       }
 
       @keyframes fadeIn {
         from {
           opacity: 0;
+          transform: translateY(15px);
         }
         to {
           opacity: 1;
+          transform: translateY(0);
         }
       }
 
       @keyframes blink {
-        0%,
-        100% {
+        0%, 100% {
           opacity: 1;
         }
         50% {
-          opacity: 0.6;
+          opacity: 0.5;
         }
       }
     </style>
   </head>
+
   <body>
     <div class="shutdown-logo">
-      <img src="icons/windows_xp_shutdown_screen.jpg" alt="Shutting Down..." />
+      <img
+        src="icons/windows_xp_shutdown_screen.jpg"
+        alt="Shutting Down..."
+      />
     </div>
 
     <div class="shutdown-text">
       Please wait while your computer shuts down...
     </div>
 
+    <div id="fade-overlay"></div>
+
     <!-- Shutdown sound -->
-    <audio id="shutdown-sound">
+    <audio id="shutdown-sound" preload="auto">
       <source src="sounds/winxpshutdown.mp3" type="audio/mpeg" />
       <source src="sounds/winxpshutdown.ogg" type="audio/ogg" />
     </audio>
 
     <script>
       const sound = document.getElementById("shutdown-sound");
+      const overlay = document.getElementById("fade-overlay");
 
-      // Play shutdown sound as soon as page loads (safe if triggered by Start Menu "Shut Down" button)
-      window.addEventListener("DOMContentLoaded", () => {
-        sound.volume = 0.6;
-        sound.play().catch((err) => console.log("Autoplay blocked:", err));
+      // Prevent replay if user presses Back after shutdown
+      if (sessionStorage.getItem("shutdownPlayed")) {
+        powerOff();
+      } else {
+        sessionStorage.setItem("shutdownPlayed", "true");
+      }
+
+      // Play shutdown sound
+      window.addEventListener("DOMContentLoaded", async () => {
+        try {
+          sound.volume = 0.65;
+          await sound.play();
+          sound.addEventListener("ended", () => fadeToBlack());
+        } catch (err) {
+          console.warn("Autoplay blocked:", err);
+          // Fallback: force fade after 4 seconds
+          setTimeout(fadeToBlack, 4000);
+        }
       });
 
-      // After sound finishes, "power off" (blank screen)
-      sound.onended = () => {
+      function fadeToBlack() {
+        overlay.style.opacity = 1;
+        setTimeout(powerOff, 2000); // Wait for fade transition
+      }
+
+      function powerOff() {
         document.body.innerHTML = "";
         document.body.style.background = "#000";
-      };
+      }
     </script>
   </body>
 </html>
+
