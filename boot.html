@@ -162,6 +162,9 @@
           console.warn("Boot sound autoplay blocked:", err);
           // Fallback timer in case of autoplay restrictions
           setTimeout(() => {
+            // Mark the system as fully booted
+            sessionStorage.setItem("booted", "true");
+            sessionStorage.removeItem("restarting"); // Clear restart flag if set
             window.location.replace("index.html");
           }, 3500);
         }

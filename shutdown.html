@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -58,7 +58,8 @@
       }
 
       @keyframes blink {
-        0%, 100% {
+        0%,
+        100% {
           opacity: 1;
         }
         50% {
@@ -70,10 +71,7 @@
 
   <body>
     <div class="shutdown-logo">
-      <img
-        src="icons/windows_xp_shutdown_screen.jpg"
-        alt="Shutting Down..."
-      />
+      <img src="icons/windows_xp_shutdown_screen.jpg" alt="Shutting Down..." />
     </div>
 
     <div class="shutdown-text">
@@ -116,6 +114,7 @@
         overlay.style.opacity = 1;
         setTimeout(powerOff, 2000); // Wait for fade transition
       }
+      sessionStorage.removeItem("booted"); // reset system state
 
       function powerOff() {
         document.body.innerHTML = "";
@@ -124,4 +123,3 @@
     </script>
   </body>
 </html>
-

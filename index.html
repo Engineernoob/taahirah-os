@@ -160,11 +160,12 @@
     <script>
       document.addEventListener("DOMContentLoaded", () => {
         // --- Boot screen (first visit only)
-        if (!sessionStorage.getItem("booted")) {
+        // Only trigger boot if system isn't already booted or coming from shutdown
+        if (!sessionStorage.getItem("booted") && !sessionStorage.getItem("restarting")) {
           sessionStorage.setItem("booted", "true");
           window.location.replace("boot.html");
-          return; // Stop further loading so no flashes
         }
+
 
         // --- Ada AI Assistant setup
         const adaIcon = document.getElementById("ada-icon");
