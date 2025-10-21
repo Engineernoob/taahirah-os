@@ -53,7 +53,7 @@ const WINDOW_PRESETS = {
   resume: {
     title: "Resume",
     icon: "icons/resume.png",
-    file: "Resume-2.pdf",
+    file: "Oct-Resume.pdf",
     width: 600,
     height: 500,
   },
