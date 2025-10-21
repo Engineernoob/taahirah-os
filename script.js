@@ -145,6 +145,24 @@ WINDOW_PRESETS.notchpod = {
   height: 520,
 };
 
+WINDOW_PRESETS.notepad = {
+  title: "Notepad",
+  icon: "icons/server.png",
+  file: "notepad.html",
+  width: 500,
+  height: 400,
+};
+
+// -------------------- Pinball Icon Animation --------------------
+
+WINDOW_PRESETS.minesweeper = {
+  title: "💣 Minesweeper",
+  icon: "projects/projects.png",
+  file: "minesweeper.html",
+  width: 320,
+  height: 400,
+};
+
 // -------------------- Pinball Icon Animation --------------------
 function initPinballIcon() {
   const pinballIcon = document.getElementById("pinball-desktop-icon");

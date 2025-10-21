@@ -7,10 +7,39 @@
     <link rel="stylesheet" href="window-content.css" />
   </head>
   <body class="window-content window-content--tight">
-    <h4 class="resume-heading">📄 My Resume</h4>
+    <div style="display: flex; flex-direction: column; height: 100%;">
+      <!-- View Toggle -->
+      <div style="margin-bottom: 12px; display: flex; gap: 8px; justify-content: center;">
+        <button class="default" onclick="openEnhancedResume()" style="padding: 4px 12px; font-size: 11px;">
+          🎯 Enhanced Resume
+        </button>
+        <button class="default" onclick="openOriginalResume()" style="padding: 4px 12px; font-size: 11px;">
+          📄 Original PDF
+        </button>
+      </div>
 
-    <!-- PDF Viewer -->
-    <iframe class="resume-frame" src="Oct-Resume.pdf"></iframe>
+      <!-- Resume Content Frame -->
+      <iframe id="resume-frame" class="resume-frame" style="flex: 1; border: 2px inset #808080;"></iframe>
+    </div>
+    
+    <!-- Close Button -->
+    <div class="content-actions">
+      <button onclick="window.parent.postMessage('closeWindow','*')">Close</button>
+    </div>
+  </div>
+
+  <script>
+    function openEnhancedResume() {
+      document.getElementById('resume-frame').src = 'enhanced-resume.html';
+    }
+    
+    function openOriginalResume() {
+      document.getElementById('resume-frame').src = 'Oct-Resume.pdf';
+    }
+    
+    // Start with enhanced resume
+    openEnhancedResume();
+  </script>
 
     <!-- Fallback Download Option -->
     <div class="resume-fallback">

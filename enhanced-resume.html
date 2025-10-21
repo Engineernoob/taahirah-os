@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Enhanced Resume · Taahirah</title>
+  <link rel="stylesheet" href="vendor/98.css" />
+  <link rel="stylesheet" href="window-content.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
+  <style>
+    .resume-container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    .resume-header {
+      background: linear-gradient(135deg, #000080, #000040);
+      color: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .resume-header h3 {
+      margin: 0 0 10px 0;
+      font-size: 28px;
+    }
+
+    .contact-info {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+      font-size: 14px;
+    }
+
+    .contact-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .toggle-container {
+      display: flex;
+      gap: 12px;
+      margin: 20px 0;
+      justify-content: center;
+      border-bottom: 2px inset #808080;
+      padding-bottom: 10px;
+    }
+
+    .toggle-btn {
+      padding: 6px 16px;
+      border: 2px outset #808080;
+      background: #c0c0c0;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .toggle-btn.active {
+      border: 2px inset #808080;
+      background: #e0e0e0;
+    }
+
+    /* Timeline View */
+    .timeline-view {
+      display: none;
+      padding: 20px 0;
+    }
+
+    .timeline {
+      position: relative;
+      padding-left: 40px;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #000080;
+    }
+
+    .timeline-item {
+      position: relative;
+      margin-bottom: 25px;
+      border: 2px inset #808080;
+      background: #ffffff;
+      padding: 15px;
+      border-radius: 0;
+    }
+
+    .timeline-item::before {
+      content: '';
+      position: absolute;
+      left: -50px;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: #000080;
+      border: 2px solid #ffffff;
+    }
+
+    .timeline-date {
+      color: #000080;
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 12px;
+    }
+
+    .timeline-title {
+      color: #000;
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 8px;
+    }
+
+    .timeline-company {
+      color: #000080;
+      font-weight: bold;
+      margin-bottom: 8px;
+      font-size: 14px;
+    }
+
+    .timeline-duration {
+      color: #666;
+      font-size: 12px;
+      font-style: italic;
+      margin-bottom: 8px;
+    }
+
+    .timeline-description {
+      color: #333;
+      line-height: 1.5;
+    }
+
+    .timeline-tags {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+    }
+
+    .tag {
+      padding: 2px 8px;
+      background: #e0e0e0;
+      border: 1px solid #999;
+      border-radius: 3px;
+      font-size: 11px;
+      color: #333;
+    }
+
+    /* Traditional View */
+    .traditional-view {
+      display: block;
+    }
+
+    .section {
+      margin-bottom: 25px;
+      border: 2px inset #808080;
+      padding: 15px;
+      background: #ffffff;
+    }
+
+    .section h4 {
+      color: #000080;
+      margin-top: 0;
+      margin-bottom: 10px;
+      font-size: 16px;
+      border-bottom: 1px solid #ccc;
+      padding-bottom: 5px;
+    }
+
+    .section-content {
+      line-height: 1.5;
+    }
+
+    .experience-item, .education-item, .skill-item {
+      margin-bottom: 15px;
+      padding-bottom: 15px;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .experience-item:last-child,
+    .education-item:last-child,
+    .skill-item:last-child {
+      border-bottom: none;
+      margin-bottom: 0;
+      padding-bottom: 0;
+    }
+
+    .experience-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 5px;
+      flex-wrap: wrap;
+    }
+
+    .experience-title {
+      font-weight: bold;
+      color: #000;
+      flex: 1;
+    }
+
+    .experience-duration {
+      color: #666;
+      font-style: italic;
+      font-size: 12px;
+    }
+
+    .experience-company {
+      color: #000080;
+      font-weight: bold;
+      margin-bottom: 8px;
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 15px;
+    }
+
+    .skill-card {
+      border: 2px inset #808080;
+      padding: 15px;
+      background: #ffffff;
+      text-align: center;
+    }
+
+    .skill-name {
+      font-weight: bold;
+      color: #000;
+      margin-bottom: 8px;
+    }
+
+    .skill-level {
+      display: flex;
+      gap: 4px;
+      align-items: center;
+      font-size: 12px;
+    }
+
+    .skill-bar {
+      flex: 1;
+      height: 8px;
+      background: #e0e0e0;
+      border: 1px inset #808080;
+      position: relative;
+    }
+
+    .skill-progress {
+      height: 100%;
+      background: #000080;
+      transition: width 0.3s ease;
+    }
+
+    .skill-percent {
+      margin-left: 8px;
+      font-weight: bold;
+      font-size: 11px;
+      color: #000080;
+    }
+
+    /* Skills Radar */
+    .skills-radar {
+      display: none;
+      margin-top: 20px;
+    }
+
+    .radar-chart {
+      width: 400px;
+      height: 400px;
+      background: #ffffff;
+      border: 2px inset #808080;
+      margin: 0 auto;
+      position: relative;
+    }
+
+    .radar-svg {
+      width: 100%;
+      height: 100%;
+    }
+  </style>
+</head>
+<body class="window-content">
+  <div class="resume-container">
+    <!-- Resume Header -->
+    <div class="resume-header">
+      <h3>👤 Taahirah Denmark</h3>
+      <div class="contact-info">
+        <div class="contact-item">
+          <i class="fas fa-envelope"></i>
+          <span>taahirah@example.com</span>
+        </div>
+        <div class="contact-item">
+          <i class="fas fa-phone"></i>
+          <span>+1 (555) 123-4567</span>
+        </div>
+        <div class="contact-item">
+          <i class="fab fa-linkedin"></i>
+          <span>linkedin.com/in/taahirah</span>
+        </div>
+        <div class="contact-item">
+          <i class="fab fa-github"></i>
+          <span>github.com/taahirah</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- View Toggle -->
+    <div class="toggle-container">
+      <button class="toggle-btn active active" onclick="showView('traditional')">📄 Traditional</button>
+      <button class="toggle-btn" onclick="showView('timeline')">📅 Timeline</button>
+      <button class="toggle-btn" onclick="showView('skills')">🎯 Skills Radar</button>
+    </div>
+
+    <!-- Traditional View -->
+    <div class="traditional-view">
+      <!-- Summary -->
+      <section class="section">
+        <h4>👋 Summary</h4>
+        <div class="section-content">
+          <p>Passionate and innovative software engineer with expertise in full-stack development, machine learning, and creating engaging user experiences. Proven track record of delivering high-quality solutions in fast-paced environments. Strong background inwall being cutting-edge technologies and methodologies.</p>
+        <p>Seeking to leverage technical skills and creative problem-solving abilities to contribute to innovative projects that make a meaningful impact.</p>
+        </div>
+      </section>
+
+      <!-- Experience -->
+      <section class="section">
+        <h4>💼 Experience</h4>
+        <div class="section-content">
+          <div class="experience-item">
+            <div class="experience-header">
+              <div class="experience-title">Senior Software Engineer</div>
+              <div class="experience-duration">Jun 2023 - Present</div>
+            </div>
+            <div class="experience-company">Tech Innovations Inc.</div>
+            <div class="section-content">
+              <p>Lead development of cloud-based SaaS platform serving 10M+ users. Implemented microservices architecture improving system performance by 40%. Mentored junior developers and conducted code reviews ensuring best practices.</p>
+            </div>
+          </div>
+
+          <div class="experience-item">
+            <div class="experience-header">
+              <div class="experience-title">Full Stack Developer</div>
+              <div class="experience-duration">Jan 2021 - Jun 2023</div>
+            </div>
+            <div class="experience-company">Digital Solutions Group</div>
+            <div class="section-content">
+              <p>Developed and maintained multiple web applications using React, Node.js, and cloud platforms. Integrated third-party APIs and payment systems. Led migration of legacy systems to modern architecture, improving performance and security.</p>
+            </div>
+          </div>
+
+          <div class="experience-item">
+            <div class="experience-header">
+              <div class="experience-title">Junior Developer</div>
+              <div class="experience-duration">Mar 2019 - Dec 2020</div>
+            </div>
+            <div class="experience-company">StartUp Innovations</div>
+            <div class="section-content">
+              <p>Contributed to agile development teams, working on various projects including e-commerce platforms and content management systems. Gained experience in version control, testing methodologies, and collaborative development practices.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Education -->
+      <section class="section">
+        <h4>🎓 Education</h4>
+        <div class="section-content">
+          <div class="education-item">
+            <div class="experience-header">
+              <div class="experience-title">Bachelor of Science in Computer Science</div>
+              <div class="experience-duration">2015 - 2019</div>
+            </div>
+            <div class="experience-company">Tech University</div>
+            <div class="section-content">
+              <p>Relevant coursework: Data Structures, Algorithms, Machine Learning, Web Development, Database Management</p>
+              <p>GPA: 3.8/4.0, Dean's List</p>
+            </div>
+          </div>
+
+          <div class="education-item">
+            <div class="experience-header">
+              <div class="experience-title">Full Stack Web Development Bootcamp</div>
+              <div class="experience-duration">2018 - 2019</div>
+            </div>
+            <div class="experience-company">Code Academy</div>
+            <div class="section-content">
+              <p>Intensive 6-month program covering full-stack JavaScript development, including React, Node.js, Express, MongoDB, and modern web technologies. Completed multiple real-world projects.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Skills -->
+      <section class="section">
+        <h4>🛠️ Skills</h4>
+        <div class="skills-grid">
+          <div class="skill-card">
+            <div class="skill-name">JavaScript</div>
+            <div class="skill-level">
+              <div class="skill-bar">
+                <div class="skill-progress" style="width: 95%"></div>
+              </div>
+              <div class="skill-percent">95%</div>
+            </div>
+          </div>
+
+          <div class="skill-card">
+            <div class="skill-name">React</div>
+            <div class="skill-level">
+              <div class="skill-bar">
+                <div class="skill-progress" style="width: 90%"></div>
+              </div>
+              <div class="skill-percent">90%</div>
+            </div>
+          </div>
+
+          <div class="skill-card">
+            <div class="skill-name">Node.js</div>
+            <div class="skill-level">
+              <div class="skill-bar">
+                <div class="skill-progress" style="width: 88%"></div>
+              </div>
+              <div class="skill-percent">88%</div>
+            </div>
+          </div>
+
+          <div class="skill-card">
+            <div class="skill-name">Python</div>
+            <div class="skill-level">
+              <div class="skill-bar">
+                <div class="skill-progress" style="width: 85%"></div>
+              </div>
+              <div class="skill-percent">85%</div>
+            </div>
+          </div>
+
+          <div class="skill-card">
+            <div class="skill-name">MongoDB</div>
+            <div class="skill-level">
+              <div class="skill-bar">
+                <div class="skill-progress" style="width: 80%"></div>
+              </div>
+              <div class="skill-percent">80%</div>
+            </div>
+          </div>
+
+          <div class="skill-card">
+            <div class="skill-name">AWS/Cloud</div>
+            <div class="skill-level">
+              <div class="skill-bar">
+                <div class="skill-progress" style="width: 75%"></div>
+              </div>
+              <div class="skill-percent">75%</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Projects -->
+      <section class="section">
+        <h4>🚀 Projects</h4>
+        <div class="section-content">
+          <div class="skill-item">
+            <div class="section-content">
+              <strong>TaahirahOS Desktop Portfolio</strong> - Windows 98 themed interactive portfolio with multiple mini-applications and authentic retro aesthetic.
+            </div>
+          </div>
+
+          <div class="skill-item">
+            <div class="section-content">
+              <strong>3D Pinball Recreation</strong> - Web-based recreation of the classic Windows 3D Pinball Space Cadet using original decompiled assets.
+            </div>
+          </div>
+
+          <div class="skill-item">
+            <div class="section-content">
+              <strong>AI Interview Assistant (Cue)</strong> - Real-time AI-powered interview preparation tool with personalized feedback and performance analytics.
+            </div>
+          </div>
+
+          <div class="skill-item">
+            <div class="section-content">
+              <strong>Property Management Dashboard</strong> - Full-stack application for property management with AI-powered features and data visualization.
+            </div>
+          </div>
+        </div>
+      </section>
+    </div>
+
+    <!-- Timeline View -->
+    <div class="timeline-view">
+      <div class="timeline">
+        <div class="timeline-item">
+          <div class="timeline-date">2023 - Present</div>
+          <div class="timeline-title">Senior Software Engineer</div>
+          <div class="timeline-company">Tech Innovations Inc.</div>
+          <div class="timeline-duration">2+ years</div>
+          <div class="timeline-description">
+            Lead development of cloud-based SaaS platform serving 10M+ users. Implemented microservices architecture improving system performance by 40%. Mentored junior developers and conducted code reviews.</div>
+          <div class="timeline-tags">
+            <span class="tag">Cloud Architecture</span>
+            <span class="tag">Microservices</span>
+            <span class="tag">Leadership</span>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">2021 - 2023</div>
+          <div class="timeline-title">Full Stack Developer</div>
+          <div class="timeline-company">Digital Solutions Group</div>
+          <div class="timeline-duration">2.5 years</div>
+          <div class="timeline-description">
+            Developed and maintained multiple web applications using React, Node.js, and cloud platforms. Integrated third-party APIs and payment systems. Led migration of legacy systems to modern architecture.</div>
+          <div class="timeline-tags">
+            <span class="tag">Full Stack</span>
+            <span class="tag">React</span>
+            <span class="tag">Node.js</span>
+            <span class="tag">Cloud Migration</span>
+          </div>
+        </div>
+
+        <div class="timeline-item">
+          <div class="timeline-date">2019 - 2020</div>
+          <div class="timeline-title">Junior Developer</div>
+          <div class="timeline-company">StartUp Innovations</div>
+          <div class="timeline-duration">1.5 years</div>
+          <div class="timeline-description">
+            Contributed to agile development teams, working on various projects including e-commerce platforms and content management systems. Gained experience in version control, testing methodologies.</div>
+          <div class="timeline-tags">
+            <span class="tag">Agile</span>
+            <span class="tag">JavaScript</span>
+            <span class="tag">Team Collaboration</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Skills Radar View -->
+    <div class="skills-radar">
+      <div class="radar-chart">
+        <svg class="radar-svg" viewBox="0 0 400 400">
+          <!-- Radar background circles -->
+          <circle cx="200" cy="200" r="40" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+          <circle cx="200" cy="200" r="80" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+          <circle cx="200" cy="200" r="120" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+          <circle cx="200" cy="200" r="160" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+          <circle cx="200" cy="200" r="180" fill="none" stroke="#e0e0e0" stroke-width="1"/>
+          
+          <!-- Axis lines -->
+          <line x="200" y="20" x2="200" y="380" stroke="#ccc" stroke-width="1"/>
+          <line x="20" y="200" x2="380" y2="200" stroke="#ccc" stroke-width="1"/>
+          
+          <!-- Skill data points -->
+          <polygon points="200,20 250,150 300,100 350,150 380,200 350,250 300,300 250,350 200,380 150,350 100,300 50,250 20,200 50,150 100,100 150,50 200,20" 
+                   fill="rgba(0,0,128,0.3)" stroke="url(#grad1)" stroke-width="2"/>
+          
+          <polygon points="200,120 260,80 300,130 340,200 310,270 260,320 200,360 140,320 100,280 60,230 40,200 60,170 100,130 140,80 170,60 200,120" 
+                   fill="rgba(0,128,0,0.2)" stroke="url(#grad2)" stroke-width="2"/>
+          
+          <polygon points="200,220 260,180 300,230 340,200 310,270 260,320 200,360 140,320 100,280 60,230 40,200 60,170 100,130 140,80 170,60 200,220" 
+                   fill="rgba(0,255,0,0.2)" stroke="url(#grad3)" stroke-width="2"/>
+          
+          <!-- Labels -->
+          <text x="200" y="15" text-anchor="begin" font-size="11" fill="#666">Frontend</text>
+          <text x="380" y="205" text-anchor="end" font-size="11" fill="#666">System</text>
+          <text x="200" y="395" text-anchor="begin" font-size="11" fill="#666">Backend</text>
+          <text x="15" y="205" text-anchor="end" font-size="11" fill="#666">DevOps</text>
+          <text x="15" y="270" text-anchor="end" font-size="11" fill="#666">Database</span>
+          <text x="355" y="270" text-anchor="end" font-size="11" fill="#666">DevOps</text>
+          <text x="200" y="255" text-anchor="middle" font-size="12" font-weight="bold" fill="#000">Skills Radar</text>
+          
+          <!-- Gradients -->
+          <defs>
+            <linearGradient id="grad1"><stop offset="0%" stop-color="#4CAF50"/><stop offset="100%" stop-color="#2196F3"/></linearGradient>
+            <linearGradient id="grad2"><stop offset="0%" stop-color="#FF9800"/><stop offset="100%" stop-color="#FFC107"/></linearGradient>
+            <linearGradient id="grad3"><stop offset="0%" stop-color="#9C27B0"/><stop offset="100%" stop-color="#673AB7"/></linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div style="text-align: center; margin-top: 15px; color: #666;">
+        <small>Interactive Skills Assessment</small><br>
+        <small>Demonstrates proficiency across key development areas</small>
+      </div>
+    </div>
+
+    <!-- Close Button -->
+    <div class="content-actions">
+      <button onclick="window.parent.postMessage('closeWindow','*')">Close</button>
+      <button class="default" onclick="exportResume()">📄 Export PDF</button>
+    </div>
+  </div>
+
+  <script>
+    function showView(view) {
+      // Hide all views
+      document.querySelectorAll('.traditional-view, .timeline-view, .skills-radar').forEach(v => {
+        v.style.display = 'none';
+      });
+      
+      // Show selected view
+      const viewElement = view === 'timeline' ? '.timeline-view' : 
+                         view === 'skills' ? '.skills-radar' : 
+                         '.traditional-view';
+      document.querySelector(viewElement).style.display = 'block';
+      
+      // Update button states
+      document.querySelectorAll('.toggle-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      event?.target?.classList.add('active');
+      
+      // Add active state to initially selected button
+      const activeBtn = Array.from(document.querySelectorAll('.toggle-btn')).find(btn => 
+        btn.textContent.toLowerCase().includes(view)
+      );
+      if (activeBtn) {
+        activeBtn.classList.add('active');
+      }
+    }
+    
+    function exportResume() {
+      alert('Resume export functionality coming soon! 📄');
+    }
+
+    // Start with traditional view
+    showView('traditional');
+  </script>
+</body>
+</html>

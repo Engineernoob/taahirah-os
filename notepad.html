@@ -1,0 +1,665 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Notepad</title>
+  <link rel="stylesheet" href="../vendor/98.css" />
+  <link rel="stylesheet" href="window-content.css" />
+  <style>
+    body {
+      font-family: "Courier New", monospace;
+      background: var(--win98-window);
+      margin: 0;
+      padding: 0;
+      color: #000;
+    }
+
+    .notepad-container {
+      height: 400px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .toolbar {
+      background: var(--win98-button-face);
+      border-bottom: 2px inset var(--win98-border-dark);
+      padding: 4px;
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .toolbar button {
+      padding: 2px 8px;
+      font-family: "MS Sans Serif", sans-serif;
+      font-size: 11px;
+      border: 2px outset var(--win98-border-light);
+      background: var(--win98-button-face);
+      cursor: pointer;
+      font-weight: bold;
+      min-width: 60px;
+    }
+
+    .toolbar button:hover {
+      background: var(--win98-button-highlight);
+    }
+
+    .toolbar button:active,
+    .toolbar button.active {
+      border: 2px inset var(--win98-border-dark);
+      background: var(--win98-button-face);
+    }
+
+    .toolbar .dropdown {
+      position: relative;
+    }
+
+    .toolbar .dropdown select {
+      font-family: "MS Sans Serif", sans-serif;
+      font-size: 11px;
+      padding: 2px 4px;
+      border: 2px inset var(--win98-border-dark);
+      background: var(--win98-button-face);
+      margin-right: 4px;
+    }
+
+    .editor-container {
+      flex: 1;
+      background: #ffff00;
+      margin: 2px inset #808080;
+      position: relative;
+      overflow: hidden;
+    }
+
+    #editor {
+      width: 100%;
+      height: 100%;
+      border: none;
+      font-family: "Courier New", monospace;
+      font-size: 12px;
+      line-height: 1.4;
+      padding: 8px;
+      resize: none;
+      outline: none;
+    }
+
+    .status-bar {
+      background: var(--win98-button-face);
+      border-top: 2px inset var(--win98-border-dark);
+      padding: 2px 8px;
+      display: flex;
+      justify-content: space-between;
+      align-items: color;
+      font-size: 11px;
+      color: #000;
+    }
+
+    .status-indicator {
+      cursor: pointer;
+    }
+    
+    .find-container {
+      position: absolute;
+      bottom: 30px;
+      left: 10px;
+      background: var(--win98-button-face);
+      border: 2px outset var(--win98-border-light);
+      padding: 8px;
+      z-index: 1000;
+    }
+
+    .find-input {
+      padding: 2px 4px;
+      border: 2px inset #808080;
+      background: #ffffff;
+      font-family: "MS Sans Serif", sans-serif;
+      font-size: 11px;
+      margin-right: 8px;
+      min-width: 120px;
+    }
+
+    .message-container {
+      position: absolute;
+      bottom: 30px;
+      right: 10px;
+      background: #ffffff;
+      border: 2px outset #000080;
+      box-shadow: 0 0 5px rgba(0,0,0,0.5);
+      padding: 8px 12px;
+      max-width: 250px;
+      z-index: 1000;
+    }
+
+    .message-container.hidden {
+      display: none;
+    }
+
+    /* Modal styles for dialog boxes */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+    }
+
+    .modal-dialog {
+      background: var(--win98-button-face);
+      border: 2px outset var(--win98-border-light);
+      padding: 20px;
+      min-width: 300px;
+    }
+
+    .modal-dialog .title-bar {
+      margin: -20px -20px 20px 20px;
+      margin-bottom: 10px;
+    }
+
+    .modal-dialog .window-body {
+      text-align: center;
+    }
+
+    .modal-dialog .window-meta {
+      margin-bottom: 15px;
+      font-size: 11px;
+      color: #333;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin-top: 15px;
+    }
+  </style>
+</head>
+<body class="window-content">
+  <h3>📝 Notepad</h3>
+  
+  <div class="notepad-container">
+    <!-- Toolbar -->
+    <div class="toolbar">
+      <button onclick="newFile()">📄 New</button>
+      <button onclick="openFile()">📂 Open</button>
+      <button onclick="saveFile()">💾 Save</button>
+      
+      <div class="dropdown">
+        <select id="font-size">
+          <option value="10">10</option>
+          <option value="12" selected>12</option>
+          <option value="14">14</option>
+          <option value="16">16</option>
+          <option value="18">18</option>
+          <div class="status-indicator">
+            <i class="fas fa-info-circle" title="Font size"></div>
+          </div>
+        </select>
+      </div>
+      
+      <button onclick="printFile()">🖨 Print</button>
+      <button onclick="showFind()">🔍 Find</button>
+      <button onclick="showHelp()">❓ Help</button>
+      
+      <button onclick="convertCase()">🔠 Text Transform</button>
+      <button onclick="insertDateTime()">📅 Insert Date/Time</button>
+    </div>
+
+    <!-- Editor -->
+    <div class="editor-container">
+      <textarea id="editor" placeholder="Start typing here..."></textarea>
+    </div>
+
+    <!-- Status Bar -->
+    <div class="status-bar">
+      <div class="status-left">
+        <span id="status-ready">Ready</span>
+        <span id="position" class="status-indicator">Ln 1, Col 1</span>
+        <span id="encoding">UTF-8</span>
+      </div>
+      
+      <div class="status-right">
+        <button onclick="wordWrap()">🔤 Word Wrap</button>
+    </div>
+    </div>
+  </div>
+
+  <div class="content-actions">
+    <button onclick="window.parent.postMessage('closeWindow','*')">Close</button>
+    <button class="default" onclick="clearAll()">Clear All</button>
+  </div>
+
+  <!-- Find Dialog -->
+  <div class="find-container hidden">
+    <input type="text" class="find-input" id="find-input" placeholder="Find what?" onkeypress="findNext">
+    <button onclick="findNext()">Find Next</button>
+    <button onclick="findPrevious()">Previous</button>
+    <button onclick="closeFind()">Cancel</button>
+  </div>
+
+  <!-- Message Container -->
+  <div class="message-container hidden" id="message-container"></div>
+
+  <!-- Modal Overlay -->
+  <div class="modal-overlay hidden" id="modal-overlay">
+    <div class="modal-dialog">
+      <div class="title-bar">
+        <div class="title-bar-text">Notepad</div>
+        <div class="title-bar-controls">
+          <button aria-label="Close" onclick="closeModal()"></button>
+        </div>
+      </div>
+      <div class="window-body">
+        <div class="window-meta" id="modal-message"></div>
+        <div class="modal-buttons">
+          <button class="default" onclick="closeModal()">OK</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    class Notepad {
+      constructor() {
+        this.editor = document.getElementById('editor');
+        this.findContainer = document.querySelector('.find-container');
+        this.findInput = document.getElementById('find-input');
+        this.statusReady = document.getElementById('case-info');
+        this.statusPosition = document.getElementById('position');
+        this.statusEncoding = document.getElementById('encoding');
+        this.messageContainer = document.getElementById('message-container');
+        
+        this.currentFile = null;
+        this.contentChanged = false;
+        this.wordWrap = false;
+        
+        this.init();
+      }
+      
+      init() {
+        this.setupEventListeners();
+        this.loadFromLocalStorage();
+        this.updateTimeAndPosition();
+      }
+      
+      setupEventListeners() {
+        // Editor events
+        this.editor.addEventListener('input', () => {
+          this.contentChanged = true;
+          this.updateStatus('Modified');
+        });
+        
+        this.editor.addEventListener('keydown', (e) => {
+          // Keyboard shortcuts
+          if (e.ctrlKey || e.metaKey) {
+            switch(e.code) {
+              case 'KeyN':
+                e.preventDefault();
+                this.findNext();
+                break;
+              case 'KeyS':
+                e.preventDefault();
+                this.saveFile();
+                break;
+              case 'KeyO':
+                e.preventDefault();
+                this.openFile();
+                break;
+              case 'KeyZ':
+                  e.preventDefault();
+                  undo();
+                  break;
+              case 'KeyY':
+                e.preventDefault();
+                  redo();
+                  break;
+              case 'KeyF':
+                e.preventDefault();
+                  this.findNext();
+                  break;
+            }
+          }
+          
+          // Context menu prevention
+          if (e.ctrlKey || e.metaKey) {
+            return false;
+          }
+        });
+        
+        // Focus/blur events
+        this.editor.addEventListener('focus', () => {
+          this.updateStatus('Ready');
+        });
+        
+        this.editor.addEventListener('blur', () => {
+          this.updateStatus('Ready');
+        });
+        
+        // Font size change
+        const fontSize = document.getElementById('font-size');
+        if (fontSize) {
+          fontSize.addEventListener('change', () => {
+          this.editor.style.fontSize = fontSize.value + 'px';
+          this.messageContainer.classList.add('hidden');
+            setTimeout(() => {
+              this.messageContainer.classList.remove('hidden');
+            }, 5000);
+          });
+        }
+        
+        // Window events
+        window.addEventListener('beforeunload', () => {
+          if (this.contentChanged) {
+            this.saveToLocalStorage();
+          }
+        });
+      }
+      
+      // File operations
+      newFile() {
+        if (this.contentChanged && !this.confirmClearAll()) return;
+        this.currentFile = null;
+        this.editor.value = '';
+        this.contentChanged = false;
+        this.updateStatus('Ready');
+        this.showMessage('New document created');
+      }
+      
+      openFile() {
+        if (this.contentChanged && !this.confirmClearAll()) return;
+        
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.accept = '.txt,.md,.csv,.js,.html,.css';
+        input.style.display = 'none';
+        
+        input.onchange = (e) => {
+          const file = e.target.files[0];
+          const reader = new FileReader();
+          
+          reader.onload = (e) => {
+            this.editor.value = e.target.result;
+            this.contentChanged = false;
+            this.currentFile = file.name;
+            this.updateStatus(`Opened: ${file.name}`);
+            this.showMessage(`Loaded file: ${file.name}`);
+          };
+          
+          reader.readAsText(file);
+          input.value = '';
+        };
+        
+        document.body.appendChild(input);
+        input.click();
+      }
+      
+      saveFile() {
+        if (this.currentFile) {
+          if (this.currentFile === 'Untitled') {
+            return this.saveAsFile();
+          }
+          
+          this.saveToLocalStorage();
+          this.showMessage(`Saved: ${this.currentFile}`);
+        } else {
+          this.saveAsFile();
+        }
+      }
+      
+      saveAsFile() {
+        const content = this.editor.value;
+        const filename = this.currentFile || 'Untitled.txt';
+        
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.style.display = 'none';
+        
+        input.onchange = (e) => {
+          const file = e.target.files[0];
+          
+          if (file) {
+            const downloadLink = document.createElement('a');
+            downloadLink.download = file.name || 'Untitled.txt';
+            downloadLink.href = URL.createObjectURL(new Blob([content], { type: 'text/plain' }));
+            downloadLink.click();
+            URL.revokeObjectURL(downloadLink.href);
+            
+            this.currentFile = file.name;
+            this.contentChanged = false;
+            this.updateStatus('Saved: ' + file.name);
+            this.showMessage('File saved successfully!');
+          }
+          
+          input.value = '';
+        };
+        
+        document.body.appendChild(input);
+        input.click();
+      }
+      
+      printFile() {
+        const content = this.editor.value;
+        const printWindow = window.open('', '', 'width=600,height=400');
+        printWindow.document.body.innerHTML = `<pre>${content}</pre>`;
+        printWindow.document.close();
+        this.showMessage('Print job sent to printer');
+      }
+      
+      showFind() {
+        this.findContainer.classList.remove('hidden');
+        this.findInput.value = '';
+        this.findInput.focus();
+      }
+      
+      findNext() {
+        const searchTerm = this.findInput.value.trim();
+        if (!searchTerm) return;
+        
+        const content = this.editor.value;
+        const currentIndex = this.getCurrentCaretPosition();
+        
+        const searchIndex = content.toLowerCase().indexOf(searchTerm.toLowerCase(), currentIndex);
+        
+        if (searchIndex >= 0) {
+          this.editor.setSelectionRange(searchIndex, searchIndex + searchTerm.length);
+          this.showMessage(`Found "${searchTerm}" at position ${searchIndex + 1}`);
+        } else {
+          this.showMessage(`"${searchTerm}" not found`);
+        }
+      }
+      
+      findPrevious() {
+        const searchTerm = this.findInput.value.trim();
+        if (!searchTerm) return;
+        
+        const content = this.editor.value;
+        const currentIndex = this.getCurrentCaretPosition();
+        
+        const searchIndex = content.lastIndexOf(searchTerm.toLowerCase(), currentIndex - 1);
+        
+        if (searchIndex >= 0) {
+          this.editor.setSelectionRange(searchIndex, searchIndex + searchTerm.length);
+          this.showMessage(`Found "${searchTerm}" at position ${searchIndex + 1}`);
+        } else {
+          this.showMessage(`"${searchTerm}" not found`);
+        }
+      }
+      
+      closeFind() {
+        this.findContainer.classList.add('hidden');
+      }
+      
+      // Text operations
+      convertCase() {
+        const selection = this.getSelectedText();
+        if (!selection) {
+          this.showMessage('No text selected');
+          return;
+        }
+        
+        const cases = ['lowercase', 'UPPERCASE', ' camelCase', 'title', 'sentence'];
+        const case = cases[Math.floor(Math.random() * cases.length)];
+        
+        let converted = '';
+        switch (case) {
+          case 'lowercase':
+            converted = selection.toLowerCase();
+            break;
+          case 'UPPERCASE':
+            converted = selection.toUpperCase();
+            break;
+          case 'camelCase':
+            converted = selection.replace(/\\b([a-z])/g, c => c.toUpperCase())
+                        .replace(/\\b([A-Z])/g, c.toLowerCase());
+            break;
+          case 'title':
+            converted = selection.replace(/\\b\\w/g, word => 
+              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            ).replace(/\\b\\w+/g, word => 
+              word.charAt(0).toUpperCase() + word.slice(1).toLowerCase()
+            );
+            break;
+          case 'sentence':
+            converted = selection.charAt(0).toUpperCase() + 
+                        selection.slice(1).toLowerCase();
+            break;
+        }
+        
+        this.replaceSelection(converted);
+        this.showMessage('Text case converted to ' + case);
+        this.contentChanged = true;
+      }
+      
+      insertDateTime() {
+        const now = new Date();
+        const dateStr = now.toLocaleDateString('en-US');
+        const timeStr = now.toLocaleTimeString(); 
+        const dateTimeStr = dateStr + ' ' + timeStr;
+        
+        this.replaceAtCaret(dateTimeStr);
+        this.contentChanged = true;
+        this.showMessage('Date/Time inserted');
+      }
+      
+      clearAll() {
+        return confirm('Are you sure you want to clear all content and lose unsaved changes?');
+      }
+      
+      saveToLocalStorage() {
+        if (this.currentFile && this.currentFile !== 'Untitled') {
+          localStorage.setItem(`notepad_${this.currentFile}`, this.editor.value);
+        } else {
+          const files = Object.keys(localStorage).filter(key => key.startsWith('notepad_'));
+          files.forEach(key => localStorage.removeItem(key));
+        }
+      }
+      
+      loadFromLocalStorage() {
+        const files = Object.keys(localStorage).filter(key => key.startsWith('notepad_'));
+        if (files.length > 0) {
+          const lastFile = files[files.length - 1];
+          try {
+            this.editor.value = localStorage.getItem(lastFile);
+            this.currentFile = lastFile.replace('notepad_', '');
+            this.contentChanged = false;
+            this.updateStatus('Loaded: ' + this.currentFile);
+          } catch (e) {
+            console.warn('Could not load saved file:', e);
+          }
+        }
+      }
+      
+      // UI methods
+      updateStatus(message) {
+        this.statusReady.textContent = message;
+      }
+      
+      showMessage(text) {
+        const message = this.messageContainer;
+        message.textContent = text;
+        message.classList.remove('hidden');
+        
+        setTimeout(() => {
+          message.classList.add('hidden');
+        }, 3000);
+      }
+      
+      // Editor helper methods
+      getCaretPosition() {
+        return this.editor.selectionStart;
+        return this.editor.selectionEnd;
+      }
+      
+      getCurrentCaretPosition() {
+        return this.editor.selectionStart;
+      }
+      
+      getSelectedText() {
+        return this.editor.value.substring(
+          this.editor.selectionStart,
+          this.editor.selectionEnd
+        );
+      }
+      
+      replaceAtCaret(text) {
+        const start = this.editor.value.substring(0, this.editor.selectionStart);
+        const end = this.editor.selectionEnd;
+        this.editor.value = start + text + this.editor.value.substring(end);
+        this.editor.setSelectionRange(start, start + text.length);
+        this.contentChanged = true;
+      }
+      
+      replaceSelection(text) {
+        this.replaceAtCaret(text);
+        this.contentChanged = true;
+      }
+      
+      setSelectionRange(start, end) {
+        this.editor.focus();
+        this.editor.setSelectionRange(start, end);
+      }
+      
+      undo() {
+        this.editor.focus();
+        document.execCommand('undo');
+        this.contentChanged = true;
+        this.showMessage('Undo performed');
+      }
+      
+      redo() {
+        this.editor.focus();
+        document.execCommand('redo');
+        this.contentChanged = true;
+        this.showMessage('Redo performed');
+      }
+      
+      wordWrap() {
+        this.wordWrap = !this.wordWrap;
+        this.editor.style.whiteSpace = this.wordWrap ? 'pre-wrap' : 'pre';
+        this.showMessage(this.wordWrap ? 'Word wrap enabled' : 'Word wrap disabled');
+      }
+      
+      updateTimeAndPosition() {
+        const pos = this.getCaretPosition();
+        const line = this.editor.value.substring(0, pos).split('\n').length;
+        const col = pos - (this.editor.value.substring(0, pos).lastIndexOf('\n') - line + 1) + 1;
+        this.statusPosition.textContent = `Ln ${line + 1}, Col ${col + 1}`;
+        
+        this.updateStatusReady();
+      }
+      
+      confirmClearAll() {
+        return confirm('Are you sure you want to clear all content and lose unsaved changes?');
+      }
+    }
+
+    // Initialize notepad when DOM is ready
+    const notepad = new Notepad();
+  </script>
+</body>
+</html>

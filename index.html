@@ -60,6 +60,11 @@
         <span>Code Demo</span>
       </div>
 
+      <div class="desktop-icon" data-window="minesweeper" title="Minesweeper">
+        <img src="icons/game.png" alt="Minesweeper Icon" />
+        <span>Minesweeper</span>
+      </div>
+
       <div
         class="desktop-icon pinball-icon"
         id="pinball-desktop-icon"
@@ -197,6 +202,12 @@
           <hr style="border: 1px inset #808080; margin: 4px 0" />
 
           <li>
+            <button data-action="logout" class="menu-item">
+              <img src="icons/shutdown.png" alt="" />
+              <span>Log Out</span>
+            </button>
+          </li>
+          <li>
             <button data-action="shutdown" class="menu-item shutdown">
               <img src="icons/shutdown.png" alt="" />
               <span>Shut Down...</span>
@@ -246,16 +257,72 @@
     <!-- Boot + Ada Hooks -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        // --- Boot logic: only trigger once per full session
+        // --- Boot & Login logic: only trigger once per full session
         const booted = sessionStorage.getItem("booted");
+        const loggedIn = sessionStorage.getItem("loggedIn");
         const restarting = sessionStorage.getItem("restarting");
+        
         if (!booted && !restarting) {
           sessionStorage.setItem("booted", "true");
           window.location.replace("boot.html");
           return;
         }
+        
+        // Check if user is logged in
+        if (booted && !loggedIn && !restarting) {
+          sessionStorage.setItem("booted", "true");
+          window.location.replace("boot.html");
+          return;
+        }
+        
         // Clear restarting flag if coming back from shutdown
         if (restarting) sessionStorage.removeItem("restarting");
+        
+        // Display welcome message for logged in user
+        const currentUser = sessionStorage.getItem("currentUser");
+        if (currentUser && !document.querySelector('.welcome-message')) {
+          setTimeout(() => {
+            createWelcomeMessage(currentUser);
+          }, 2000);
+        }
+
+        // --- Welcome message function
+        function createWelcomeMessage(username) {
+          const welcomeWindow = document.createElement('div');
+          welcomeWindow.className = 'window welcome-message';
+          welcomeWindow.style.cssText = `
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 350px;
+            z-index: 10000;
+          `;
+          
+          welcomeWindow.innerHTML = `
+            <div class="title-bar">
+              <div class="title-bar-text">Welcome to TaahirahOS</div>
+              <div class="title-bar-controls">
+                <button aria-label="Close" onclick="this.closest('.window').remove()"></button>
+              </div>
+            </div>
+            <div class="window-body" style="padding: 20px; text-align: center;">
+              <h3 style="margin-top: 0; color: #000080;">Welcome, ${username}!</h3>
+              <p style="color: #000;">Your TaahirahOS desktop is ready.</p>
+              <p style="color: #000; font-size: 12px; margin-bottom: 20px;">Double-click icons to open applications.</p>
+              <button class="default" onclick="this.closest('.window').remove()">OK</button>
+            </div>
+          `;
+          
+          document.body.appendChild(welcomeWindow);
+          
+          // Auto-close after 5 seconds
+          setTimeout(() => {
+            if (welcomeWindow.parentNode) {
+              welcomeWindow.remove();
+            }
+          }, 5000);
+        }
 
         // --- Ada AI Assistant setup
         const adaIcon = document.getElementById("ada-icon");
@@ -268,6 +335,15 @@
               audio.play().catch(() => {});
               sessionStorage.setItem("adaPlayed", "true");
             }
+          });
+        }
+
+        // --- Logout handling
+        const logoutLink = document.querySelector("[data-action='logout']");
+        if (logoutLink) {
+          logoutLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            logOut();
           });
         }
 
@@ -288,6 +364,27 @@
           });
         });
       });
+
+      // --- Logout function
+      function logOut() {
+        // Play logout sound
+        try {
+          const logoutAudio = new Audio("sounds/winxpshutdown.mp3");
+          logoutAudio.volume = 0.4;
+          logoutAudio.play().catch(() => {});
+        } catch (err) {
+          console.log('Logout sound not available');
+        }
+        
+        // Clear login state
+        sessionStorage.removeItem('loggedIn');
+        sessionStorage.removeItem('currentUser');
+        
+        // Redirect to login/boot screen
+        setTimeout(() => {
+          window.location.replace('boot.html');
+        }, 1500);
+      }
 
       // --- Shutdown sound & redirect
       function playShutdownAndExit() {

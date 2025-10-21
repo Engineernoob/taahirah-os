@@ -1,174 +1,557 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Booting...</title>
-    <link rel="stylesheet" href="style.css" />
-    <style>
-      body {
-        margin: 0;
-        background: #000080; /* Win98 dark blue */
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        height: 100vh;
-        color: white;
-        font-family: "W95", "MS Sans Serif", sans-serif;
-        overflow: hidden;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <title>TaahirahOS Boot</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
-      .boot-logo {
-        display: none;
-        flex-direction: column;
-        align-items: center;
-        opacity: 0;
-        animation: fadeIn 1s ease forwards;
-      }
+    body {
+      width: 100vw;
+      height: 100vh;
+      font-family: "W95", "MS Sans Serif", sans-serif;
+      overflow: hidden;
+    }
 
-      .boot-logo img {
-        width: 320px;
-        image-rendering: pixelated;
-        margin-bottom: 16px;
-      }
+    /* Start Overlay */
+    #start-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+      cursor: pointer;
+      user-select: none;
+    }
 
-      .boot-logo p {
-        font-size: 14px;
-        margin: 8px 0;
-      }
+    .start-screen {
+      text-align: center;
+      color: #fff;
+    }
 
-      .boot-progress {
-        width: 300px;
-        height: 18px;
-        border: 2px inset #fff;
-        background: #000;
-        margin-top: 18px;
-        padding: 2px;
-        display: none; /* hidden until boot starts */
-      }
+    .start-screen h1 {
+      font-size: 48px;
+      margin-bottom: 20px;
+      text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
+      animation: pulse 2s infinite;
+    }
 
-      .boot-progress .progress-bar {
-        width: 0%;
-        height: 100%;
-        background: #00ff00;
-        transition: width 0.2s linear;
-      }
+    .start-screen p {
+      font-size: 18px;
+      opacity: 0.9;
+      animation: blink 1.5s infinite;
+    }
 
-      @keyframes boot-progress {
-        from {
-          width: 0%;
-        }
-        to {
-          width: 100%;
-        }
-      }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.7; }
+    }
 
-      @keyframes fadeIn {
-        from {
-          opacity: 0;
-          transform: translateY(20px);
-        }
-        to {
-          opacity: 1;
-          transform: translateY(0);
-        }
-      }
+    @keyframes blink {
+      0%, 50%, 100% { opacity: 1; }
+      25%, 75% { opacity: 0.5; }
+    }
 
-      /* Overlay */
-      #boot-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: black;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        flex-direction: column;
-        z-index: 999;
-        color: white;
-        font-size: 18px;
-        cursor: pointer;
-        user-select: none;
-        animation: flicker 1.5s infinite alternate;
-      }
+    /* BIOS/POST Screen */
+    #bios-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000080;
+      display: none;
+      flex-direction: column;
+      padding: 20px;
+      color: #fff;
+      font-family: "Courier New", monospace;
+      font-size: 14px;
+      z-index: 900;
+    }
 
-      @keyframes flicker {
-        from {
-          opacity: 0.6;
-        }
-        to {
-          opacity: 1;
-        }
-      }
+    .bios-line {
+      margin: 2px 0;
+      opacity: 0;
+      animation: typeIn 0.3s forwards;
+    }
 
-      #boot-overlay p {
-        margin: 0;
-        font-family: "MS Sans Serif", sans-serif;
-      }
-    </style>
-  </head>
+    @keyframes typeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
-  <body>
-    <!-- Overlay -->
-    <div id="boot-overlay">
-      <p>▶ Click to Start TaahirahOS</p>
+    /* Boot Screen */
+    #boot-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000080;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 800;
+    }
+
+    .boot-container {
+      text-align: center;
+      color: #fff;
+    }
+
+    .boot-logo {
+      width: 320px;
+      height: 240px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .boot-logo img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+    }
+
+    .boot-text {
+      font-size: 16px;
+      margin-bottom: 20px;
+      font-weight: bold;
+    }
+
+    .boot-progress {
+      width: 320px;
+      height: 20px;
+      border: 2px inset #c0c0c0;
+      background: #000;
+      padding: 2px;
+      position: relative;
+    }
+
+    .boot-progress-inner {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(90deg, #00ff00, #00ff00, #00cc00);
+      transition: width 0.3s ease;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .boot-progress-inner::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+      animation: shimmer 1s infinite;
+    }
+
+    @keyframes shimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
+    }
+
+    .boot-status {
+      margin-top: 15px;
+      font-size: 12px;
+      opacity: 0.8;
+    }
+
+    /* Login Screen */
+    #login-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, #000080, #000040);
+      display: none;
+      z-index: 700;
+    }
+
+    .login-container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      text-align: center;
+    }
+
+    .login-window {
+      background: #c0c0c0;
+      border: 2px outset #fff;
+      padding: 30px;
+      min-width: 400px;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+    }
+
+    .login-title {
+      font-size: 20px;
+      font-weight: bold;
+      margin-bottom: 20px;
+      color: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+    }
+
+    .login-icon {
+      width: 32px;
+      height: 32px;
+      background: #000080;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-weight: bold;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 5px;
+    }
+
+    .form-label {
+      font-size: 12px;
+      color: #000;
+      font-weight: bold;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 4px 8px;
+      border: 2px inset #fff;
+      background: #fff;
+      font-family: "MS Sans Serif", sans-serif;
+      font-size: 13px;
+    }
+
+    .form-input:focus {
+      outline: 1px dotted #000;
+      outline-offset: -2px;
+    }
+
+    .login-buttons {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 4px 16px;
+      border: 2px outset #c0c0c0;
+      background: #c0c0c0;
+      font-family: "MS Sans Serif", sans-serif;
+      font-size: 11px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    .btn:hover {
+      background: #e0e0e0;
+    }
+
+    .btn:active {
+      border: 2px inset #c0c0c0;
+    }
+
+    .btn-ok {
+      font-weight: bold;
+    }
+
+    .login-info {
+      margin-top: 15px;
+      font-size: 10px;
+      color: #666;
+      text-align: center;
+    }
+
+    .shutdown-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: #000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 2000;
+    }
+
+    .shutdown-text {
+      color: #fff;
+      font-size: 24px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Start Overlay -->
+  <div id="start-overlay">
+    <div class="start-screen">
+      <h1>TaahirahOS</h1>
+      <p>Press any key to boot system</p>
     </div>
+  </div>
 
-    <div class="boot-logo">
-      <img src="icons/win-98-logo.png" alt="Windows 98" />
-      <p>Starting <b>TaahirahOS</b>...</p>
+  <!-- BIOS/POST Screen -->
+  <div id="bios-screen">
+    <div class="bios-content"></div>
+  </div>
+
+  <!-- Boot Screen -->
+  <div id="boot-screen">
+    <div class="boot-container">
+      <div class="boot-logo">
+        <img src="icons/win-98-logo.png" alt="TaahirahOS" />
+      </div>
+      <div class="boot-text">Microsoft Windows 98</div>
       <div class="boot-progress">
-        <div class="progress-bar"></div>
+        <div class="boot-progress-inner" id="progress-bar"></div>
+      </div>
+      <div class="boot-status" id="boot-status">Starting TaahirahOS...</div>
+    </div>
+  </div>
+
+  <!-- Login Screen -->
+  <div id="login-screen">
+    <div class="login-container">
+      <div class="login-window">
+        <div class="login-title">
+          <div class="login-icon">T</div>
+          <span>Log On to TaahirahOS</span>
+        </div>
+        <div class="login-form">
+          <div class="form-group">
+            <label class="form-label">User name:</label>
+            <input type="text" class="form-input" id="username" value="Taahirah" readonly>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Password:</label>
+            <input type="password" class="form-input" id="password" placeholder="Enter password">
+          </div>
+        </div>
+        <div class="login-buttons">
+          <button class="btn" onclick="shutdownSystem()">Shutdown</button>
+          <button class="btn btn-ok" onclick="login()">OK</button>
+        </div>
+        <div class="login-info">
+          <div>Press Enter or click OK to log on</div>
+          <div>Leave password blank for guest access</div>
+        </div>
       </div>
     </div>
+  </div>
 
-    <!-- Boot sound -->
-    <audio id="boot-sound" preload="auto">
-      <source src="sounds/winxp.mp3" type="audio/mpeg" />
-      <source src="sounds/win-start.ogg" type="audio/ogg" />
-    </audio>
+  <!-- Shutdown Overlay -->
+  <div class="shutdown-overlay" id="shutdown-overlay">
+    <div class="shutdown-text">
+      <div>It is now safe to turn off your computer.</div>
+    </div>
+  </div>
 
-    <script>
-      const overlay = document.getElementById("boot-overlay");
-      const bootLogo = document.querySelector(".boot-logo");
-      const bootSound = document.getElementById("boot-sound");
-      const progressBar = document.querySelector(".progress-bar");
-      const progressContainer = document.querySelector(".boot-progress");
+  <!-- Boot sounds -->
+  <audio id="boot-sound" preload="auto">
+    <source src="sounds/winxp.mp3" type="audio/mpeg" />
+    <source src="sounds/win-start.ogg" type="audio/ogg" />
+  </audio>
 
-      let hasStarted = false;
+  <audio id="login-sound" preload="auto">
+    <source src="sounds/login.wav" type="audio/wav" />
+  </audio>
 
-      overlay.addEventListener("click", async () => {
-        if (hasStarted) return;
-        hasStarted = true;
+  <script>
+    const startOverlay = document.getElementById('start-overlay');
+    const biosScreen = document.getElementById('bios-screen');
+    const bootScreen = document.getElementById('boot-screen');
+    const loginScreen = document.getElementById('login-screen');
+    const progressBar = document.getElementById('progress-bar');
+    const bootStatus = document.getElementById('boot-status');
+    const bootSound = document.getElementById('boot-sound');
+    const loginSound = document.getElementById('login-sound');
+    const shutdownOverlay = document.getElementById('shutdown-overlay');
 
-        overlay.style.display = "none"; // remove overlay
-        bootLogo.style.display = "flex"; // show boot screen
-        progressContainer.style.display = "block"; // show progress bar
+    let hasStarted = false;
+    let currentBootPhase = 'start';
 
-        // Start progress animation
-        progressBar.style.animation = "boot-progress 3.2s linear forwards";
+    // Start overlay handler
+    function handleStart() {
+      if (hasStarted) return;
+      hasStarted = true;
+      startBIOS();
+    }
 
-        // Play boot sound and redirect after it ends
+    startOverlay.addEventListener('click', handleStart);
+    document.addEventListener('keydown', handleStart);
+
+    // BIOS/POST sequence
+    async function startBIOS() {
+      startOverlay.style.display = 'none';
+      biosScreen.style.display = 'flex';
+      currentBootPhase = 'bios';
+
+      const biosMessages = [
+        'TaahirahOS BIOS v1.0',
+        'CPU: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz',
+        'Memory Test: 16384MB OK',
+        'Detecting IDE Primary Master... ST1000DM003-1ER162',
+        'Detecting SATA Drives...',
+        'USB Controllers Initialized',
+        'PCI Device Listing...',
+        'Boot from CD-ROM...',
+        'Boot from Hard Disk...',
+        ''
+      ];
+
+      const biosContent = biosScreen.querySelector('.bios-content');
+      biosContent.innerHTML = '';
+
+      for (let i = 0; i < biosMessages.length; i++) {
+        biosContent.innerHTML += `<div class="bios-line" style="animation-delay: ${i * 0.2}s">${biosMessages[i]}</div>`;
+      }
+
+      await new Promise(resolve => setTimeout(resolve, biosMessages.length * 200 + 1000));
+      startBoot();
+    }
+
+    // Boot sequence
+    async function startBoot() {
+      biosScreen.style.display = 'none';
+      bootScreen.style.display = 'flex';
+      currentBootPhase = 'boot';
+
+      const bootSteps = [
+        { progress: 10, status: 'Loading TaahirahOS kernel...' },
+        { progress: 25, status: 'Initializing device drivers...' },
+        { progress: 40, status: 'Loading system files...' },
+        { progress: 55, status: 'Starting network services...' },
+        { progress: 70, status: 'Loading user profiles...' },
+        { progress: 85, status: 'Preparing desktop environment...' },
+        { progress: 95, status: 'Starting Windows...' },
+        { progress: 100, status: 'Welcome to TaahirahOS!' }
+      ];
+
+      for (let step of bootSteps) {
+        progressBar.style.width = step.progress + '%';
+        bootStatus.textContent = step.status;
+        await new Promise(resolve => setTimeout(resolve, 400));
+      }
+
+      // Play boot sound
+      try {
+        bootSound.volume = 0.5;
+        await bootSound.play();
+      } catch (err) {
+        console.log('Boot sound not available');
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      startLogin();
+    }
+
+    // Login screen
+    function startLogin() {
+      bootScreen.style.display = 'none';
+      loginScreen.style.display = 'block';
+      currentBootPhase = 'login';
+      
+      // Focus on password field
+      setTimeout(() => {
+        document.getElementById('password').focus();
+      }, 100);
+    }
+
+    // Login handler
+    function login() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+
+      // Accept any password or blank
+      const acceptedPasswords = ['', 'password', 'admin', '1234', 'taahirah'];
+      
+      if (acceptedPasswords.includes(password.toLowerCase())) {
+        // Play login sound
         try {
-          bootSound.volume = 0.7;
-          await bootSound.play();
-
-          bootSound.addEventListener("ended", () => {
-            window.location.replace("index.html");
-          });
+          loginSound.volume = 0.5;
+          loginSound.play();
         } catch (err) {
-          console.warn("Boot sound autoplay blocked:", err);
-          // Fallback timer in case of autoplay restrictions
-          setTimeout(() => {
-            // Mark the system as fully booted
-            sessionStorage.setItem("booted", "true");
-            sessionStorage.removeItem("restarting"); // Clear restart flag if set
-            window.location.replace("index.html");
-          }, 3500);
+          console.log('Login sound not available');
         }
-      });
-    </script>
-  </body>
+
+        // Save login info
+        sessionStorage.setItem('currentUser', username);
+        sessionStorage.setItem('loggedIn', 'true');
+        sessionStorage.setItem('booted', 'true');
+
+        // Transition to desktop
+        setTimeout(() => {
+          window.location.replace('index.html');
+        }, 500);
+      } else {
+        // Wrong password animation
+        const passwordField = document.getElementById('password');
+        passwordField.style.background = '#ffcccc';
+        
+        setTimeout(() => {
+          passwordField.style.background = '#fff';
+          passwordField.value = '';
+          passwordField.focus();
+        }, 500);
+      }
+    }
+
+    // Shutdown system
+    function shutdownSystem() {
+      shutdownOverlay.style.display = 'flex';
+      setTimeout(() => {
+        window.close();
+        // Fallback for browsers that can't close the window
+        window.location.replace('about:blank');
+      }, 3000);
+    }
+
+    // Enter key to login
+    document.getElementById('password').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        login();
+      }
+    });
+
+    // Auto-hide mouse cursor after inactivity
+    let mouseTimer;
+    document.addEventListener('mousemove', () => {
+      document.body.style.cursor = 'default';
+      clearTimeout(mouseTimer);
+      mouseTimer = setTimeout(() => {
+        if (currentBootPhase === 'boot') {
+          document.body.style.cursor = 'none';
+        }
+      }, 3000);
+    });
+  </script>
+</body>
 </html>

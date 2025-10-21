@@ -44,15 +44,65 @@
       }
 
       .output-frame {
-        background: #000;
+        background: #1a1a1a;
         border: 2px inset #808080;
         height: 300px;
-        padding: 8px;
+        padding: 12px;
         font-family: "Courier New", monospace;
-        font-size: 12px;
-        color: #0f0;
+        font-size: 13px;
+        line-height: 1.5;
+        color: #e6e6e6;
         overflow-y: auto;
         white-space: pre-wrap;
+        border-radius: 0;
+      }
+      
+      /* Eye-friendly output colors */
+      .output-frame {
+        --success-green: #4CAF50;
+        --tech-blue: #2196F3;
+        --info-cyan: #00ACC1;
+        --warning-orange: #FF9800;
+        --highlight-yellow: #FFC107;
+        --purple: #9C27B0;
+        --pink: #E91E63;
+      }
+      
+      .output-frame .emoji-effect {
+        font-size: 14px;
+        font-weight: bold;
+        background: linear-gradient(90deg, #4CAF50, #2196F3);
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        background-clip: text;
+      }
+      
+      .output-frame .tech-icon {
+        color: #2196F3;
+        font-weight: bold;
+      }
+      
+      .output-frame .key-highlight {
+        color: #4CAF50;
+        font-weight: bold;
+      }
+      
+      .output-frame .section-title {
+        color: #FF9800;
+        font-weight: bold;
+        border-bottom: 2px solid #404040;
+        padding-bottom: 4px;
+        margin-bottom: 8px;
+      }
+      
+      .output-frame .bullet-point {
+        color: #00ACC1;
+        font-weight: bold;
+      }
+      
+      .output-frame .quality-score {
+        color: #FFC107;
+        font-weight: bold;
       }
 
       .demo-selector {
@@ -116,7 +166,8 @@
       <div class="code-section">
         <fieldset>
           <legend>✏️ Code Editor</legend>
-          <textarea id="code-editor"></textarea>
+          <textarea id="code-editor" style="display: none;"></textarea>
+          <div id="fallback-editor" style="display: none; width: 100%; height: 300px; border: 2px inset #808080; background: #1e1e1e; color: #f8f8f2; font-family: 'Courier New', monospace; font-size: 12px; padding: 8px; resize: vertical;"></textarea>
           <button id="run-code" class="run-btn default">▶ Run Code</button>
         </fieldset>
       </div>
@@ -124,7 +175,7 @@
       <div class="result-section">
         <fieldset>
           <legend>📋 Output Result</legend>
-          <div id="output">Click "Run Code" to see results...</div>
+          <div id="output" class="output-frame">Click "Run Code" to see results...</div>
         </fieldset>
       </div>
     </div>
@@ -603,7 +654,12 @@ async function fetchUserData() {
 
       document.addEventListener('DOMContentLoaded', () => {
         // Initialize CodeMirror
-        editor = CodeMirror.fromTextArea(document.getElementById('code-editor'), {
+        const textArea = document.getElementById('code-editor');
+        if (!textArea) {
+          console.error('Code editor textarea not found');
+          return;
+        }
+        editor = CodeMirror.fromTextArea(textArea, {
           mode: 'javascript',
           theme: 'monokai',
           lineNumbers: true,
@@ -631,24 +687,99 @@ async function fetchUserData() {
       });
 
       function loadDemo(demoName) {
+        if (!demos[demoName]) {
+          console.error('Demo not found:', demoName);
+          return;
+        }
+        
         currentDemo = demoName;
         const demo = demos[demoName];
+        
+        // Save any changes from fallback to textarea before switching
+        const fallbackEditor = document.getElementById('fallback-editor');
+        if (fallbackEditor && fallbackEditor.style.display !== 'none') {
+          const textArea = document.getElementById('code-editor');
+          if (textArea) {
+            textArea.value = fallbackEditor.value;
+          }
+        }
+        
+        if (editor && editor.setValue) {
         editor.setValue(demo.code);
-        document.getElementById('output').textContent = 'Click "Run Code" to see results...';
+          // Hide fallback if CodeMirror is working
+          if (fallbackEditor) {
+            fallbackEditor.style.display = 'none';
+          }
+        } else {
+          console.error('Code editor not initialized');
+          // Show fallback editor
+          if (fallbackEditor) {
+            fallbackEditor.style.display = 'block';
+            fallbackEditor.value = demo.code;
+          }
+        }
+        
+        const output = document.getElementById('output');
+        if (output) {
+          output.textContent = 'Click "Run Code" to see results...';
+        }
       }
 
       function runCode() {
         const demo = demos[currentDemo];
         const output = document.getElementById('output');
         
+        if (!demo) {
+          console.error('No demo selected');
+          return;
+        }
+        
+        if (!output) {
+          console.error('Output element not found');
+          return;
+        }
+        
         // Simulate running/analyzing the code
-        output.style.color = '#0f0';
+        output.style.color = '#4CAF50';
         output.textContent = '🔄 Analyzing code...\n';
         
         setTimeout(() => {
-          output.style.color = '#0f0';
-          output.textContent = demo.output;
+          output.style.color = '';
+          output.innerHTML = formatOutput(demo.output);
         }, 800);
+
+      function formatOutput(text) {
+        return text
+          // Success checkmarks
+          .replace(/✅/g, '<span class="emoji-effect">✅</span>')
+          // Tech icons
+          .replace(/🎯\s*(Modern|Technical|Security|User|Performance|Responsive)/g, '<span class="section-title">🎯 $1</span>')
+          .replace(/🎯/g, '<span class="tech-icon">🎯</span>')
+          .replace(/📊/g, '<span class="tech-icon">📊</span>')
+          // Info icons
+          .replace(/💡/g, '<span class="highlight-yellow">💡</span>')
+          .replace(/⚡/g, '<span class="tech-icon">⚡</span>')
+          // Security and features
+          .replace(/🛡️/g, '<span class="key-highlight">🛡️</span>')
+          .replace(/📈/g, '<span class="key-highlight">📈</span>')
+          // UI and design
+          .replace(/🎨/g, '<span class="bullet-point">🎨</span>')
+          .replace(/📱/g, '<span class="bullet-point">📱</span>')
+          // Quality scores
+          .replace(/💻/g, '<span class="tech-icon">💻</span>')
+          // Advanced features
+          .replace(/🧠/g, '<span class="tech-icon">🧠</span>')
+          .replace(/🔐/g, '<span class="key-highlight">🔐</span>')
+          .replace(/🌐/g, '<span class="tech-icon">🌐</span>')
+          // Quality scores
+          .replace(/Code Quality Score: (\d+\/\d+)/g, '<span class="quality-score">💡 Code Quality Score: $1</span>')
+          // Key highlights
+          .replace(/•/g, '<span class="bullet-point">•</span>')
+          // Section dividers
+          .replace(/━━━━━━━━━━━━━━━━━━━━━━━━━━━━━/g, '<div class="section-title">═══════════════════════════════</div>')
+          // Fix the duplicate replacement issue
+          .replace/<span class="tech-icon">🎯<\/span><span class="tech-icon">🎯<\/span>/g, '<span class="tech-icon">🎯</span>');
+      }
       }
     </script>
   </body>
