@@ -1,0 +1,282 @@
+/* ============================================
+   WINDOWS 98 3D PINBALL EMULATOR STYLES
+   ============================================ */
+
+/* Loading Screen */
+#loading-screen {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #008080 0%, #004040 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.loading-content {
+  background: var(--win98-button-face);
+  border: 2px outset var(--win98-border-light);
+  padding: 30px;
+  text-align: center;
+  max-width: 400px;
+  box-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.loading-content h3 {
+  margin: 0 0 20px 0;
+  color: var(--win98-text);
+  font-family: "MS Sans Serif", sans-serif;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.loading-steps {
+  text-align: left;
+  margin: 20px 0;
+  font-family: "MS Sans Serif", sans-serif;
+  font-size: 11px;
+  color: var(--win98-text);
+  line-height: 1.8;
+}
+
+.loading-steps div {
+  padding: 2px 0;
+  position: relative;
+  padding-left: 20px;
+}
+
+.loading-steps div::before {
+  content: "□";
+  position: absolute;
+  left: 0;
+  color: var(--win98-text);
+}
+
+.loading-steps div.loading::before {
+  content: "☐";
+  color: #0000ff;
+}
+
+.loading-steps div.completed::before {
+  content: "☑";
+  color: #008000;
+}
+
+.progressbar {
+  border: 2px inset var(--win98-border-dark);
+  width: 100%;
+  height: 18px;
+  background: var(--win98-window);
+  margin: 15px 0;
+}
+
+#loading-progress {
+  background: linear-gradient(90deg, #0000ff, #00ffff);
+  height: 100%;
+  width: 0%;
+  transition: width 0.3s ease;
+}
+
+/* Emulator Container */
+#emulator-container {
+  width: 100%;
+  height: 100%;
+  background: #000;
+  position: relative;
+}
+
+#v86-screen {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+#v86-screen canvas {
+  max-width: 100%;
+  max-height: 100%;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+  border: 2px inset var(--win98-border-dark);
+  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
+/* Emulator Controls Info */
+#emulator-controls {
+  font-family: "MS Sans Serif", sans-serif;
+  font-size: 11px;
+  color: var(--win98-text);
+  text-shadow: 1px 1px 0 #fff;
+  user-select: none;
+}
+
+#emulator-controls div {
+  margin: 2px 0;
+}
+
+/* Fullscreen Button */
+#fullscreen-btn {
+  background: var(--win98-button-face);
+  border: 2px outset var(--win98-border-light);
+  padding: 4px 8px;
+  margin-top: 8px;
+  cursor: pointer;
+  font-family: "MS Sans Serif", sans-serif;
+  font-size: 11px;
+  color: var(--win98-text);
+}
+
+#fullscreen-btn:hover {
+  background: var(--win98-button-highlight);
+}
+
+#fullscreen-btn:active {
+  border: 2px inset var(--win98-border-dark);
+}
+
+/* Start Button Styling */
+#start-emulator.default {
+  background: var(--win98-button-face);
+  border: 2px outset var(--win98-border-light);
+  color: var(--win98-text);
+  padding: 8px 16px;
+  font-family: "MS Sans Serif", sans-serif;
+  font-size: 11px;
+  cursor: pointer;
+}
+
+#start-emulator.default:focus {
+  outline: 1px dotted #000;
+  outline-offset: -4px;
+}
+
+#start-emulator.default:hover {
+  background: var(--win98-button-highlight);
+}
+
+#start-emulator.default:active {
+  border: 2px inset var(--win98-border-dark);
+}
+
+/* Status Indicators */
+.status-indicator {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  background: #008000;
+  margin-right: 4px;
+  border: 1px solid #000;
+}
+
+.status-indicator.warning {
+  background: #ffff00;
+}
+
+.status-indicator.error {
+  background: #ff0000;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .loading-content {
+    padding: 20px;
+    margin: 10px;
+    max-width: none;
+  }
+  
+  #emulator-controls {
+    font-size: 10px;
+    padding: 6px;
+  }
+  
+  #emulator-controls div {
+    margin: 1px 0;
+  }
+}
+
+/* Windows 98 Style Animations */
+@keyframes win98-blink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.loading-steps div.loading {
+  animation: win98-blink 1s infinite;
+}
+
+/* Error Message Styling */
+.error-message {
+  background: #ff0000;
+  color: #ffffff;
+  padding: 8px;
+  margin: 10px 0;
+  border: 2px solid #800000;
+  font-family: "MS Sans Serif", sans-serif;
+  font-size: 11px;
+  text-align: center;
+}
+
+/* Success Message Styling */
+.success-message {
+  background: #00ff00;
+  color: #000000;
+  padding: 8px;
+  margin: 10px 0;
+  border: 2px solid #008000;
+  font-family: "MS Sans Serif", sans-serif;
+  font-size: 11px;
+  text-align: center;
+}
+
+/* Loading Banner Animation */
+@keyframes loading-banner {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.loading-banner {
+  background: linear-gradient(90deg, #0000ff, #00ffff, #0000ff);
+  background-size: 200% 200%;
+  animation: loading-banner 2s linear infinite;
+}
+
+/* Performance Optimization */
+#v86-screen {
+  will-change: transform;
+}
+
+#emulator-container {
+  contain: layout style paint;
+}
+
+/* Fullscreen Mode */
+:fullscreen #v86-screen canvas {
+  width: 100vw !important;
+  height: 100vh !important;
+  border: none;
+}
+
+:-webkit-full-screen #v86-screen canvas {
+  width: 100vw !important;
+  height: 100vh !important;
+  border: none;
+}
+
+:-moz-full-screen #v86-screen canvas {
+  width: 100vw !important;
+  height: 100vh !important;
+  border: none;
+}
+
+:-ms-fullscreen #v86-screen canvas {
+  width: 100vw !important;
+  height: 100vh !important;
+  border: none;
+}

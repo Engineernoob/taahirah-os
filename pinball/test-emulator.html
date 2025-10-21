@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Emulator Test - Debug</title>
+    <script src="https://unpkg.com/v86@latest/build/libv86.js"></script>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #000; color: #0f0; }
+        .error { color: #f00; }
+        .success { color: #0f0; }
+        .warning { color: #ff0; }
+        .info { color: #00f; }
+    </style>
+</head>
+<body>
+    <h1>Emulator Debug Test</h1>
+    <div id="output"></div>
+    
+    <script>
+        const output = document.getElementById('output');
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = type;
+            div.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+            output.appendChild(div);
+            console.log(message);
+        }
+        
+        // Test v86 loading
+        if (typeof V86Starter !== 'undefined') {
+            log('✓ v86.js library loaded successfully', 'success');
+        } else {
+            log('✗ v86.js library not loaded', 'error');
+        }
+        
+        // Test file access
+        const filesToTest = [
+            '3DPinball/PINBALL.EXE',
+            '3DPinball/PINBALL.DAT', 
+            '3DPinball/table.bmp'
+        ];
+        
+        async function testFiles() {
+            for (const file of filesToTest) {
+                try {
+                    const response = await fetch(file, { method: 'HEAD' });
+                    if (response.ok) {
+                        log(`✓ ${file} - ${response.statusText} (${response.headers.get('content-length')} bytes)`, 'success');
+                    } else {
+                        log(`✗ ${file} - ${response.status} ${response.statusText}`, 'error');
+                    }
+                } catch (error) {
+                    log(`✗ ${file} - ${error.message}`, 'error');
+                }
+            }
+        }
+        
+        // Test configuration
+        function testEmulatorConfig() {
+            try {
+                const config = {
+                    memory_size: 64 * 1024 * 1024,
+                    use_xterm: false,
+                    autostart: false
+                };
+                log('✓ Emulator configuration valid', 'success');
+                log(`  Memory: ${config.memory_size / (1024*1024)}MB`);
+                return true;
+            } catch (error) {
+                log(`✗ Configuration error: ${error.message}`, 'error');
+                return false;
+            }
+        }
+        
+        // Run tests
+        log('Starting emulator compatibility tests...', 'info');
+        
+        setTimeout(() => testFiles(), 100);
+        testEmulatorConfig();
+        
+        // Test browser compatibility
+        log(`Browser: ${navigator.userAgent}`, 'info');
+        log(`WebAudio Support: ${typeof AudioContext !== 'undefined' ? '✓' : '✗'}`, 
+            typeof AudioContext !== 'undefined' ? 'success' : 'error');
+        log(`WebAssembly Support: ${typeof WebAssembly === 'object' ? '✓' : '✗'}`, 
+            typeof WebAssembly === 'object' ? 'success' : 'error');
+        log(`SharedArrayBuffer Support: ${typeof SharedArrayBuffer !== 'undefined' ? '✓' : '✗'}`, 
+            typeof SharedArrayBuffer !== 'undefined' ? 'success' : 'warning');
+        
+        // Check for security headers
+        if (location.protocol === 'https:') {
+            log('✓ HTTPS protocol - Good for security', 'success');
+        } else {
+            log('⚠ HTTP protocol - Some features may be limited', 'warning');
+        }
+    </script>
+</body>
+</html>

@@ -2,27 +2,79 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Pinball Test</title>
+  <title>3D Pinball: Space Cadet - Test</title>
+  <meta name="description" content="Test version of the 3D Pinball Space Cadet game">
   <style>
     body {
       margin: 0;
-      background: #000;
+      background: linear-gradient(135deg, #001020 0%, #000510 100%);
       display: flex;
-      align-items: center;
       justify-content: center;
-      height: 100vh;
+      align-items: center;
+      min-height: 100vh;
+      font-family: "Courier New", monospace;
     }
+    
+    #game-container {
+      position: relative;
+      padding: 20px;
+    }
+    
     #game-canvas {
-      border: 2px solid #a855f7;
-      background: #111;
+      border: 3px ridge #c0c0c0;
+      box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 255, 255, 0.1);
+      background: linear-gradient(180deg, #001030 0%, #000820 50%, #000410 100%);
+      image-rendering: pixelated;
+      image-rendering: crisp-edges;
+    }
+    
+    #controls {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+      background: rgba(0, 16, 32, 0.9);
+      border: 2px solid #00ffff;
+      padding: 15px;
+      color: #00ffff;
+      font-size: 12px;
+      border-radius: 4px;
+    }
+    
+    #controls h3 {
+      margin: 0 0 10px 0;
+      color: #ffffff;
+    }
+    
+    #controls div {
+      margin: 5px 0;
+    }
+    
+    .key {
+      display: inline-block;
+      background: #003366;
+      border: 1px solid #00ffff;
+      padding: 2px 6px;
+      margin-right: 5px;
+      border-radius: 2px;
     }
   </style>
 </head>
 <body>
-  <!-- The game canvas -->
-  <canvas id="game-canvas" width="400" height="600"></canvas>
+  <div id="game-container">
+    <!-- Game Canvas -->
+    <canvas id="game-canvas" width="500" height="700"></canvas>
+    
+    <!-- Control Instructions -->
+    <div id="controls">
+      <h3>CONTROLS</h3>
+      <div><span class="key">Z</span> / <span class="key">←</span> Left Flipper</div>
+      <div><span class="key">X</span> / <span class="key">→</span> Right Flipper</div>
+      <div><span class="key">SPACE</span> / <span class="key">↓</span> Launch Ball</div>
+      <div><span class="key">SPACE</span> Start Game</div>
+    </div>
+  </div>
 
-  <!-- Load the engine -->
-  <script src="pinball.js"></script>
+  <!-- Load the pinball engine with original assets -->
+  <script src="pinball-orig.js"></script>
 </body>
 </html>
