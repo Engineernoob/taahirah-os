@@ -121,6 +121,22 @@ WINDOW_PRESETS.quantum = {
   height: 520,
 };
 
+WINDOW_PRESETS.slowread = {
+  title: "Slow Read",
+  icon: "icons/projects.png",
+  file: "projects/slow-read.html",
+  width: 640,
+  height: 520,
+};
+
+WINDOW_PRESETS.pixelfin = {
+  title: "Pixel Fin",
+  icon: "icons/projects.png",
+  file: "projects/pixel-fin.html",
+  width: 640,
+  height: 520,
+};
+
 // -------------------- Pinball Icon Animation --------------------
 function initPinballIcon() {
   const pinballIcon = document.getElementById("pinball-desktop-icon");
@@ -365,7 +381,7 @@ function bringToFront(win) {
     const isCurrent = entry.win.dataset.windowId === windowId;
     setTaskButtonState(
       entry.btn,
-      isCurrent && entry.win.style.display !== "none",
+      isCurrent && entry.win.style.display !== "none"
     );
   }
 }
