@@ -34,8 +34,10 @@
       <div class="window-body" style="padding: 0; height: 680px">
         <div id="game-container" style="display: flex; height: 100%">
           <!-- Main Game Area -->
-          <div id="game-area" style="flex-grow: 1; background: black">
-            <canvas id="game-canvas" width="600" height="680"></canvas>
+          <div id="game-area" style="flex-grow: 1; background: black; position: relative;">
+            <div id="pinball-table">
+              <canvas id="game-canvas" width="600" height="680"></canvas>
+            </div>
             <div id="game-ui">
               <!-- Controls -->
               <div
