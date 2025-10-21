@@ -124,7 +124,7 @@ WINDOW_PRESETS.quantum = {
 WINDOW_PRESETS.slowread = {
   title: "Slow Read",
   icon: "icons/projects.png",
-  file: "projects/slow-read.html",
+  file: "projects/slowread.html",
   width: 640,
   height: 520,
 };
@@ -132,7 +132,7 @@ WINDOW_PRESETS.slowread = {
 WINDOW_PRESETS.pixelfin = {
   title: "Pixel Fin",
   icon: "icons/projects.png",
-  file: "projects/pixel-fin.html",
+  file: "projects/pixelfin.html",
   width: 640,
   height: 520,
 };
