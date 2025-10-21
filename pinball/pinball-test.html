@@ -1,80 +1,49 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>3D Pinball: Space Cadet - Test</title>
-  <meta name="description" content="Test version of the 3D Pinball Space Cadet game">
-  <style>
-    body {
-      margin: 0;
-      background: linear-gradient(135deg, #001020 0%, #000510 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
-      font-family: "Courier New", monospace;
-    }
-    
-    #game-container {
-      position: relative;
-      padding: 20px;
-    }
-    
-    #game-canvas {
-      border: 3px ridge #c0c0c0;
-      box-shadow: 0 0 30px rgba(0, 255, 255, 0.3), inset 0 0 20px rgba(0, 255, 255, 0.1);
-      background: linear-gradient(180deg, #001030 0%, #000820 50%, #000410 100%);
-      image-rendering: pixelated;
-      image-rendering: crisp-edges;
-    }
-    
-    #controls {
-      position: absolute;
-      top: 20px;
-      left: 20px;
-      background: rgba(0, 16, 32, 0.9);
-      border: 2px solid #00ffff;
-      padding: 15px;
-      color: #00ffff;
-      font-size: 12px;
-      border-radius: 4px;
-    }
-    
-    #controls h3 {
-      margin: 0 0 10px 0;
-      color: #ffffff;
-    }
-    
-    #controls div {
-      margin: 5px 0;
-    }
-    
-    .key {
-      display: inline-block;
-      background: #003366;
-      border: 1px solid #00ffff;
-      padding: 2px 6px;
-      margin-right: 5px;
-      border-radius: 2px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <title>3D Pinball: Space Cadet</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: #008080;
+        }
+        
+        .game-container {
+            width: 100vw;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        #pinball-iframe {
+            flex: 1;
+            width: 100%;
+            border: none;
+        }
+        
+        .status-bar {
+            background: #c0c0c0;
+            border-top: 2px inset #808080;
+            padding: 4px 8px;
+            font-size: 11px;
+            text-align: center;
+            color: #000;
+        }
+    </style>
 </head>
 <body>
-  <div id="game-container">
-    <!-- Game Canvas -->
-    <canvas id="game-canvas" width="500" height="700"></canvas>
-    
-    <!-- Control Instructions -->
-    <div id="controls">
-      <h3>CONTROLS</h3>
-      <div><span class="key">Z</span> / <span class="key">←</span> Left Flipper</div>
-      <div><span class="key">X</span> / <span class="key">→</span> Right Flipper</div>
-      <div><span class="key">SPACE</span> / <span class="key">↓</span> Launch Ball</div>
-      <div><span class="key">SPACE</span> Start Game</div>
+    <div class="game-container">
+        <iframe 
+            src="https://alula.github.io/SpaceCadetPinball/"
+            id="pinball-iframe"
+            frameborder="0"
+        ></iframe>
+        
+        <div class="status-bar">
+            🎮 3D Pinball: Space Cadet | Controls: Z/X Flipper | Space Launch | 🖱️ Mouse Navigate
+        </div>
     </div>
-  </div>
-
-  <!-- Load the pinball engine with original assets -->
-  <script src="pinball-orig.js"></script>
 </body>
 </html>

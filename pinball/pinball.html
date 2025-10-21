@@ -1,75 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>Windows 98 - 3D Pinball: Space Cadet</title>
-    <meta
-      name="description"
-      content="Running original Windows 3D Pinball Space Cadet in a web-based Windows 98 emulator"
-    />
-    <!-- 98.css for native Win98 look -->
-    <link rel="stylesheet" href="../vendor/98.css" />
-    <!-- v86.js emulator for running Windows -->
-    <script src="https://unpkg.com/v86@latest/build/libv86.js"></script>
-    <!-- Game-specific styles -->
-    <link rel="stylesheet" href="pinball-win98.css" />
-    <!-- Fonts -->
-    <link rel="stylesheet" href="../fonts/w95font.css" />
-  </head>
-  <body>
-    <div class="window" style="width: 920px; margin: 20px auto">
-      <!-- Title Bar -->
-      <div class="title-bar">
-        <div class="title-bar-text">Windows 98 - 3D Pinball: Space Cadet</div>
-        <div class="title-bar-controls">
-          <button aria-label="Minimize"></button>
-          <button aria-label="Maximize"></button>
-          <button aria-label="Close" onclick="window.close()"></button>
-        </div>
-      </div>
-
-      <!-- Window Body -->
-      <div class="window-body" style="padding: 0; height: 680px">
-        <div id="game-container" style="position: relative; height: 100%">
-          <!-- Loading Screen -->
-          <div id="loading-screen">
-            <div class="loading-content">
-              <h3>Starting 3D Pinball: Space Cadet</h3>
-              <div class="loading-steps">
-                <div id="step1">Loading Emscripten runtime...</div>
-                <div id="step2">Loading decompiled game code...</div>
-                <div id="step3">Compiling WebAssembly...</div>
-                <div id="step4">Launching pinball.exe...</div>
-              </div>
-              <div class="progressbar">
-                <div id="loading-progress" style="width: 0%"></div>
-              </div>
-              <button id="start-emulator" style="display: none; margin-top: 20px;" class="default">
-                Launch 3D Pinball: Space Cadet (Decompiled)
-              </button>
-            </div>
-          </div>
-
-          <!-- V86 Emulator Display -->
-          <div id="emulator-container" style="display: none; width: 100%; height: 100%;">
-            <div id="v86-screen" style="width: 100%; height: 100%; overflow: hidden;">
-              <!-- Emulator canvas will be inserted here -->
-            </div>
-          </div>
-
-          <!-- Emulator Controls -->
-          <div id="emulator-controls" style="display: none; position: absolute; bottom: 10px; right: 10px; z-index: 1000;">
-            <div style="background: #c0c0c0; border: 2px inset #808080; padding: 8px; font-size: 11px;">
-              <div><strong>Controls:</strong></div>
-              <div>• Z/X or ←/→: Flippers</div>
-              <div>• SPACE: Launch Ball</div>
-              <div>• ESC: Fullscreen</div>
-            </div>
-          </div>
-        </div>
-      </div>
+<head>
+    <meta charset="UTF-8">
+    <title>3D Pinball: Space Cadet</title>
+    <meta name="description" content="Classic 3D Pinball Space Cadet game" />
+    <script>
+        // Direct redirect to the actual pinball game
+        window.location.replace('https://alula.github.io/SpaceCadetPinball/');
+    </script>
+</head>
+<body>
+    <div style="text-align: center; padding: 50px; font-family: Arial, sans-serif;">
+        <h2>Loading 3D Pinball: Space Cadet...</h2>
+        <p>If you're not redirected automatically, <a href="https://alula.github.io/SpaceCadetPinball/">click here</a>.</p>
     </div>
-
-    <script src="pinball-win98.js"></script>
-  </body>
+</body>
 </html>
