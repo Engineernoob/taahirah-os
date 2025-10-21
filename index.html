@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -81,7 +81,7 @@
         alt="Start Menu"
         title="Open Start Menu"
         style="
-          height: auto;
+          height: 32px;
           width: auto;
           margin-left: 6px;
           cursor: pointer;
@@ -102,56 +102,121 @@
       class="window start-menu"
       hidden
       aria-label="Start Menu"
+      style="
+        position: fixed;
+        bottom: 38px;
+        left: 6px;
+        width: 220px;
+        z-index: 2000;
+      "
     >
       <div class="title-bar">
-        <div class="title-bar-text">Start Menu</div>
+        <div class="title-bar-text">Taahirah-OS</div>
       </div>
-      <div class="window-body">
-        <ul class="start-menu-list">
+
+      <div
+        class="window-body"
+        style="padding: 0; background: var(--win98-button-face)"
+      >
+        <ul
+          class="start-menu-list"
+          style="
+            list-style: none;
+            margin: 0;
+            padding: 4px;
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+          "
+        >
           <li>
-            <button data-window="about">
-              <img src="icons/about-me.png" alt="" /> About
+            <button data-window="about" class="menu-item">
+              <img src="icons/about-me.png" alt="" />
+              About Me
             </button>
           </li>
           <li>
-            <button data-window="projects">
-              <img src="icons/projects.png" alt="" /> Projects
+            <button data-window="projects" class="menu-item">
+              <img src="icons/projects.png" alt="" />
+              Projects
             </button>
           </li>
           <li>
-            <button data-window="case-study">
-              <img src="icons/win-98-logo.png" alt="" /> Case Study
+            <button data-window="case-study" class="menu-item">
+              <img src="icons/win-98-logo.png" alt="" />
+              Case Study
             </button>
           </li>
           <li>
-            <button data-window="contact">
-              <img src="icons/contact.png" alt="" /> Contact
+            <button data-window="contact" class="menu-item">
+              <img src="icons/contact.png" alt="" />
+              Contact
             </button>
           </li>
           <li>
-            <button data-window="skills-radar">
-              <img src="icons/skills.png" alt="" /> Skills Radar
+            <button data-window="skills-radar" class="menu-item">
+              <img src="icons/skills.png" alt="" />
+              Skills Radar
             </button>
           </li>
           <li>
-            <button data-window="pinball">
-              <img src="icons/game.png" alt="" /> Pinball Game
+            <button data-window="pinball" class="menu-item">
+              <img src="icons/game.png" alt="" />
+              Pinball Game
             </button>
           </li>
           <li>
-            <button data-window="ada">
-              <img src="icons/ada-icon.png" alt="" /> Ada Assistant
+            <button data-window="ada" class="menu-item">
+              <img src="icons/ada-icon.png" alt="" />
+              Ada Assistant
             </button>
           </li>
-          <hr />
+
+          <hr style="border: 1px inset #808080; margin: 4px 0" />
+
           <li>
-            <button data-action="shutdown">
-              <img src="icons/shutdown.png" alt="" /> Shut Down
+            <button data-action="shutdown" class="menu-item shutdown">
+              <img src="icons/shutdown.png" alt="" />
+              <span>Shut Down...</span>
             </button>
           </li>
         </ul>
       </div>
     </nav>
+
+    <style>
+      .menu-item {
+        width: 100%;
+        background: var(--win98-button-face);
+        border: none;
+        padding: 4px 6px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-family: "W95", "MS Sans Serif", sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+        text-align: left;
+        color: black;
+        box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #808080;
+      }
+
+      .menu-item:hover {
+        background: #000080;
+        color: white;
+      }
+
+      .menu-item img {
+        width: 18px;
+        height: 18px;
+        image-rendering: pixelated;
+      }
+
+      .menu-item.shutdown:hover {
+        background: #800000;
+        color: white;
+      }
+    </style>
 
     <!-- Scripts -->
     <script src="script.js"></script>
@@ -159,21 +224,22 @@
     <!-- Boot + Ada Hooks -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        // Only trigger boot if system isn't already booted or coming from shutdown
-        if (!sessionStorage.getItem("booted") && !sessionStorage.getItem("restarting")) {
+        // --- Boot logic: only trigger once per full session
+        const booted = sessionStorage.getItem("booted");
+        const restarting = sessionStorage.getItem("restarting");
+        if (!booted && !restarting) {
           sessionStorage.setItem("booted", "true");
           window.location.replace("boot.html");
+          return;
         }
-
+        // Clear restarting flag if coming back from shutdown
+        if (restarting) sessionStorage.removeItem("restarting");
 
         // --- Ada AI Assistant setup
         const adaIcon = document.getElementById("ada-icon");
         if (adaIcon) {
           adaIcon.addEventListener("click", () => {
-            // Open Ada window
             openWindow("ada");
-
-            // Play Ada boot tone (only once per session)
             if (!sessionStorage.getItem("adaPlayed")) {
               const audio = new Audio("sounds/ada-boot.mp3");
               audio.volume = 0.7;
@@ -191,31 +257,37 @@
             playShutdownAndExit();
           });
         }
+
+        // --- Auto-close Start Menu when an app launches
+        document.querySelectorAll("[data-window]").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const menu = document.getElementById("start-menu");
+            if (menu) menu.setAttribute("hidden", "");
+          });
+        });
       });
 
       // --- Shutdown sound & redirect
       function playShutdownAndExit() {
+        sessionStorage.setItem("restarting", "true");
         const shutdownAudio = new Audio("sounds/winxpshutdown.mp3");
         shutdownAudio.volume = 0.6;
-
-        // Wait for sound before redirecting
         shutdownAudio.play().catch(() => {
           window.location.href = "shutdown.html";
         });
-
         shutdownAudio.addEventListener("ended", () => {
           window.location.href = "shutdown.html";
         });
       }
 
-      // --- Fallback before tab close (for non-click exits)
-      window.addEventListener("beforeunload", (e) => {
-        const shutdownAudio = new Audio("sounds/winxpshutdown.mp3");
-        shutdownAudio.volume = 0.4;
-        shutdownAudio.play().catch(() => {});
+      // --- Fallback: if the tab closes, don’t block but play quick fade
+      window.addEventListener("beforeunload", () => {
+        try {
+          const shutdownAudio = new Audio("sounds/winxpshutdown.mp3");
+          shutdownAudio.volume = 0.25;
+          shutdownAudio.play().catch(() => {});
+        } catch {}
       });
-    </script>
-
     </script>
   </body>
 </html>
