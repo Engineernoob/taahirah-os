@@ -137,6 +137,14 @@ WINDOW_PRESETS.pixelfin = {
   height: 520,
 };
 
+WINDOW_PRESETS.notchpod = {
+  title: "NotchPod",
+  icon: "icons/projects.png",
+  file: "projects/notchpod.html",
+  width: 640,
+  height: 520,
+};
+
 // -------------------- Pinball Icon Animation --------------------
 function initPinballIcon() {
   const pinballIcon = document.getElementById("pinball-desktop-icon");

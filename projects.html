@@ -4,37 +4,65 @@
     <meta charset="UTF-8" />
     <title>Projects</title>
     <link rel="stylesheet" href="https://unpkg.com/98.css" />
-    <link rel="stylesheet" href="window-content.css" />
+    <link rel="stylesheet" href="../window-content.css" />
+
     <style>
       body {
-        font-family: "MS Sans Serif", sans-serif;
+        font-family: "w95font", "MS Sans Serif" sans-serif;
         background: #c0c0c0;
         margin: 0;
-        padding: 16px;
+        padding: 12px;
+        color: #000;
       }
-      h4 {
+
+      h3 {
         margin-top: 0;
+        margin-bottom: 12px;
+        font-weight: bold;
+        color: #000080;
       }
-      .project-list {
-        list-style: none;
-        padding-left: 0;
+
+      .projects-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 12px;
       }
-      .project-list li {
-        margin-bottom: 14px;
-      }
-      .project-list button {
-        background: none;
-        border: none;
-        font: inherit;
-        color: black;
-        text-align: left;
+
+      .project-card {
+        background: #fff;
+        border: 2px solid #808080;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
         cursor: pointer;
-        line-height: 1.4;
+        transition: all 0.2s ease;
       }
-      .project-list button:hover {
-        text-decoration: underline;
-        color: #004080;
+
+      .project-card:hover {
+        background: #d4d0c8;
+        border-color: #000;
       }
+
+      .project-icon {
+        width: 40px;
+        height: 40px;
+        flex-shrink: 0;
+        image-rendering: pixelated;
+      }
+
+      .project-info h4 {
+        margin: 0;
+        font-size: 14px;
+        color: #000;
+      }
+
+      .project-info p {
+        margin: 2px 0 0;
+        font-size: 12px;
+        color: #333;
+      }
+
       .content-actions {
         margin-top: 20px;
         text-align: right;
@@ -42,42 +70,86 @@
     </style>
   </head>
   <body class="window-content">
-    <h4>Projects</h4>
-    <ul class="project-list">
-      <li>
-        <button data-project="cue">Cue – AI-powered Interview Assistant</button>
-      </li>
-      <li>
-        <button data-project="fern">
-          FERN – Autonomous Full-stack Reinforcement Agent
-        </button>
-      </li>
-      <li>
-        <button data-project="villacard">
-          VillaCard – AI Concierge &amp; Property Dashboard
-        </button>
-      </li>
-      <li>
-        <button data-project="cortex">
-          Cortex – Local RAG Knowledge Workspace
-        </button>
-      </li>
-      <li>
-        <button data-project="slowread">
-          Slow Read - A Calm, Neurodivergent-Friendly Summary App with Bookshelf
-        </button>
-      </li>
-      <li>
-        <button data-project="quantum">
-          Quantum Lottery Predictor – Quantum Randomness Experiments
-        </button>
-      </li>
-      <li>
-        <button data-project="pixelfin">PixelFin</button>
-        Pixel Fin - a playful pixel-art finance app that lets users manually log
-        spending or saving with one tap
-      </li>
-    </ul>
+    <h3>📁 My Projects</h3>
+
+    <section class="projects-grid">
+      <div class="project-card" data-project="cue">
+        <img src="../icons/projects.png" class="project-icon" alt="Cue icon" />
+        <div class="project-info">
+          <h4>Cue</h4>
+          <p>AI-powered interview assistant</p>
+        </div>
+      </div>
+
+      <div class="project-card" data-project="fern">
+        <img src="../icons/projects.png" class="project-icon" alt="FERN icon" />
+        <div class="project-info">
+          <h4>FERN</h4>
+          <p>Autonomous full-stack RL coding agent</p>
+        </div>
+      </div>
+
+      <div class="project-card" data-project="villacard">
+        <img
+          src="../icons/home.png"
+          class="project-icon"
+          alt="VillaCard icon"
+        />
+        <div class="project-info">
+          <h4>VillaCard</h4>
+          <p>AI concierge & property dashboard</p>
+        </div>
+      </div>
+
+      <div class="project-card" data-project="cortex">
+        <img
+          src="../icons/database.png"
+          class="project-icon"
+          alt="Cortex icon"
+        />
+        <div class="project-info">
+          <h4>Cortex</h4>
+          <p>Local RAG knowledge workspace</p>
+        </div>
+      </div>
+
+      <div class="project-card" data-project="slowread">
+        <img src="../icons/book.png" class="project-icon" alt="SlowRead icon" />
+        <div class="project-info">
+          <h4>SlowRead</h4>
+          <p>Minimal reading & summary PWA</p>
+        </div>
+      </div>
+
+      <div class="project-card" data-project="pixelfin">
+        <img src="../icons/coin.png" class="project-icon" alt="PixelFin icon" />
+        <div class="project-info">
+          <h4>PixelFin</h4>
+          <p>Pixel-art finance & savings tracker</p>
+        </div>
+      </div>
+
+      <div class="project-card" data-project="quantum">
+        <img
+          src="../icons/quantum.png"
+          class="project-icon"
+          alt="Quantum icon"
+        />
+        <div class="project-info">
+          <h4>Quantum Predictor</h4>
+          <p>Randomness experiments & simulations</p>
+        </div>
+      </div>
+
+      <div class="project-card" data-project="notchpod">
+        <img src="icons/cd.png" class="project-icon" alt="notchpod-icon" />
+        <div class="project-info">
+          <h4>NotchPod</h4>
+          <p>desktop-first audio companion</p>
+        </div>
+      </div>
+    </section>
+
     <div class="content-actions">
       <button
         class="default"
@@ -88,10 +160,9 @@
     </div>
 
     <script>
-      // Relay project clicks safely to the parent window
-      document.querySelectorAll("[data-project]").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const project = btn.dataset.project;
+      document.querySelectorAll(".project-card").forEach((card) => {
+        card.addEventListener("click", () => {
+          const project = card.dataset.project;
           window.parent.postMessage({ action: "openProject", project }, "*");
         });
       });

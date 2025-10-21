@@ -1,13 +1,29 @@
+/* =========================================================
+   Windows 95 Font Integration
+   ========================================================= */
+
+@font-face {
+  font-family: "W95";
+  src: url("fonts/w95font.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Global override — every window uses W95 by default */
 body.window-content {
   margin: 0;
   padding: 12px;
-  font-family: "MS Sans Serif", "Tahoma", sans-serif;
+  font-family: "W95", "MS Sans Serif", "Tahoma", sans-serif;
   font-size: 13px;
   line-height: 1.4;
   background: transparent;
   color: #000;
+  image-rendering: pixelated;
+  text-rendering: optimizeLegibility;
 }
 
+/* Compact padding variants */
 body.window-content.window-content--cozy {
   padding: 10px;
 }
