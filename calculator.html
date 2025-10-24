@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .calculator-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background: var(--mac-desktop);
+            background-image: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.1) 2px,
+                    rgba(255, 255, 255, 0.1) 4px
+                );
+            background-size: 8px 8px;
+        }
+
+        .calculator {
+            width: 320px;
+            background: #f5f5f5;
+            border: 2px solid var(--mac-border-dark);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+        }
+
+        .calculator-display {
+            background: #333;
+            color: #0f0;
+            font-family: "Monaco", "Courier New", monospace;
+            font-size: 24px;
+            text-align: right;
+            padding: 16px;
+            min-height: 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            border-bottom: 2px solid var(--mac-border-dark);
+        }
+
+        .calculator-expression {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 4px;
+            min-height: 18px;
+        }
+
+        .calculator-value {
+            font-weight: bold;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+        }
+
+        .calculator-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 2px;
+            padding: 8px;
+            background: #e0e0e0;
+        }
+
+        .calc-btn {
+            background: #f8f8f8;
+            border: 2px outset #ffffff;
+            border-radius: 8px;
+            padding: 20px;
+            font-size: 18px;
+            font-family: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            user-select: none;
+        }
+
+        .calc-btn:hover {
+            background: #e8e8e8;
+        }
+
+        .calc-btn:active {
+            border: 2px inset #cccccc;
+            background: #d0d0d0;
+            transform: scale(0.98);
+        }
+
+        .calc-btn wide {
+            grid-column: span 2;
+        }
+
+        .calc-btn.operator {
+            background: #ff9500;
+            color: white;
+            font-weight: bold;
+        }
+
+        .calc-btn.operator:hover {
+            background: #e88500;
+        }
+
+        .calc-btn.equals {
+            background: #ff9500;
+            color: white;
+            font-weight: bold;
+            grid-column: span 2;
+        }
+
+        .calc-btn.equals:hover {
+            background: #e88500;
+        }
+
+        .calc-btn.clear {
+            background: #ff3b30;
+            color: white;
+            font-weight: bold;
+        }
+
+        .calc-btn.clear:hover {
+            background: #d93226;
+        }
+
+        .calc-btn.function {
+            background: #a0a0a0;
+            color: white;
+        }
+
+        .calc-btn.function:hover {
+            background: #909090;
+        }
+
+        .calculator-menu {
+            background: var(--mac-menubar);
+            border-bottom: 1px solid var(--mac-border-dark);
+            padding: 4px 8px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .menu-item {
+            background: transparent;
+            border: none;
+            padding: 2px 8px;
+            cursor: pointer;
+            font-size: 12px;
+            font-family: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+            color: var(--mac-menu-text);
+        }
+
+        .menu-item:hover {
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 3px;
+        }
+
+        .calculator-info {
+            text-align: center;
+            margin-top: 16px;
+            color: #666;
+            font-size: 11px;
+        }
+    </style>
+</head>
+<body>
+    <div class="calculator-container">
+        <div class="calculator">
+            <div class="calculator-menu">
+                <button class="menu-item" onclick="showScientificMode()">Scientific</button>
+                <button class="menu-item" onclick="showProgrammerMode()">Programmer</button>
+                <button class="menu-item" onclick="clearHistory()">Clear History</button>
+                <button class="menu-item" onclick="showAbout()">About</button>
+            </div>
+            
+            <div class="calculator-display">
+                <div class="calculator-expression" id="expression"></div>
+                <div class="calculator-value" id="display">0</div>
+            </div>
+            
+            <div class="calculator-buttons" id="standard-buttons">
+                <button class="calc-btn clear" onclick="clearAll()">AC</button>
+                <button class="calc-btn function" onclick="toggleSign()">+/-</button>
+                <button class="calc-btn function" onclick="percentage()">%</button>
+                <button class="calc-btn operator" onclick="setOperation('/')">÷</button>
+                
+                <button class="calc-btn" onclick="appendNumber('7')">7</button>
+                <button class="calc-btn" onclick="appendNumber('8')">8</button>
+                <button class="calc-btn" onclick="appendNumber('9')">9</button>
+                <button class="calc-btn operator" onclick="setOperation('*')">×</button>
+                
+                <button class="calc-btn" onclick="appendNumber('4')">4</button>
+                <button class="calc-btn" onclick="appendNumber('5')">5</button>
+                <button class="calc-btn" onclick="appendNumber('6')">6</button>
+                <button class="calc-btn operator" onclick="setOperation('-')">−</button>
+                
+                <button class="calc-btn" onclick="appendNumber('1')">1</button>
+                <button class="calc-btn" onclick="appendNumber('2')">2</button>
+                <button class="calc-btn" onclick="appendNumber('3')">3</button>
+                <button class="calc-btn operator" onclick="setOperation('+')">+</button>
+                
+                <button class="calc-btn wide" onclick="appendNumber('0')">0</button>
+                <button class="calc-btn" onclick="appendDecimal()">.</button>
+                <button class="calc-btn equals" onclick="calculate()">=</button>
+            </div>
+        </div>
+        
+        <div class="calculator-info">
+            Macintosh Calculator v1.0
+        </div>
+    </div>
+
+    <script>
+        class Calculator {
+            constructor() {
+                this.currentValue = '0';
+                this.previousValue = null;
+                this.operation = null;
+                this.waitingForOperand = false;
+                this.expression = '';
+                this.history = [];
+                
+                this.init();
+            }
+
+            init() {
+                this.updateDisplay();
+                this.loadHistory();
+                this.setupKeyboardSupport();
+            }
+
+            setupKeyboardSupport() {
+                document.addEventListener('keydown', (e) => {
+                    if (e.key >= '0' && e.key <= '9') {
+                        this.appendNumber(e.key);
+                    } else if (e.key === '.') {
+                        this.appendDecimal();
+                    } else if (e.key === '+' || e.key === '-' || e.key === '*' || e.key === '/') {
+                        this.setOperation(e.key);
+                    } else if (e.key === 'Enter' || e.key === '=') {
+                        this.calculate();
+                    } else if (e.key === 'Escape' || e.key === 'c' || e.key === 'C') {
+                        this.clearAll();
+                    } else if (e.key === 'Backspace') {
+                        this.backspace();
+                    }
+                });
+            }
+
+            appendNumber(num) {
+                if (this.waitingForOperand) {
+                    this.currentValue = num;
+                    this.waitingForOperand = false;
+                } else {
+                    this.currentValue = this.currentValue === '0' ? num : this.currentValue + num;
+                }
+                this.updateDisplay();
+            }
+
+            appendDecimal() {
+                if (this.waitingForOperand) {
+                    this.currentValue = '0.';
+                    this.waitingForOperand = false;
+                } else if (this.currentValue.indexOf('.') === -1) {
+                    this.currentValue += '.';
+                }
+                this.updateDisplay();
+            }
+
+            setOperation(nextOperation) {
+                const inputValue = parseFloat(this.currentValue);
+
+                if (this.previousValue === null) {
+                    this.previousValue = inputValue;
+                } else if (this.operation) {
+                    const currentValue = this.previousValue || 0;
+                    const newValue = this.performCalculation();
+
+                    this.currentValue = String(newValue);
+                    this.previousValue = newValue;
+                }
+
+                this.waitingForOperand = true;
+                this.operation = nextOperation;
+                this.expression = `${this.previousValue} ${this.getOperationSymbol(nextOperation)}`;
+                this.updateDisplay();
+            }
+
+            getOperationSymbol(op) {
+                switch(op) {
+                    case '*': return '×';
+                    case '/': return '÷';
+                    case '-': return '−';
+                    case '+': return '+';
+                    default: return op;
+                }
+            }
+
+            performCalculation() {
+                const inputValue = parseFloat(this.currentValue);
+                const calculations = {
+                    '/': (prev, curr) => prev / curr,
+                    '*': (prev, curr) => prev * curr,
+                    '-': (prev, curr) => prev - curr,
+                    '+': (prev, curr) => prev + curr,
+                };
+
+                return calculations[this.operation](this.previousValue, inputValue);
+            }
+
+            calculate() {
+                const inputValue = parseFloat(this.currentValue);
+
+                if (this.previousValue !== null && this.operation !== null) {
+                    const newValue = this.performCalculation();
+                    const fullExpression = `${this.expression} ${inputValue} = ${newValue}`;
+                    
+                    this.addToHistory(fullExpression);
+                    
+                    this.currentValue = String(newValue);
+                    this.previousValue = null;
+                    this.operation = null;
+                    this.waitingForOperand = true;
+                    this.expression = '';
+                    this.updateDisplay();
+                }
+            }
+
+            clearAll() {
+                this.currentValue = '0';
+                this.previousValue = null;
+                this.operation = null;
+                this.waitingForOperand = false;
+                this.expression = '';
+                this.updateDisplay();
+            }
+
+            toggleSign() {
+                this.currentValue = String(parseFloat(this.currentValue) * -1);
+                this.updateDisplay();
+            }
+
+            percentage() {
+                this.currentValue = String(parseFloat(this.currentValue) / 100);
+                this.updateDisplay();
+            }
+
+            backspace() {
+                if (this.currentValue.length > 1) {
+                    this.currentValue = this.currentValue.slice(0, -1);
+                } else {
+                    this.currentValue = '0';
+                }
+                this.updateDisplay();
+            }
+
+            updateDisplay() {
+                document.getElementById('display').textContent = this.formatNumber(this.currentValue);
+                document.getElementById('expression').textContent = this.expression;
+            }
+
+            formatNumber(num) {
+                const number = parseFloat(num);
+                if (isNaN(number)) return '0';
+                
+                // Format large numbers in scientific notation
+                if (Math.abs(number) > 999999999) {
+                    return number.toExponential(6);
+                }
+                
+                // Format decimal places
+                if (num.includes('.')) {
+                    const parts = num.split('.');
+                    if (parts[1].length > 8) {
+                        return parseFloat(num).toFixed(8);
+                    }
+                }
+                
+                return num;
+            }
+
+            addToHistory(calculation) {
+                this.history.unshift({
+                    expression: calculation,
+                    timestamp: new Date().toLocaleTimeString()
+                });
+                
+                // Keep only last 50 calculations
+                if (this.history.length > 50) {
+                    this.history = this.history.slice(0, 50);
+                }
+                
+                this.saveHistory();
+            }
+
+            saveHistory() {
+                localStorage.setItem('calculator_history', JSON.stringify(this.history));
+            }
+
+            loadHistory() {
+                const saved = localStorage.getItem('calculator_history');
+                if (saved) {
+                    try {
+                        this.history = JSON.parse(saved);
+                    } catch (e) {
+                        this.history = [];
+                    }
+                }
+            }
+
+            clearHistoryData() {
+                this.history = [];
+                localStorage.removeItem('calculator_history');
+            }
+        }
+
+        // Global calculator instance
+        let calculator;
+
+        // Initialize calculator when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            calculator = new Calculator();
+        });
+
+        // Global functions for button onclick handlers
+        function appendNumber(num) {
+            calculator.appendNumber(num);
+        }
+
+        function appendDecimal() {
+            calculator.appendDecimal();
+        }
+
+        function setOperation(op) {
+            calculator.setOperation(op);
+        }
+
+        function calculate() {
+            calculator.calculate();
+        }
+
+        function clearAll() {
+            calculator.clearAll();
+        }
+
+        function toggleSign() {
+            calculator.toggleSign();
+        }
+
+        function percentage() {
+            calculator.percentage();
+        }
+
+        function clearHistory() {
+            if (confirm('Clear all calculation history?')) {
+                calculator.clearHistoryData();
+                alert('History cleared');
+            }
+        }
+
+        function showScientificMode() {
+            alert('Scientific mode coming soon! Features include:\n• Trigonometric functions\n• Logarithms\n• Exponents\n• Memory functions');
+        }
+
+        function showProgrammerMode() {
+            alert('Programmer mode coming soon! Features include:\n• Binary, octal, hex conversion\n• Bitwise operations\n• Logical functions');
+        }
+
+        function showAbout() {
+            alert('Macintosh Calculator v1.0\n\nA faithful recreation of the classic Macintosh calculator experience.\n\nFeatures:\n• Basic arithmetic operations\n• Memory functions\n• Calculation history\n• Keyboard support');
+        }
+    </script>
+</body>
+</html>

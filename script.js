@@ -78,6 +78,49 @@ const WINDOW_PRESETS = {
     width: 640,
     height: 520,
   },
+  // Macintosh Applications
+  macdraw: {
+    title: "MacDraw",
+    icon: "icons/computer-icon.png",
+    file: "macdraw.html",
+    width: 900,
+    height: 700,
+  },
+  macwrite: {
+    title: "MacWrite",
+    icon: "icons/computer-icon.png",
+    file: "macwrite.html",
+    width: 900,
+    height: 700,
+  },
+  calculator: {
+    title: "Calculator",
+    icon: "icons/computer-icon.png",
+    file: "calculator.html",
+    width: 400,
+    height: 550,
+  },
+  "alarm-clock": {
+    title: "Alarm Clock",
+    icon: "icons/computer-icon.png",
+    file: "alarm-clock.html",
+    width: 450,
+    height: 600,
+  },
+  "puzzle-game": {
+    title: "Puzzle Game",
+    icon: "icons/game.png",
+    file: "puzzle-game.html",
+    width: 600,
+    height: 700,
+  },
+  hypercard: {
+    title: "HyperCard",
+    icon: "icons/computer-icon.png",
+    file: "hypercard.html",
+    width: 900,
+    height: 700,
+  },
 };
 
 // -------------------- Project Windows --------------------
@@ -290,7 +333,7 @@ function makeIframeWindow({ title, icon, file, width, height, type }) {
   win.style.height = `${height}px`;
   win.style.position = "absolute";
   win.style.left = 120 + Math.random() * 100 + "px";
-  win.style.top = 100 + Math.random() * 80 + "px";
+  win.style.top = 80 + Math.random() * 80 + "px";
 
   win.innerHTML = `
     <div class="title-bar">
@@ -351,9 +394,9 @@ function toggleMaximize(win) {
     win.dataset.prevHeight = win.style.height;
     win.classList.add("maximized");
     win.style.left = "0";
-    win.style.top = "0";
+    win.style.top = "24px";
     win.style.width = "100%";
-    win.style.height = "calc(100% - 40px)";
+    win.style.height = "calc(100% - 24px)";
   }
   bringToFront(win);
 }

@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MacDraw</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .macdraw-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #f0f0f0;
+        }
+
+        .macdraw-toolbar {
+            background: var(--mac-button-face);
+            border-bottom: 1px solid var(--mac-border-dark);
+            padding: 8px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .tool-group {
+            display: flex;
+            gap: 4px;
+            padding: 0 8px;
+            border-right: 1px solid var(--mac-border);
+        }
+
+        .tool-group:last-child {
+            border-right: none;
+        }
+
+        .tool-button {
+            width: 32px;
+            height: 32px;
+            background: var(--mac-button-face);
+            border: 1px solid var(--mac-border);
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+            transition: all 0.2s ease;
+        }
+
+        .tool-button:hover {
+            background: var(--mac-titlebar);
+            border-color: var(--mac-selected);
+        }
+
+        .tool-button.active {
+            background: var(--mac-selected);
+            color: white;
+            border-color: var(--mac-selected);
+        }
+
+        .color-picker {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--mac-border);
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .stroke-width-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stroke-width-slider {
+            width: 80px;
+        }
+
+        .macdraw-canvas-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            overflow: hidden;
+        }
+
+        #drawingCanvas {
+            background: white;
+            border: 1px solid var(--mac-border);
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            cursor: crosshair;
+        }
+
+        .status-bar {
+            background: var(--mac-button-face);
+            border-top: 1px solid var(--mac-border-dark);
+            padding: 4px 12px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--mac-text);
+        }
+    </style>
+</head>
+<body>
+    <div class="macdraw-container">
+        <div class="macdraw-toolbar">
+            <div class="tool-group">
+                <button class="tool-button active" data-tool="select" title="Select">↖</button>
+                <button class="tool-button" data-tool="pencil" title="Pencil">✏</button>
+                <button class="tool-button" data-tool="line" title="Line">╱</button>
+                <button class="tool-button" data-tool="rectangle" title="Rectangle">▭</button>
+                <button class="tool-button" data-tool="circle" title="Circle">○</button>
+                <button class="tool-button" data-tool="eraser" title="Eraser">⬜</button>
+            </div>
+            
+            <div class="tool-group">
+                <input type="color" class="color-picker" id="colorPicker" value="#000000" title="Color">
+                <div class="stroke-width-control">
+                    <label for="strokeWidth">Width:</label>
+                    <input type="range" class="stroke-width-slider" id="strokeWidth" min="1" max="20" value="2">
+                    <span id="strokeWidthValue">2</span>
+                </div>
+            </div>
+            
+            <div class="tool-group">
+                <button class="tool-button" id="undoBtn" title="Undo">↶</button>
+                <button class="tool-button" id="redoBtn" title="Redo">↷</button>
+                <button class="tool-button" id="clearBtn" title="Clear">🗑</button>
+            </div>
+        </div>
+
+        <div class="macdraw-canvas-container">
+            <canvas id="drawingCanvas" width="800" height="600"></canvas>
+        </div>
+
+        <div class="status-bar">
+            <span id="coordinates">X: 0, Y: 0</span>
+            <span id="toolStatus">Tool: Select</span>
+        </div>
+    </div>
+
+    <script>
+        class MacDraw {
+            constructor() {
+                this.canvas = document.getElementById('drawingCanvas');
+                this.ctx = this.canvas.getContext('2d');
+                this.currentTool = 'select';
+                this.isDrawing = false;
+                this.startX = 0;
+                this.startY = 0;
+                this.history = [];
+                this.historyStep = -1;
+                this.currentPath = [];
+                
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.saveState();
+            }
+
+            setupEventListeners() {
+                // Tool selection
+                document.querySelectorAll('.tool-button[data-tool]').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        document.querySelectorAll('.tool-button[data-tool]').forEach(b => b.classList.remove('active'));
+                        btn.classList.add('active');
+                        this.currentTool = btn.dataset.tool;
+                        document.getElementById('toolStatus').textContent = `Tool: ${btn.title}`;
+                        this.updateCursor();
+                    });
+                });
+
+                // Canvas events
+                this.canvas.addEventListener('mousedown', this.startDrawing.bind(this));
+                this.canvas.addEventListener('mousemove', this.draw.bind(this));
+                this.canvas.addEventListener('mouseup', this.stopDrawing.bind(this));
+                this.canvas.addEventListener('mouseout', this.stopDrawing.bind(this));
+
+                // Touch support
+                this.canvas.addEventListener('touchstart', this.handleTouch.bind(this));
+                this.canvas.addEventListener('touchmove', this.handleTouch.bind(this));
+                this.canvas.addEventListener('touchend', this.stopDrawing.bind(this));
+
+                // Color and stroke width
+                document.getElementById('colorPicker').addEventListener('change', () => {
+                    this.ctx.strokeStyle = document.getElementById('colorPicker').value;
+                });
+
+                document.getElementById('strokeWidth').addEventListener('input', (e) => {
+                    this.ctx.lineWidth = e.target.value;
+                    document.getElementById('strokeWidthValue').textContent = e.target.value;
+                });
+
+                // Action buttons
+                document.getElementById('undoBtn').addEventListener('click', () => this.undo());
+                document.getElementById('redoBtn').addEventListener('click', () => this.redo());
+                document.getElementById('clearBtn').addEventListener('click', () => this.clear());
+
+                // Coordinate display
+                this.canvas.addEventListener('mousemove', (e) => {
+                    const rect = this.canvas.getBoundingClientRect();
+                    const x = Math.round(e.clientX - rect.left);
+                    const y = Math.round(e.clientY - rect.top);
+                    document.getElementById('coordinates').textContent = `X: ${x}, Y: ${y}`;
+                });
+
+                // Set initial drawing properties
+                this.ctx.strokeStyle = '#000000';
+                this.ctx.lineWidth = 2;
+                this.ctx.lineCap = 'round';
+                this.ctx.lineJoin = 'round';
+            }
+
+            updateCursor() {
+                const cursors = {
+                    select: 'default',
+                    pencil: 'crosshair',
+                    line: 'crosshair',
+                    rectangle: 'crosshair',
+                    circle: 'crosshair',
+                    eraser: 'grab'
+                };
+                this.canvas.style.cursor = cursors[this.currentTool] || 'default';
+            }
+
+            getMousePos(e) {
+                const rect = this.canvas.getBoundingClientRect();
+                return {
+                    x: e.clientX - rect.left,
+                    y: e.clientY - rect.top
+                };
+            }
+
+            handleTouch(e) {
+                e.preventDefault();
+                const touch = e.touches[0];
+                const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : 'mousemove', {
+                    clientX: touch.clientX,
+                    clientY: touch.clientY
+                });
+                this.canvas.dispatchEvent(mouseEvent);
+            }
+
+            startDrawing(e) {
+                this.isDrawing = true;
+                const pos = this.getMousePos(e);
+                this.startX = pos.x;
+                this.startY = pos.y;
+
+                if (this.currentTool === 'pencil') {
+                    this.currentPath = [{x: pos.x, y: pos.y}];
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(pos.x, pos.y);
+                } else if (this.currentTool === 'eraser') {
+                    this.ctx.globalCompositeOperation = 'destination-out';
+                    this.ctx.beginPath();
+                    this.ctx.moveTo(pos.x, pos.y);
+                }
+            }
+
+            draw(e) {
+                if (!this.isDrawing) return;
+
+                const pos = this.getMousePos(e);
+
+                if (this.currentTool === 'pencil' || this.currentTool === 'eraser') {
+                    this.ctx.lineTo(pos.x, pos.y);
+                    this.ctx.stroke();
+                    
+                    if (this.currentTool === 'pencil') {
+                        this.currentPath.push({x: pos.x, y: pos.y});
+                    }
+                }
+            }
+
+            stopDrawing(e) {
+                if (!this.isDrawing) return;
+
+                if (this.currentTool === 'line' || this.currentTool === 'rectangle' || this.currentTool === 'circle') {
+                    const pos = this.getMousePos(e);
+                    this.ctx.globalCompositeOperation = 'source-over';
+                    
+                    if (this.currentTool === 'line') {
+                        this.ctx.beginPath();
+                        this.ctx.moveTo(this.startX, this.startY);
+                        this.ctx.lineTo(pos.x, pos.y);
+                        this.ctx.stroke();
+                    } else if (this.currentTool === 'rectangle') {
+                        this.ctx.strokeRect(
+                            this.startX, 
+                            this.startY, 
+                            pos.x - this.startX, 
+                            pos.y - this.startY
+                        );
+                    } else if (this.currentTool === 'circle') {
+                        const radius = Math.sqrt(
+                            Math.pow(pos.x - this.startX, 2) + 
+                            Math.pow(pos.y - this.startY, 2)
+                        );
+                        this.ctx.beginPath();
+                        this.ctx.arc(this.startX, this.startY, radius, 0, 2 * Math.PI);
+                        this.ctx.stroke();
+                    }
+                }
+
+                this.isDrawing = false;
+                this.ctx.globalCompositeOperation = 'source-over';
+                this.saveState();
+            }
+
+            saveState() {
+                this.historyStep++;
+                if (this.historyStep < this.history.length) {
+                    this.history.length = this.historyStep;
+                }
+                this.history.push(this.canvas.toDataURL());
+            }
+
+            undo() {
+                if (this.historyStep > 0) {
+                    this.historyStep--;
+                    this.restoreState();
+                }
+            }
+
+            redo() {
+                if (this.historyStep < this.history.length - 1) {
+                    this.historyStep++;
+                    this.restoreState();
+                }
+            }
+
+            restoreState() {
+                const img = new Image();
+                img.src = this.history[this.historyStep];
+                img.onload = () => {
+                    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                    this.ctx.drawImage(img, 0, 0);
+                };
+            }
+
+            clear() {
+                this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+                this.saveState();
+            }
+        }
+
+        // Initialize MacDraw when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new MacDraw();
+        });
+    </script>
+</body>
+</html>

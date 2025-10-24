@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MacWrite</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .macwrite-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            background: #f0f0f0;
+            font-family: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+        }
+
+        .macwrite-toolbar {
+            background: var(--mac-button-face);
+            border-bottom: 1px solid var(--mac-border-dark);
+            padding: 6px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .tool-group {
+            display: flex;
+            gap: 2px;
+            padding: 0 8px;
+            border-right: 1px solid var(--mac-border);
+            align-items: center;
+        }
+
+        .tool-group:last-child {
+            border-right: none;
+        }
+
+        .tool-button {
+            background: var(--mac-button-face);
+            border: 1px solid var(--mac-border);
+            border-radius: 4px;
+            padding: 4px 8px;
+            cursor: pointer;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            transition: all 0.2s ease;
+            min-width: 24px;
+            justify-content: center;
+        }
+
+        .tool-button:hover {
+            background: var(--mac-titlebar);
+            border-color: var(--mac-selected);
+        }
+
+        .tool-button.active {
+            background: var(--mac-selected);
+            color: white;
+            border-color: var(--mac-selected);
+        }
+
+        .tool-select {
+            padding: 2px 4px;
+            font-size: 11px;
+            border: 1px solid var(--mac-border);
+            border-radius: 3px;
+            background: white;
+        }
+
+        .macwrite-editor {
+            flex: 1;
+            padding: 20px;
+            background: white;
+            margin: 20px;
+            border: 1px solid var(--mac-border);
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow-y: auto;
+        }
+
+        #editor {
+            min-height: 100%;
+            outline: none;
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .status-bar {
+            background: var(--mac-button-face);
+            border-top: 1px solid var(--mac-border-dark);
+            padding: 4px 12px;
+            display: flex;
+            justify-content: space-between;
+            font-size: 11px;
+            color: var(--mac-text);
+        }
+
+        .color-picker-wrapper {
+            position: relative;
+        }
+
+        .font-color-picker {
+            width: 24px;
+            height: 24px;
+            border: 1px solid var(--mac-border);
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        /* Rich text styles */
+        #editor h1 { font-size: 24px; font-weight: bold; margin: 16px 0; }
+        #editor h2 { font-size: 20px; font-weight: bold; margin: 14px 0; }
+        #editor h3 { font-size: 18px; font-weight: bold; margin: 12px 0; }
+        #editor p { margin: 8px 0; }
+        #editor ul, #editor ol { margin: 8px 0; padding-left: 20px; }
+        #editor li { margin: 4px 0; }
+        #editor blockquote { 
+            margin: 12px 0; 
+            padding-left: 16px; 
+            border-left: 3px solid var(--mac-selected);
+            font-style: italic;
+        }
+        #editor code {
+            background: #f5f5f5;
+            padding: 2px 4px;
+            border-radius: 2px;
+            font-family: "Monaco", monospace;
+        }
+        #editor pre {
+            background: #f5f5f5;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: "Monaco", monospace;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="macwrite-container">
+        <div class="macwrite-toolbar">
+            <div class="tool-group">
+                <button class="tool-button" id="newBtn" title="New">
+                    <i class="fas fa-file"></i>
+                </button>
+                <button class="tool-button" id="saveBtn" title="Save">
+                    <i class="fas fa-save"></i>
+                </button>
+                <button class="tool-button" id="printBtn" title="Print">
+                    <i class="fas fa-print"></i>
+                </button>
+            </div>
+            
+            <div class="tool-group">
+                <button class="tool-button" id="undoBtn" title="Undo">
+                    <i class="fas fa-undo"></i>
+                </button>
+                <button class="tool-button" id="redoBtn" title="Redo">
+                    <i class="fas fa-redo"></i>
+                </button>
+            </div>
+            
+            <div class="tool-group">
+                <button class="tool-button" id="cutBtn" title="Cut">
+                    <i class="fas fa-cut"></i>
+                </button>
+                <button class="tool-button" id="copyBtn" title="Copy">
+                    <i class="fas fa-copy"></i>
+                </button>
+                <button class="tool-button" id="pasteBtn" title="Paste">
+                    <i class="fas fa-paste"></i>
+                </button>
+            </div>
+            
+            <div class="tool-group">
+                <select class="tool-select" id="fontSelect" title="Font">
+                    <option value="Arial">Arial</option>
+                    <option value="Helvetica">Helvetica</option>
+                    <option value="Times New Roman">Times New Roman</option>
+                    <option value="Courier New">Courier New</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Verdana">Verdana</option>
+                    <option value="Monaco">Monaco</option>
+                </select>
+                <select class="tool-select" id="fontSize" title="Size">
+                    <option value="10">10pt</option>
+                    <option value="12">12pt</option>
+                    <option value="14" selected>14pt</option>
+                    <option value="16">16pt</option>
+                    <option value="18">18pt</option>
+                    <option value="20">20pt</option>
+                    <option value="24">24pt</option>
+                    <option value="28">28pt</option>
+                    <option value="32">32pt</option>
+                    <option value="36">36pt</option>
+                </select>
+            </div>
+            
+            <div class="tool-group">
+                <button class="tool-button" id="boldBtn" title="Bold">
+                    <i class="fas fa-bold"></i>
+                </button>
+                <button class="tool-button" id="italicBtn" title="Italic">
+                    <i class="fas fa-italic"></i>
+                </button>
+                <button class="tool-button" id="underlineBtn" title="Underline">
+                    <i class="fas fa-underline"></i>
+                </button>
+            </div>
+            
+            <div class="tool-group">
+                <button class="tool-button" id="alignLeftBtn" title="Align Left">
+                    <i class="fas fa-align-left"></i>
+                </button>
+                <button class="tool-button" id="alignCenterBtn" title="Align Center">
+                    <i class="fas fa-align-center"></i>
+                </button>
+                <button class="tool-button" id="alignRightBtn" title="Align Right">
+                    <i class="fas fa-align-right"></i>
+                </button>
+                <button class="tool-button" id="justifyBtn" title="Justify">
+                    <i class="fas fa-align-justify"></i>
+                </button>
+            </div>
+            
+            <div class="tool-group">
+                <button class="tool-button" id="listUlBtn" title="Bullet List">
+                    <i class="fas fa-list-ul"></i>
+                </button>
+                <button class="tool-button" id="listOlBtn" title="Numbered List">
+                    <i class="fas fa-list-ol"></i>
+                </button>
+                <button class="tool-button" id="indentBtn" title="Indent">
+                    <i class="fas fa-indent"></i>
+                </button>
+                <button class="tool-button" id="outdentBtn" title="Outdent">
+                    <i class="fas fa-outdent"></i>
+                </button>
+            </div>
+            
+            <div class="tool-group">
+                <div class="color-picker-wrapper">
+                    <input type="color" class="font-color-picker" id="colorPicker" value="#000000" title="Text Color">
+                </div>
+            </div>
+        </div>
+
+        <div class="macwrite-editor">
+            <div id="editor" contenteditable="true">
+                <h1>Welcome to MacWrite</h1>
+                <p>Start typing your document here. MacWrite provides all the essential word processing features you need.</p>
+                <h2>Features</h2>
+                <ul>
+                    <li>Rich text formatting</li>
+                    <li>Multiple fonts and sizes</li>
+                    <li>Text alignment options</li>
+                    <li>Lists and indentation</li>
+                    <li>Text colors</li>
+                </ul>
+                <p>Use the toolbar above to format your text. You can make text <strong>bold</strong>, <em>italic</em>, or <u>underlined</u>.</p>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <span id="wordCount">Words: 0 | Characters: 0</span>
+            <span id="cursorPosition">Line 1, Column 1</span>
+        </div>
+    </div>
+
+    <script>
+        class MacWrite {
+            constructor() {
+                this.editor = document.getElementById('editor');
+                this.init();
+            }
+
+            init() {
+                this.setupEventListeners();
+                this.updateWordCount();
+                this.setupAutoSave();
+            }
+
+            setupEventListeners() {
+                // File operations
+                document.getElementById('newBtn').addEventListener('click', () => this.newDocument());
+                document.getElementById('saveBtn').addEventListener('click', () => this.saveDocument());
+                document.getElementById('printBtn').addEventListener('click', () => this.printDocument());
+
+                // Edit operations
+                document.getElementById('undoBtn').addEventListener('click', () => this.undo());
+                document.getElementById('redoBtn').addEventListener('click', () => this.redo());
+                document.getElementById('cutBtn').addEventListener('click', () => this.cut());
+                document.getElementById('copyBtn').addEventListener('click', () => this.copy());
+                document.getElementById('pasteBtn').addEventListener('click', () => this.paste());
+
+                // Font selection
+                document.getElementById('fontSelect').addEventListener('change', (e) => {
+                    this.setFont(e.target.value);
+                });
+
+                document.getElementById('fontSize').addEventListener('change', (e) => {
+                    this.setFontSize(e.target.value);
+                });
+
+                // Text formatting
+                document.getElementById('boldBtn').addEventListener('click', () => this.toggleBold());
+                document.getElementById('italicBtn').addEventListener('click', () => this.toggleItalic());
+                document.getElementById('underlineBtn').addEventListener('click', () => this.toggleUnderline());
+
+                // Alignment
+                document.getElementById('alignLeftBtn').addEventListener('click', () => this.alignText('left'));
+                document.getElementById('alignCenterBtn').addEventListener('click', () => this.alignText('center'));
+                document.getElementById('alignRightBtn').addEventListener('click', () => this.alignText('right'));
+                document.getElementById('justifyBtn').addEventListener('click', () => this.alignText('justify'));
+
+                // Lists
+                document.getElementById('listUlBtn').addEventListener('click', () => this.toggleList('ul'));
+                document.getElementById('listOlBtn').addEventListener('click', () => this.toggleList('ol'));
+                document.getElementById('indentBtn').addEventListener('click', () => this.indent());
+                document.getElementById('outdentBtn').addEventListener('click', () => this.outdent());
+
+                // Color
+                document.getElementById('colorPicker').addEventListener('change', (e) => {
+                    this.setTextColor(e.target.value);
+                });
+
+                // Editor events
+                this.editor.addEventListener('input', () => {
+                    this.updateWordCount();
+                });
+
+                this.editor.addEventListener('keyup', (e) => {
+                    this.updateCursorPosition();
+                });
+
+                this.editor.addEventListener('click', (e) => {
+                    this.updateCursorPosition();
+                    this.updateButtonStates();
+                });
+
+                // Keyboard shortcuts
+                document.addEventListener('keydown', (e) => {
+                    if (e.ctrlKey || e.metaKey) {
+                        switch(e.key) {
+                            case 'b':
+                                e.preventDefault();
+                                this.toggleBold();
+                                break;
+                            case 'i':
+                                e.preventDefault();
+                                this.toggleItalic();
+                                break;
+                            case 'u':
+                                e.preventDefault();
+                                this.toggleUnderline();
+                                break;
+                            case 's':
+                                e.preventDefault();
+                                this.saveDocument();
+                                break;
+                            case 'z':
+                                e.preventDefault();
+                                this.undo();
+                                break;
+                            case 'y':
+                                e.preventDefault();
+                                this.redo();
+                                break;
+                        }
+                    }
+                });
+            }
+
+            // Document operations
+            newDocument() {
+                if (confirm('Are you sure you want to create a new document? Any unsaved changes will be lost.')) {
+                    this.editor.innerHTML = '<h1>Untitled Document</h1><p>Start writing here...</p>';
+                    this.updateWordCount();
+                }
+            }
+
+            saveDocument() {
+                const content = this.editor.innerHTML;
+                const blob = new Blob([content], { type: 'text/html' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'document.html';
+                a.click();
+                URL.revokeObjectURL(url);
+                
+                // Show saved notification
+                this.showNotification('Document saved');
+            }
+
+            printDocument() {
+                window.print();
+            }
+
+            // Edit operations
+            undo() {
+                document.execCommand('undo', false, null);
+            }
+
+            redo() {
+                document.execCommand('redo', false, null);
+            }
+
+            cut() {
+                document.execCommand('cut', false, null);
+            }
+
+            copy() {
+                document.execCommand('copy', false, null);
+            }
+
+            paste() {
+                navigator.clipboard.readText().then(text => {
+                    document.execCommand('insertText', false, text);
+                }).catch(() => {
+                    document.execCommand('paste', false, null);
+                });
+            }
+
+            // Font operations
+            setFont(font) {
+                document.execCommand('fontName', false, font);
+            }
+
+            setFontSize(size) {
+                document.execCommand('fontSize', false, '7');
+                const fontElements = document.querySelectorAll('font[size="7"]');
+                fontElements.forEach(el => {
+                    el.removeAttribute('size');
+                    el.style.fontSize = size + 'pt';
+                });
+            }
+
+            // Text formatting
+            toggleBold() {
+                document.execCommand('bold', false, null);
+                this.updateButtonStates();
+            }
+
+            toggleItalic() {
+                document.execCommand('italic', false, null);
+                this.updateButtonStates();
+            }
+
+            toggleUnderline() {
+                document.execCommand('underline', false, null);
+                this.updateButtonStates();
+            }
+
+            // Alignment
+            alignText(alignment) {
+                document.execCommand('justify' + alignment.charAt(0).toUpperCase() + alignment.slice(1), false, null);
+                this.updateButtonStates();
+            }
+
+            // Lists
+            toggleList(type) {
+                const command = type === 'ul' ? 'insertUnorderedList' : 'insertOrderedList';
+                document.execCommand(command, false, null);
+                this.updateButtonStates();
+            }
+
+            indent() {
+                document.execCommand('indent', false, null);
+            }
+
+            outdent() {
+                document.execCommand('outdent', false, null);
+            }
+
+            // Color
+            setTextColor(color) {
+                document.execCommand('foreColor', false, color);
+            }
+
+            // Utility functions
+            updateWordCount() {
+                const text = this.editor.innerText || this.editor.textContent || '';
+                const words = text.trim().split(/\s+/).filter(word => word.length > 0).length;
+                const characters = text.length;
+                document.getElementById('wordCount').textContent = `Words: ${words} | Characters: ${characters}`;
+            }
+
+            updateCursorPosition() {
+                const selection = window.getSelection();
+                if (selection.rangeCount > 0) {
+                    const range = selection.getRangeAt(0);
+                    const preCaretRange = range.cloneRange();
+                    preCaretRange.selectNodeContents(this.editor);
+                    preCaretRange.setEnd(range.startContainer, range.startOffset);
+                    
+                    const text = this.editor.innerText || this.editor.textContent || '';
+                    const lines = text.substring(0, preCaretRange.toString().length).split('\n');
+                    const line = lines.length;
+                    const column = lines[lines.length - 1].length + 1;
+                    
+                    document.getElementById('cursorPosition').textContent = `Line ${line}, Column ${column}`;
+                }
+            }
+
+            updateButtonStates() {
+                // Update formatting button states based on current selection
+                document.getElementById('boldBtn').classList.toggle('active', document.queryCommandState('bold'));
+                document.getElementById('italicBtn').classList.toggle('active', document.queryCommandState('italic'));
+                document.getElementById('underlineBtn').classList.toggle('active', document.queryCommandState('underline'));
+                
+                // Update alignment button states
+                const alignment = this.getCurrentAlignment();
+                document.querySelectorAll('[id^="align"]').forEach(btn => btn.classList.remove('active'));
+                if (alignment) {
+                    document.getElementById(alignment + 'Btn').classList.add('active');
+                }
+
+                // Update list button states
+                document.getElementById('listUlBtn').classList.toggle('active', document.queryCommandState('insertUnorderedList'));
+                document.getElementById('listOlBtn').classList.toggle('active', document.queryCommandState('insertOrderedList'));
+            }
+
+            getCurrentAlignment() {
+                const selection = window.getSelection();
+                if (selection.rangeCount > 0) {
+                    const range = selection.getRangeAt(0);
+                    const element = range.commonAncestorContainer.nodeType === Node.ELEMENT_NODE ? 
+                                   range.commonAncestorContainer : 
+                                   range.commonAncestorContainer.parentElement;
+                    
+                    if (element) {
+                        const computedStyle = window.getComputedStyle(element);
+                        const textAlign = computedStyle.textAlign;
+                        
+                        switch(textAlign) {
+                            case 'left': return 'alignLeft';
+                            case 'center': return 'alignCenter';
+                            case 'right': return 'alignRight';
+                            case 'justify': return 'justify';
+                        }
+                    }
+                }
+                return null;
+            }
+
+            showNotification(message) {
+                // Create a simple notification
+                const notification = document.createElement('div');
+                notification.textContent = message;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 50%;
+                    left: 50%;
+                    transform: translate(-50%, -50%);
+                    background: var(--mac-selected);
+                    color: white;
+                    padding: 12px 24px;
+                    border-radius: 6px;
+                    z-index: 1000;
+                    animation: fadeInOut 2s ease;
+                `;
+                
+                document.body.appendChild(notification);
+                
+                setTimeout(() => {
+                    notification.remove();
+                }, 2000);
+            }
+
+            setupAutoSave() {
+                // Auto-save every 30 seconds
+                setInterval(() => {
+                    localStorage.setItem('macwrite_autosave', this.editor.innerHTML);
+                }, 30000);
+
+                // Restore from auto-save if exists
+                const autoSave = localStorage.getItem('macwrite_autosave');
+                if (autoSave && this.editor.innerHTML.includes('Welcome to MacWrite')) {
+                    if (confirm('Auto-saved document found. Would you like to restore it?')) {
+                        this.editor.innerHTML = autoSave;
+                        this.updateWordCount();
+                    }
+                }
+            }
+        }
+
+        // Initialize MacWrite when page loads
+        document.addEventListener('DOMContentLoaded', () => {
+            new MacWrite();
+        });
+
+        // Add fade animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInOut {
+                0% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+                20% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                80% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+                100% { opacity: 0; transform: translate(-50%, -50%) scale(0.9); }
+            }
+        `;
+        document.head.appendChild(style);
+    </script>
+</body>
+</html>

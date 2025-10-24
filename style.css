@@ -13,26 +13,49 @@
   font-style: normal;
 }
 
-/* Windows 98 System Colors */
+/* Macintosh OS System Colors */
 :root {
-  --win98-desktop: #008080; /* Teal desktop background */
-  --win98-window: #c0c0c0; /* Window background */
-  --win98-titlebar: #000080; /* Active title bar (dark blue) */
-  --win98-titlebar-inactive: #808080; /* Inactive title bar */
-  --win98-titlebar-text: #ffffff; /* Title bar text */
-  --win98-titlebar-text-inactive: #c0c0c0;
-  --win98-border: #c0c0c0; /* Window border */
-  --win98-border-light: #ffffff; /* Light border */
-  --win98-border-dark: #808080; /* Dark border */
-  --win98-button-face: #c0c0c0; /* Button face */
-  --win98-button-light: #ffffff; /* Button highlight */
-  --win98-button-dark: #808080; /* Button shadow */
-  --win98-text: #000000; /* Text color */
-  --win98-selected: #000080; /* Selected items */
-  --win98-selected-text: #ffffff; /* Selected text */
+  --mac-desktop: #a8a8a8; /* Macintosh desktop gray */
+  --mac-desktop-pattern: linear-gradient(45deg, #a8a8a8 25%, transparent 25%), 
+                          linear-gradient(-45deg, #a8a8a8 25%, transparent 25%), 
+                          linear-gradient(45deg, transparent 75%, #a8a8a8 75%), 
+                          linear-gradient(-45deg, transparent 75%, #a8a8a8 75%);
+  --mac-window: #ffffff; /* Window background */
+  --mac-titlebar: #dddddd; /* Active title bar (light gray) */
+  --mac-titlebar-inactive: #e8e8e8; /* Inactive title bar */
+  --mac-titlebar-text: #000000; /* Title bar text */
+  --mac-titlebar-text-inactive: #666666;
+  --mac-border: #808080; /* Window border */
+  --mac-border-light: #ffffff; /* Light border */
+  --mac-border-dark: #404040; /* Dark border */
+  --mac-button-face: #dddddd; /* Button face */
+  --mac-button-light: #ffffff; /* Button highlight */
+  --mac-button-dark: #808080; /* Button shadow */
+  --mac-text: #000000; /* Text color */
+  --mac-selected: #000080; /* Selected items (blue) */
+  --mac-selected-text: #ffffff; /* Selected text */
+  --mac-menubar: #dddddd; /* Menu bar background */
+  --mac-menu-text: #000000; /* Menu text color */
+  
+  /* Legacy aliases for compatibility */
+  --win98-desktop: var(--mac-desktop);
+  --win98-window: var(--mac-window);
+  --win98-titlebar: var(--mac-titlebar);
+  --win98-titlebar-inactive: var(--mac-titlebar-inactive);
+  --win98-titlebar-text: var(--mac-titlebar-text);
+  --win98-titlebar-text-inactive: var(--mac-titlebar-text-inactive);
+  --win98-border: var(--mac-border);
+  --win98-border-light: var(--mac-border-light);
+  --win98-border-dark: var(--mac-border-dark);
+  --win98-button-face: var(--mac-button-face);
+  --win98-button-light: var(--mac-button-light);
+  --win98-button-dark: var(--mac-button-dark);
+  --win98-text: var(--mac-text);
+  --win98-selected: var(--mac-selected);
+  --win98-selected-text: var(--mac-selected-text);
 }
 
-/* Apply globally */
+/* Apply globally with Macintosh system fonts */
 body,
 button,
 input,
@@ -40,52 +63,58 @@ textarea,
 .window-body,
 .desktop-icon span,
 #taskbar {
-  font-family: "W95", "MS Sans Serif", sans-serif;
-  font-size: 11px;
-  color: var(--win98-text);
+  font-family: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+  font-weight: 400;
+  font-size: 12px;
+  color: var(--mac-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
-/* Full desktop background */
+/* Full desktop background - Macintosh style */
 body,
 html {
   height: 100%;
   margin: 0;
-  background: var(--win98-desktop);
-  background-image: url("icons/wallpaper-1.png");
-  background-repeat: no-repeat;
-  background-position: center center;
-  background-attachment: fixed;
-  background-size: cover;
+  background: var(--mac-desktop);
+  background-image: 
+    repeating-linear-gradient(
+      45deg,
+      transparent,
+      transparent 2px,
+      rgba(255, 255, 255, 0.1) 2px,
+      rgba(255, 255, 255, 0.1) 4px
+    );
+  background-size: 8px 8px;
   overflow: hidden;
   cursor: default;
 }
 
-/* Desktop container */
+/* Desktop container - Macintosh style */
 #desktop {
   display: flex;
   flex-direction: column;
   flex-wrap: wrap;
   align-items: flex-start;
-  padding: 20px;
+  padding: 40px 20px 20px; /* top padding for menubar */
   gap: 30px;
-  height: calc(100% - 40px); /* leave space for taskbar */
+  height: 100vh; /* full viewport height */
 }
 
-/* Desktop icons */
+/* Macintosh-style Desktop icons */
 .desktop-icon {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
   width: 80px;
-  padding: 8px;
+  padding: 4px;
   cursor: pointer;
-  color: var(--win98-text);
-  text-shadow: 1px 1px 0px var(--win98-border-light);
+  color: var(--mac-text);
   user-select: none;
-  border-radius: 4px;
-  transition: background-color 0.1s ease, box-shadow 0.1s ease;
+  border-radius: 0;
+  transition: background-color 0.2s ease;
   background: transparent;
   border: none;
   appearance: none;
@@ -95,63 +124,67 @@ html {
 .desktop-icon:hover,
 .desktop-icon:focus-visible {
   background-color: rgba(0, 0, 0, 0.1);
-  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.35);
 }
 
 .desktop-icon:active {
-  background-color: rgba(0, 0, 0, 0.18);
+  background-color: rgba(0, 0, 0, 0.2);
 }
 
 .desktop-icon img {
-  width: 32px;
-  height: 32px;
-  margin-bottom: 6px;
+  width: 48px;
+  height: 48px;
+  margin-bottom: 2px;
   image-rendering: pixelated;
   image-rendering: -moz-crisp-edges;
   image-rendering: crisp-edges;
+  filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.3));
 }
 
 .desktop-icon span {
-  font-size: 11px;
+  font-size: 10px;
   text-align: center;
   word-wrap: break-word;
-  line-height: 1.2;
-  max-width: 70px;
+  line-height: 1.1;
+  max-width: 75px;
+  background: rgba(255, 255, 255, 0.8);
+  padding: 1px 2px;
+  border-radius: 2px;
 }
 
-/* Taskbar */
+/* Macintosh Menu Bar */
 #taskbar {
   position: fixed;
-  bottom: 0;
+  top: 0;
   left: 0;
-  height: 40px;
+  height: 24px;
   width: 100%;
-  background: var(--win98-button-face);
-  border-top: 2px solid var(--win98-border-light);
-  border-left: 2px solid var(--win98-border-light);
-  border-right: 2px solid var(--win98-border-dark);
-  border-bottom: 2px solid var(--win98-border-dark);
+  background: var(--mac-menubar);
+  border-bottom: 1px solid var(--mac-border-dark);
   display: flex;
   align-items: center;
-  box-shadow: inset 1px 1px 0px var(--win98-border-light),
-    inset -1px -1px 0px var(--win98-border-dark);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
   z-index: 1000;
+  padding: 0 8px;
 }
 
-.start-menu {
+/* Apple Menu */
+#start-menu {
   position: fixed;
-  bottom: 40px;
-  left: 5px;
+  top: 24px;
+  left: 8px;
   width: 220px;
   z-index: 1500;
+  border-radius: 6px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
 }
 
-.start-menu[hidden] {
+#start-menu[hidden] {
   display: none;
 }
 
-.start-menu .window-body {
+#start-menu .window-body {
   padding: 6px 0;
+  border-radius: 0 0 6px 6px;
 }
 
 .start-menu-list {
@@ -165,57 +198,78 @@ html {
   align-items: center;
   gap: 8px;
   padding: 6px 12px;
-  color: var(--win98-text);
+  color: var(--mac-menu-text);
   text-decoration: none;
-  font-size: 11px;
+  font-size: 12px;
 }
 
 .start-menu-list li a:hover,
 .start-menu-list li a:focus {
-  background: var(--win98-selected);
-  color: var(--win98-selected-text);
+  background: var(--mac-selected);
+  color: var(--mac-selected-text);
   outline: none;
 }
 
-/* Start button */
-
-.start-btn {
+/* Apple Menu Button */
+.apple-menu-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
-  height: 32px;
-  margin-left: 4px;
-  padding: 0 12px;
-  border: 2px outset var(--win98-button-light);
-  background: var(--win98-button-face);
+  padding: 0 8px;
+  height: 24px;
+  background: transparent;
+  border: none;
   cursor: pointer;
-  box-shadow: inset 1px 1px 0px var(--win98-button-light),
-    inset -1px -1px 0px var(--win98-button-dark);
+  font-size: 14px;
   font-weight: bold;
-  font-size: 11px;
-  color: var(--win98-text);
+  color: var(--mac-menu-text);
   appearance: none;
   outline: none;
+  transition: background-color 0.2s ease;
 }
 
-.start-btn:active,
-.start-btn[aria-expanded="true"] {
-  border: 2px inset var(--win98-button-dark);
-  box-shadow: inset -1px -1px 0px var(--win98-button-light),
-    inset 1px 1px 0px var(--win98-button-dark);
+.apple-menu-button:hover,
+.apple-menu-button:focus {
+  background: rgba(0, 0, 0, 0.1);
 }
 
-.start-btn:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.6);
-  outline-offset: 2px;
+.apple-menu-button:active,
+.apple-menu-button[aria-expanded="true"] {
+  background: rgba(0, 0, 0, 0.2);
 }
 
-.start-btn img {
-  height: 20px;
-  width: auto;
-  image-rendering: pixelated;
-  margin-right: 6px;
+.apple-logo {
+  font-size: 16px;
+  line-height: 1;
+}
+
+/* Application Menu */
+.app-menu {
+  display: flex;
+  gap: 0;
+  margin-left: 16px;
+}
+
+.menu-item-button {
+  padding: 0 12px;
+  height: 24px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 12px;
+  color: var(--mac-menu-text);
+  appearance: none;
+  outline: none;
+  transition: background-color 0.2s ease;
+}
+
+.menu-item-button:hover,
+.menu-item-button:focus {
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.menu-item-button:active {
+  background: rgba(0, 0, 0, 0.2);
 }
 
 /* Taskbar buttons container */
@@ -227,15 +281,16 @@ html {
   flex-grow: 1; /* expand to fill space between start & clock */
 }
 
-/* Taskbar button style */
+/* Macintosh-style window buttons */
 .taskbar-btn {
-  height: 28px;
-  min-width: 90px;
+  height: 20px;
+  min-width: 100px;
   padding: 0 8px;
   font-size: 11px;
   font-family: "W95", "MS Sans Serif", sans-serif;
-  border: 2px outset var(--win98-button-light);
-  background: var(--win98-button-face);
+  border: 1px solid var(--mac-border-dark);
+  background: var(--mac-button-face);
+  border-radius: 3px;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -243,11 +298,10 @@ html {
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  box-shadow: inset 1px 1px 0px var(--win98-button-light),
-    inset -1px -1px 0px var(--win98-button-dark);
-  color: var(--win98-text);
+  color: var(--mac-text);
   appearance: none;
   outline: none;
+  transition: all 0.2s ease;
 }
 
 /* Button icon */
@@ -261,23 +315,20 @@ html {
 
 /* Hover effect */
 .taskbar-btn:hover {
-  background: #dcdcdc;
-  box-shadow: inset 1px 1px 0px #ffffff,
-    inset -1px -1px 0px var(--win98-border-dark);
+  background: #e8e8e8;
+  border-color: var(--mac-border-dark);
 }
 
-/* Active (pressed in) state */
+/* Active (focused) state */
 .taskbar-btn.active,
 .taskbar-btn[aria-pressed="true"] {
-  border: 2px inset var(--win98-button-dark);
-  background: var(--win98-window);
-  box-shadow: inset -1px -1px 0px var(--win98-button-light),
-    inset 1px 1px 0px var(--win98-button-dark);
-  color: var(--win98-text);
+  background: var(--mac-titlebar);
+  border-color: var(--mac-selected);
+  color: var(--mac-selected);
 }
 
 .taskbar-btn:focus-visible {
-  outline: 2px solid rgba(255, 255, 255, 0.6);
+  outline: 1px solid var(--mac-selected);
   outline-offset: 1px;
 }
 
@@ -296,17 +347,19 @@ html {
   font-weight: bold;
 }
 
-/* Windows 98 Window Styling */
+/* Macintosh OS Window Styling */
 .window {
   position: absolute;
-  background: var(--win98-window);
-  border: 2px solid var(--win98-border);
+  background: var(--mac-window);
+  border: 1px solid var(--mac-border-dark);
+  border-radius: 6px;
   font-family: "W95", "MS Sans Serif", sans-serif;
   font-size: 11px;
   z-index: 100;
   min-width: 100px;
   min-height: 30px;
   box-sizing: border-box; /* fixes bottom-left gap */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .window.active {
@@ -317,32 +370,34 @@ html {
   opacity: 0.9;
 }
 
-/* Window Title Bar */
+/* Macintosh Window Title Bar */
 .title-bar {
   background: linear-gradient(
     to bottom,
-    var(--win98-titlebar),
-    var(--win98-titlebar)
+    var(--mac-titlebar),
+    #cccccc
   );
-  color: var(--win98-titlebar-text);
-  height: 20px;
+  color: var(--mac-titlebar-text);
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 2px 4px;
-  font-size: 11px;
+  padding: 2px 8px;
+  font-size: 12px;
   font-weight: bold;
   cursor: move;
   user-select: none;
+  border-radius: 6px 6px 0 0;
+  border-bottom: 1px solid var(--mac-border-dark);
 }
 
 .title-bar.inactive {
   background: linear-gradient(
     to bottom,
-    var(--win98-titlebar-inactive),
-    var(--win98-titlebar-inactive)
+    var(--mac-titlebar-inactive),
+    #f0f0f0
   );
-  color: var(--win98-titlebar-text-inactive);
+  color: var(--mac-titlebar-text-inactive);
 }
 
 .title-bar-text {
@@ -353,36 +408,55 @@ html {
   text-overflow: ellipsis;
 }
 
-/* Window Control Buttons */
+/* Macintosh Window Control Buttons */
 .title-bar-controls {
   display: flex;
-  gap: 2px;
+  gap: 8px;
+  align-items: center;
 }
 
 .title-bar-controls button {
-  width: 16px;
+  width: 14px;
   height: 14px;
-  border: 1px outset var(--win98-button-light);
-  background: var(--win98-button-face);
+  border: 1px solid var(--mac-border-dark);
+  border-radius: 50%;
+  background: var(--mac-button-face);
   cursor: pointer;
-  font-size: 8px;
-  font-weight: bold;
-  color: var(--win98-text);
+  font-size: 0;
+  color: transparent;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: inset 1px 1px 0px var(--win98-button-light),
-    inset -1px -1px 0px var(--win98-button-dark);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  transition: all 0.2s ease;
+}
+
+/* Close button - red */
+.title-bar-controls button[aria-label="Close"] {
+  background: #ff5f57;
+  border-color: #e0443e;
+}
+
+/* Minimize button - yellow */
+.title-bar-controls button[aria-label="Minimize"] {
+  background: #ffbd2e;
+  border-color: #dea123;
+}
+
+/* Maximize button - green */
+.title-bar-controls button[aria-label="Maximize"] {
+  background: #28ca42;
+  border-color: #1aad29;
 }
 
 .title-bar-controls button:hover {
-  background: #e0e0e0;
+  transform: scale(1.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .title-bar-controls button:active {
-  border: 1px inset var(--win98-button-dark);
-  box-shadow: inset -1px -1px 0px var(--win98-button-light),
-    inset 1px 1px 0px var(--win98-button-dark);
+  transform: scale(0.95);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 /* Window Body */

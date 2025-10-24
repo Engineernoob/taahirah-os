@@ -14,18 +14,19 @@
     body {
       width: 100vw;
       height: 100vh;
-      font-family: "W95", "MS Sans Serif", sans-serif;
+      font-family: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
       overflow: hidden;
+      cursor: default;
     }
 
-    /* Start Overlay */
+    /* Macintosh-style Start Screen */
     #start-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: #000;
+      background: linear-gradient(135deg, #a8a8a8 0%, #c0c0c0 100%);
       display: flex;
       align-items: center;
       justify-content: center;
@@ -36,20 +37,35 @@
 
     .start-screen {
       text-align: center;
-      color: #fff;
+      color: #000;
+    }
+
+    .mac-logo {
+      font-size: 120px;
+      margin-bottom: 40px;
+      font-weight: 100;
+      letter-spacing: -4px;
+      animation: macStartupPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes macStartupPulse {
+      0%, 100% { opacity: 0.7; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
     }
 
     .start-screen h1 {
-      font-size: 48px;
+      font-size: 32px;
       margin-bottom: 20px;
-      text-shadow: 0 0 20px rgba(0, 255, 255, 0.5);
-      animation: pulse 2s infinite;
+      font-weight: 300;
+      letter-spacing: -1px;
+      color: #333;
     }
 
     .start-screen p {
-      font-size: 18px;
-      opacity: 0.9;
-      animation: blink 1.5s infinite;
+      font-size: 16px;
+      opacity: 0.8;
+      font-style: italic;
+      color: #555;
     }
 
     @keyframes pulse {
@@ -62,21 +78,22 @@
       25%, 75% { opacity: 0.5; }
     }
 
-    /* BIOS/POST Screen */
+    /* Macintosh-style BIOS Screen */
     #bios-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: #000080;
+      background: #000;
       display: none;
       flex-direction: column;
       padding: 20px;
-      color: #fff;
-      font-family: "Courier New", monospace;
+      color: #0f0;
+      font-family: "Monaco", "Courier New", monospace;
       font-size: 14px;
       z-index: 900;
+      text-shadow: 0 0 3px #0f0;
     }
 
     .bios-line {
@@ -90,14 +107,14 @@
       to { opacity: 1; }
     }
 
-    /* Boot Screen */
+    /* Macintosh-style Boot Screen */
     #boot-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: #000080;
+      background: linear-gradient(45deg, #000 0%, #1a1a1a 100%);
       display: none;
       align-items: center;
       justify-content: center;
@@ -109,42 +126,46 @@
       color: #fff;
     }
 
-    .boot-logo {
-      width: 320px;
-      height: 240px;
-      margin-bottom: 20px;
-      position: relative;
+    .mac-logo-large {
+      font-size: 120px;
+      margin-bottom: 40px;
+      font-weight: 100;
+      letter-spacing: -4px;
+      opacity: 0.9;
+      animation: macLogoPulse 3s ease-in-out infinite;
     }
 
-    .boot-logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+    @keyframes macLogoPulse {
+      0%, 100% { opacity: 0.6; transform: scale(1); }
+      50% { opacity: 1; transform: scale(1.05); }
     }
 
     .boot-text {
-      font-size: 16px;
-      margin-bottom: 20px;
-      font-weight: bold;
+      font-size: 24px;
+      margin-bottom: 30px;
+      font-weight: 300;
+      letter-spacing: -1px;
+      opacity: 0.9;
     }
 
     .boot-progress {
-      width: 320px;
-      height: 20px;
-      border: 2px inset #c0c0c0;
-      background: #000;
+      width: 400px;
+      height: 8px;
+      border: 1px solid #333;
+      background: #222;
       padding: 2px;
       position: relative;
+      border-radius: 4px;
     }
 
     .boot-progress-inner {
       width: 0%;
       height: 100%;
-      background: linear-gradient(90deg, #00ff00, #00ff00, #00cc00);
-      transition: width 0.3s ease;
+      background: linear-gradient(90deg, #007aff, #5856d6);
+      transition: width 0.5s ease;
       position: relative;
       overflow: hidden;
+      border-radius: 2px;
     }
 
     .boot-progress-inner::after {
@@ -154,8 +175,13 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-      animation: shimmer 1s infinite;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+      animation: macShimmer 2s infinite;
+    }
+
+    @keyframes macShimmer {
+      0% { transform: translateX(-100%); }
+      100% { transform: translateX(100%); }
     }
 
     @keyframes shimmer {
@@ -164,19 +190,21 @@
     }
 
     .boot-status {
-      margin-top: 15px;
-      font-size: 12px;
+      margin-top: 20px;
+      font-size: 14px;
       opacity: 0.8;
+      font-weight: 300;
+      letter-spacing: 0.5px;
     }
 
-    /* Login Screen */
+    /* Macintosh-style Login Screen */
     #login-screen {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(135deg, #000080, #000040);
+      background: linear-gradient(135deg, #f5f5f7, #e3e3e7);
       display: none;
       z-index: 700;
     }
@@ -190,34 +218,39 @@
     }
 
     .login-window {
-      background: #c0c0c0;
-      border: 2px outset #fff;
-      padding: 30px;
-      min-width: 400px;
-      box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+      background: white;
+      border: none;
+      border-radius: 12px;
+      padding: 40px;
+      min-width: 420px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+      backdrop-filter: blur(10px);
     }
 
     .login-title {
-      font-size: 20px;
-      font-weight: bold;
-      margin-bottom: 20px;
-      color: #000;
+      font-size: 24px;
+      font-weight: 600;
+      margin-bottom: 30px;
+      color: #1d1d1f;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 10px;
+      gap: 12px;
+      font-family: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     }
 
     .login-icon {
-      width: 32px;
-      height: 32px;
-      background: #000080;
+      width: 48px;
+      height: 48px;
+      background: linear-gradient(135deg, #007aff, #5856d6);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      color: #fff;
-      font-weight: bold;
+      color: white;
+      font-weight: 600;
+      font-size: 20px;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
     }
 
     .login-form {
@@ -234,59 +267,82 @@
     }
 
     .form-label {
-      font-size: 12px;
-      color: #000;
-      font-weight: bold;
+      font-size: 14px;
+      color: #1d1d1f;
+      font-weight: 500;
+      margin-bottom: 8px;
+      font-family: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     }
 
     .form-input {
       width: 100%;
-      padding: 4px 8px;
-      border: 2px inset #fff;
-      background: #fff;
-      font-family: "MS Sans Serif", sans-serif;
-      font-size: 13px;
+      padding: 12px 16px;
+      border: 1px solid #d2d2d7;
+      border-radius: 8px;
+      background: white;
+      font-family: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      font-size: 16px;
+      transition: all 0.2s ease;
+      box-sizing: border-box;
     }
 
     .form-input:focus {
-      outline: 1px dotted #000;
-      outline-offset: -2px;
+      outline: none;
+      border-color: #007aff;
+      box-shadow: 0 0 0 3px rgba(0, 122, 255, 0.1);
     }
 
     .login-buttons {
       display: flex;
-      gap: 10px;
-      justify-content: flex-end;
-      margin-top: 20px;
+      gap: 12px;
+      justify-content: center;
+      margin-top: 30px;
     }
 
     .btn {
-      padding: 4px 16px;
-      border: 2px outset #c0c0c0;
-      background: #c0c0c0;
-      font-family: "MS Sans Serif", sans-serif;
-      font-size: 11px;
+      padding: 12px 24px;
+      border: none;
+      background: linear-gradient(135deg, #007aff, #5856d6);
+      color: white;
+      font-family: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
+      font-size: 16px;
+      font-weight: 500;
       cursor: pointer;
-      font-weight: bold;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      min-width: 120px;
+      box-shadow: 0 4px 12px rgba(0, 122, 255, 0.3);
     }
 
     .btn:hover {
-      background: #e0e0e0;
+      background: linear-gradient(135deg, #0056d6, #4a46a6);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 16px rgba(0, 122, 255, 0.4);
     }
 
     .btn:active {
-      border: 2px inset #c0c0c0;
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(0, 122, 255, 0.3);
     }
 
-    .btn-ok {
-      font-weight: bold;
+    .btn:first-child {
+      background: #f2f2f7;
+      color: #1d1d1f;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    .btn:first-child:hover {
+      background: #e5e5ea;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
 
     .login-info {
-      margin-top: 15px;
-      font-size: 10px;
-      color: #666;
+      margin-top: 25px;
+      font-size: 13px;
+      color: #86868b;
       text-align: center;
+      line-height: 1.5;
+      font-family: "SF Pro Display", "Helvetica Neue", Arial, sans-serif;
     }
 
     .shutdown-overlay {
@@ -310,11 +366,12 @@
   </style>
 </head>
 <body>
-  <!-- Start Overlay -->
+  <!-- Macintosh-style Start Screen -->
   <div id="start-overlay">
     <div class="start-screen">
-      <h1>TaahirahOS</h1>
-      <p>Press any key to boot system</p>
+      <div class="mac-logo"></div>
+      <h1>Macintosh System</h1>
+      <p>Click to start up your Macintosh</p>
     </div>
   </div>
 
@@ -323,17 +380,15 @@
     <div class="bios-content"></div>
   </div>
 
-  <!-- Boot Screen -->
+  <!-- Macintosh-style Boot Screen -->
   <div id="boot-screen">
     <div class="boot-container">
-      <div class="boot-logo">
-        <img src="icons/win-98-logo.png" alt="TaahirahOS" />
-      </div>
-      <div class="boot-text">Microsoft Windows 98</div>
+      <div class="mac-logo-large"></div>
+      <div class="boot-text">Macintosh System Software</div>
       <div class="boot-progress">
         <div class="boot-progress-inner" id="progress-bar"></div>
       </div>
-      <div class="boot-status" id="boot-status">Starting TaahirahOS...</div>
+      <div class="boot-status" id="boot-status">Starting up Macintosh...</div>
     </div>
   </div>
 
@@ -342,8 +397,8 @@
     <div class="login-container">
       <div class="login-window">
         <div class="login-title">
-          <div class="login-icon">T</div>
-          <span>Log On to TaahirahOS</span>
+          <div class="login-icon"></div>
+          <span>Welcome to Macintosh</span>
         </div>
         <div class="login-form">
           <div class="form-group">
@@ -374,14 +429,13 @@
     </div>
   </div>
 
-  <!-- Boot sounds -->
+  <!-- Macintosh Boot sounds -->
   <audio id="boot-sound" preload="auto">
-    <source src="sounds/winxp.mp3" type="audio/mpeg" />
-    <source src="sounds/win-start.ogg" type="audio/ogg" />
+    <source src="data:audio/wav;base64,UklGRiQBAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" type="audio/wav" />
   </audio>
 
   <audio id="login-sound" preload="auto">
-    <source src="sounds/login.wav" type="audio/wav" />
+    <source src="data:audio/wav;base64,UklGRiQCAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQgCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" type="audio/wav" />
   </audio>
 
   <script>
@@ -415,15 +469,15 @@
       currentBootPhase = 'bios';
 
       const biosMessages = [
-        'TaahirahOS BIOS v1.0',
-        'CPU: Intel(R) Core(TM) i7-9700K CPU @ 3.60GHz',
-        'Memory Test: 16384MB OK',
-        'Detecting IDE Primary Master... ST1000DM003-1ER162',
-        'Detecting SATA Drives...',
-        'USB Controllers Initialized',
-        'PCI Device Listing...',
-        'Boot from CD-ROM...',
-        'Boot from Hard Disk...',
+        'Macintosh Toolbox v7.5.3',
+        'CPU: Motorola 68040 40MHz',
+        'Memory Test: 8MB OK',
+        'SCSI ID 0: Apple Hard Drive',
+        'SCSI ID 6: Apple CD-ROM Drive',
+        'ADB Devices Initialized',
+        'NuBus Bus Scanning...',
+        'Checking disk partitions...',
+        'Macintosh System Folder found...',
         ''
       ];
 
@@ -445,14 +499,14 @@
       currentBootPhase = 'boot';
 
       const bootSteps = [
-        { progress: 10, status: 'Loading TaahirahOS kernel...' },
-        { progress: 25, status: 'Initializing device drivers...' },
-        { progress: 40, status: 'Loading system files...' },
-        { progress: 55, status: 'Starting network services...' },
-        { progress: 70, status: 'Loading user profiles...' },
-        { progress: 85, status: 'Preparing desktop environment...' },
-        { progress: 95, status: 'Starting Windows...' },
-        { progress: 100, status: 'Welcome to TaahirahOS!' }
+        { progress: 10, status: 'Loading Macintosh System...' },
+        { progress: 25, status: 'Initializing System Extensions...' },
+        { progress: 40, status: 'Loading Control Panels...' },
+        { progress: 55, status: 'Starting Network Services...' },
+        { progress: 70, status: 'Loading Finder...' },
+        { progress: 85, status: 'Preparing Desktop...' },
+        { progress: 95, status: 'Starting Applications...' },
+        { progress: 100, status: 'Welcome to Macintosh!' }
       ];
 
       for (let step of bootSteps) {
