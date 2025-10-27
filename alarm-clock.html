@@ -378,9 +378,10 @@
                 this.setupClock();
                 this.checkAlarms();
                 
-                // Create audio for alarm sound
-                this.alarmAudio = new Audio('data:audio/wav;base64,UklGRnoGAABXQVZFZm10IBAAAAABAAEAQB8AAEAfAAABAAgAZGF0YQoGAACBhYqFbF1fdJivrJBhNjVgodDbq2EcBj+a2/LDciUFLIHO8tiJNwgZaLvt559NEAxQp+PwtmMcBjiR1/LMeSwFJHfH8N2QQAoUXrTp66hVFApGn+DyvmwhBSuBzvLZiTYIG2m98OScTgwOUazq77thHgU4k9n1vW8uBSFyyvLbk')
+                // Create audio for alarm sound using Macintosh startup sound
+                this.alarmAudio = new Audio('sounds/StartupMac.wav');
                 this.alarmAudio.loop = true;
+                this.alarmAudio.volume = 0.8;
             }
 
             setupClock() {

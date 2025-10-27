@@ -19,7 +19,9 @@
       href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&display=swap"
       rel="stylesheet"
     />
-    <link rel="icon" href="icons/win-98-logo.png" type="image/png" />
+    <link rel="icon" href="icons/computer-icon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="icons/computer-icon.png" />
+    <link rel="shortcut icon" href="icons/computer-icon.png" />
   </head>
 
   <body>
@@ -37,17 +39,17 @@
       </div>
 
       <div class="desktop-icon" data-window="case-study" title="Case Study">
-        <img src="icons/win-98-logo.png" alt="Case Study Icon" />
+        <img src="icons/case.png" alt="Case Study Icon" />
         <span>Case Study</span>
       </div>
 
       <div class="desktop-icon" data-window="contact" title="Contact">
-        <img src="icons/contact.png" alt="Contact Icon" />
+        <img src="icons/contact.jpg" alt="Contact Icon" />
         <span>Contact</span>
       </div>
 
       <div class="desktop-icon" data-window="skills-radar" title="Skills Radar">
-        <img src="icons/computer-icon.png" alt="Skills Radar Icon" />
+        <img src="icons/skill-mac.jpg" alt="Skills Radar Icon" />
         <span>Skills Radar</span>
       </div>
 
@@ -58,22 +60,22 @@
 
       <!-- Macintosh Applications -->
       <div class="desktop-icon" data-window="macdraw" title="MacDraw">
-        <img src="icons/computer-icon.png" alt="MacDraw Icon" />
+        <img src="icons/cd.png" alt="MacDraw Icon" />
         <span>MacDraw</span>
       </div>
 
       <div class="desktop-icon" data-window="macwrite" title="MacWrite">
-        <img src="icons/computer-icon.png" alt="MacWrite Icon" />
+        <img src="icons/book.png" alt="MacWrite Icon" />
         <span>MacWrite</span>
       </div>
 
       <div class="desktop-icon" data-window="calculator" title="Calculator">
-        <img src="icons/computer-icon.png" alt="Calculator Icon" />
+        <img src="icons/mac-cal-1.jpeg" alt="Calculator Icon" />
         <span>Calculator</span>
       </div>
 
       <div class="desktop-icon" data-window="alarm-clock" title="Alarm Clock">
-        <img src="icons/computer-icon.png" alt="Alarm Clock Icon" />
+        <img src="icons/skill-mac.jpg" alt="Alarm Clock Icon" />
         <span>Alarm Clock</span>
       </div>
 
@@ -83,7 +85,7 @@
       </div>
 
       <div class="desktop-icon" data-window="hypercard" title="HyperCard">
-        <img src="icons/computer-icon.png" alt="HyperCard Icon" />
+        <img src="icons/notepad.png" alt="HyperCard Icon" />
         <span>HyperCard</span>
       </div>
 
@@ -114,49 +116,41 @@
       </div>
     </main>
 
-    <!-- Macintosh Menu Bar -->
-    <header id="taskbar" role="menubar" aria-label="Menu bar">
-      <!-- Apple Menu -->
+    <!-- Taskbar -->
+    <div id="taskbar" role="menubar" aria-label="Taskbar">
+      <!-- Start Button -->
       <button
         id="start-icon"
-        class="apple-menu-button"
-        title="Apple Menu"
+        class="start-btn"
+        title="Start"
         aria-haspopup="true"
         aria-expanded="false"
       >
-        <span class="apple-logo"></span>
+        <img src="icons/start-button.png" alt="Start" />
+        <span>Start</span>
       </button>
-
-      <!-- Application Menu -->
-      <div class="app-menu">
-        <button class="menu-item-button">File</button>
-        <button class="menu-item-button">Edit</button>
-        <button class="menu-item-button">View</button>
-        <button class="menu-item-button">Window</button>
-        <button class="menu-item-button">Help</button>
-      </div>
 
       <div id="taskbar-buttons" role="tablist" aria-label="Open windows"></div>
       <div class="taskbar-space"></div>
       <div class="taskbar-clock" id="clock" aria-live="polite"></div>
-    </header>
+    </div>
 
-    <!-- Apple Menu -->
+    <!-- Start Menu -->
     <nav
       id="start-menu"
       class="window start-menu"
       hidden
-      aria-label="Apple Menu"
+      aria-label="Start Menu"
       style="
         position: fixed;
-        top: 24px;
-        left: 8px;
+        bottom: 40px;
+        left: 5px;
         width: 220px;
         z-index: 2000;
       "
     >
       <div class="title-bar">
-        <div class="title-bar-text">System Software 7.5</div>
+        <div class="title-bar-text">Windows 98</div>
       </div>
 
       <div
@@ -188,19 +182,19 @@
           </li>
           <li>
             <button data-window="case-study" class="menu-item">
-              <img src="icons/win-98-logo.png" alt="" />
+              <img src="icons/case.png" alt="" />
               Case Study
             </button>
           </li>
           <li>
             <button data-window="contact" class="menu-item">
-              <img src="icons/contact.png" alt="" />
+              <img src="icons/contact.jpg" alt="" />
               Contact
             </button>
           </li>
           <li>
             <button data-window="skills-radar" class="menu-item">
-              <img src="icons/skills.png" alt="" />
+              <img src="icons/skill-mac.jpg" alt="" />
               Skills Radar
             </button>
           </li>
@@ -215,31 +209,31 @@
           
           <li>
             <button data-window="macdraw" class="menu-item">
-              <img src="icons/computer-icon.png" alt="" />
+              <img src="icons/cd.png" alt="" />
               MacDraw
             </button>
           </li>
           <li>
             <button data-window="macwrite" class="menu-item">
-              <img src="icons/computer-icon.png" alt="" />
+              <img src="icons/book.png" alt="" />
               MacWrite
             </button>
           </li>
           <li>
             <button data-window="calculator" class="menu-item">
-              <img src="icons/computer-icon.png" alt="" />
+              <img src="icons/mac-cal-1.jpeg" alt="" />
               Calculator
             </button>
           </li>
           <li>
             <button data-window="alarm-clock" class="menu-item">
-              <img src="icons/computer-icon.png" alt="" />
+              <img src="icons/skill-mac.jpg" alt="" />
               Alarm Clock
             </button>
           </li>
           <li>
             <button data-window="hypercard" class="menu-item">
-              <img src="icons/computer-icon.png" alt="" />
+              <img src="icons/notepad.png" alt="" />
               HyperCard
             </button>
           </li>
@@ -322,6 +316,8 @@
 
     <!-- Scripts -->
     <script src="script.js"></script>
+
+    
 
     <!-- Boot + Ada Hooks -->
     <script>

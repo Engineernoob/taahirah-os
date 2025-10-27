@@ -81,21 +81,21 @@ const WINDOW_PRESETS = {
   // Macintosh Applications
   macdraw: {
     title: "MacDraw",
-    icon: "icons/computer-icon.png",
+    icon: "icons/cd.png",
     file: "macdraw.html",
     width: 900,
     height: 700,
   },
   macwrite: {
     title: "MacWrite",
-    icon: "icons/computer-icon.png",
+    icon: "icons/book.png",
     file: "macwrite.html",
     width: 900,
     height: 700,
   },
   calculator: {
     title: "Calculator",
-    icon: "icons/computer-icon.png",
+    icon: "icons/mac-cal-1.jpeg",
     file: "calculator.html",
     width: 400,
     height: 550,
@@ -116,7 +116,7 @@ const WINDOW_PRESETS = {
   },
   hypercard: {
     title: "HyperCard",
-    icon: "icons/computer-icon.png",
+    icon: "icons/notepad.png",
     file: "hypercard.html",
     width: 900,
     height: 700,
@@ -126,7 +126,7 @@ const WINDOW_PRESETS = {
 // -------------------- Project Windows --------------------
 WINDOW_PRESETS.cue = {
   title: "Cue · AI Interview Assistant",
-  icon: "icons/projects.png",
+  icon: "icons/cue.png",
   file: "projects/cue.html",
   width: 640,
   height: 520,
@@ -158,7 +158,7 @@ WINDOW_PRESETS.cortex = {
 
 WINDOW_PRESETS.quantum = {
   title: "Quantum Lottery Predictor",
-  icon: "icons/projects.png",
+  icon: "icons/quantum.png",
   file: "projects/quantum.html",
   width: 640,
   height: 520,
@@ -364,7 +364,9 @@ function makeIframeWindow({ title, icon, file, width, height, type }) {
   const maxBtn = win.querySelector('[aria-label="Maximize"]');
 
   if (closeBtn)
-    closeBtn.addEventListener("click", () => closeWindowById(windowId));
+    closeBtn.addEventListener("click", () => {
+      closeWindowById(windowId);
+    });
   if (minBtn)
     minBtn.addEventListener("click", () => {
       win.style.display = "none";
@@ -504,7 +506,28 @@ function handleWindowMessage(event) {
   }
 }
 
-// -------------------- Shut Down --------------------
+// -------------------- Macintosh Shut Down --------------------
 function shutDown() {
-  window.location.href = "shutdown.html";
+  // Play Macintosh shutdown sound before redirecting
+  try {
+    const audio = new Audio('sounds/shutdownmac.mp3');
+    audio.volume = 0.8;
+   (audio.play || Promise.resolve()).catch(() => {
+      // Fallback if audio can't play
+      window.location.href = "shutdown.html";
+    });
+    
+    // Wait for sound to play before redirecting
+    setTimeout(() => {
+      window.location.href = "shutdown.html";
+    }, 1000);
+  } catch (err) {
+    window.location.href = "shutdown.html";
+  }
+}
+
+// -------------------- Sound Effects Removed --------------------
+function playMacSound(type) {
+  // Silent function - all Macintosh sounds have been removed
+  return;
 }

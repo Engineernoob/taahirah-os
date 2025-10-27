@@ -184,6 +184,12 @@
       100% { transform: translateX(100%); }
     }
 
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); }
+      75% { transform: translateX(5px); }
+    }
+
     @keyframes shimmer {
       0% { transform: translateX(-100%); }
       100% { transform: translateX(100%); }
@@ -429,13 +435,17 @@
     </div>
   </div>
 
-  <!-- Macintosh Boot sounds -->
+  <!-- Authentic Macintosh sounds -->
   <audio id="boot-sound" preload="auto">
-    <source src="data:audio/wav;base64,UklGRiQBAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" type="audio/wav" />
+    <source src="sounds/StartupMac.wav" type="audio/wav" />
   </audio>
 
   <audio id="login-sound" preload="auto">
-    <source src="data:audio/wav;base64,UklGRiQCAABXQVZFZm10IBAAAAABAAEARKwAAIhYAQACABAAZGF0YQgCAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA" type="audio/wav" />
+    <source src="sounds/StartupMac.wav" type="audio/wav" />
+  </audio>
+
+  <audio id="shutdown-sound" preload="auto">
+    <source src="sounds/shutdownmac.mp3" type="audio/mpeg" />
   </audio>
 
   <script>
@@ -548,9 +558,10 @@
       const acceptedPasswords = ['', 'password', 'admin', '1234', 'taahirah'];
       
       if (acceptedPasswords.includes(password.toLowerCase())) {
-        // Play login sound
+        // Play Macintosh login sound (shorter version of startup sound)
         try {
-          loginSound.volume = 0.5;
+          loginSound.volume = 0.7;
+          loginSound.currentTime = 0.3; // Start slightly into the sound
           loginSound.play();
         } catch (err) {
           console.log('Login sound not available');
@@ -561,25 +572,38 @@
         sessionStorage.setItem('loggedIn', 'true');
         sessionStorage.setItem('booted', 'true');
 
-        // Transition to desktop
+        // Transition to desktop with slight delay for sound
         setTimeout(() => {
           window.location.replace('index.html');
-        }, 500);
+        }, 800);
       } else {
-        // Wrong password animation
+        // Wrong password animation with Macintosh error sound effect
         const passwordField = document.getElementById('password');
         passwordField.style.background = '#ffcccc';
         
+        // Add visual feedback
+        passwordField.style.animation = 'shake 0.3s ease-in-out';
+        
         setTimeout(() => {
           passwordField.style.background = '#fff';
+          passwordField.style.animation = '';
           passwordField.value = '';
           passwordField.focus();
-        }, 500);
+        }, 300);
       }
     }
 
     // Shutdown system
     function shutdownSystem() {
+      // Play Macintosh shutdown sound
+      try {
+        const shutdownSound = document.getElementById('shutdown-sound');
+        shutdownSound.volume = 0.8;
+        shutdownSound.play();
+      } catch (err) {
+        console.log('Shutdown sound not available');
+      }
+      
       shutdownOverlay.style.display = 'flex';
       setTimeout(() => {
         window.close();
