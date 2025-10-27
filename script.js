@@ -78,16 +78,16 @@ const WINDOW_PRESETS = {
     width: 640,
     height: 520,
   },
-  // Macintosh Applications
+  // Applications
   macdraw: {
-    title: "MacDraw",
+    title: "Draw",
     icon: "icons/cd.png",
     file: "macdraw.html",
     width: 900,
     height: 700,
   },
   macwrite: {
-    title: "MacWrite",
+    title: "Write",
     icon: "icons/book.png",
     file: "macwrite.html",
     width: 900,
