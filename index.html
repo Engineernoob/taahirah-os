@@ -322,9 +322,8 @@
     <!-- Boot + Ada Hooks -->
     <script>
       document.addEventListener("DOMContentLoaded", () => {
-        // --- Boot & Login logic: only trigger once per full session
+        // --- Boot logic: only trigger once per full session
         const booted = sessionStorage.getItem("booted");
-        const loggedIn = sessionStorage.getItem("loggedIn");
         const restarting = sessionStorage.getItem("restarting");
         
         if (!booted && !restarting) {
@@ -333,21 +332,13 @@
           return;
         }
         
-        // Check if user is logged in
-        if (booted && !loggedIn && !restarting) {
-          sessionStorage.setItem("booted", "true");
-          window.location.replace("boot.html");
-          return;
-        }
-        
         // Clear restarting flag if coming back from shutdown
         if (restarting) sessionStorage.removeItem("restarting");
         
-        // Display welcome message for logged in user
-        const currentUser = sessionStorage.getItem("currentUser");
-        if (currentUser && !document.querySelector('.welcome-message')) {
+        // Display welcome message 
+        if (!document.querySelector('.welcome-message')) {
           setTimeout(() => {
-            createWelcomeMessage(currentUser);
+            createWelcomeMessage('User');
           }, 2000);
         }
 
@@ -441,11 +432,7 @@
           console.log('Logout sound not available');
         }
         
-        // Clear login state
-        sessionStorage.removeItem('loggedIn');
-        sessionStorage.removeItem('currentUser');
-        
-        // Redirect to login/boot screen
+        // Redirect to boot screen
         setTimeout(() => {
           window.location.replace('boot.html');
         }, 1500);
